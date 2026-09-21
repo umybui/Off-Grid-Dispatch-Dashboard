@@ -90,6 +90,15 @@ st.write(
     CONFIG["SYSTEM_TYPE"]
 )
 
+st.write("Rows before filter:", len(df))
+
+st.write(
+    "Attributes:",
+    sorted(df["Attribute"].dropna().astype(str).unique())
+)
+
+st.write("Rows after filter:", len(df))
+
 # Optional manual refresh
 if st.sidebar.button("Refresh Data"):
     st.cache_data.clear()
