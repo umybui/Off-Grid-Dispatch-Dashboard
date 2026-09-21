@@ -3,17 +3,21 @@ import pandas as pd
 import plotly.graph_objects as go
 from streamlit_sortables import sort_items
 
+from configs.palawan import CONFIG
+
 # =====================================================
 # PAGE
 # =====================================================
 
 st.set_page_config(
-    page_title="Mainland Palawan Dispatch Dashboard",
+    page_title=CONFIG["TITLE"],
     layout="wide"
 )
 
-st.title("Mainland Palawan Dispatch Dashboard")
-#try
+st.title(
+    CONFIG["TITLE"]
+)
+
 # =====================================================
 # LOAD DATA
 # =====================================================
@@ -22,8 +26,8 @@ st.title("Mainland Palawan Dispatch Dashboard")
 def load_data():
 
     df = pd.read_excel(
-        "PALECO Dispatch Summary.xlsx",
-        sheet_name="2  PALECO Reports",
+        CONFIG["SOURCE_FILE"],
+        sheet_name=CONFIG["SOURCE_SHEET"],
         engine="openpyxl"
     )
 
