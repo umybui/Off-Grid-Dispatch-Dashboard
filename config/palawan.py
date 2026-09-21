@@ -4,5 +4,8 @@ CONFIG = {
         "Mainland Palawan Dispatch Dashboard",
 
     "SOURCE_FILE":
-        "PALECO Dispatch Summary.xlsx"
+        "PALECO Dispatch Summary.xlsx",
+
+    "SOURCE_SHEET":
+        "2  PALECO Reports"
 }
