@@ -59,14 +59,26 @@ def load_data():
         errors="coerce"
     )
 
-    df["NumericValue"] = pd.to_numeric(
-        df["NumericValue"],
-        errors="coerce"
-    )
+    # Palawan structure
+    if "NumericValue" in df.columns:
 
-    df["Value"] = df["NumericValue"]
+        df["NumericValue"] = pd.to_numeric(
+            df["NumericValue"],
+            errors="coerce"
+        )
+
+        df["Value"] = df["NumericValue"]
+
+    # Mindoro structure
+    elif "Value" in df.columns:
+
+        df["Value"] = pd.to_numeric(
+            df["Value"],
+            errors="coerce"
+        )
 
     return df
+
 
 df = load_data()
 
