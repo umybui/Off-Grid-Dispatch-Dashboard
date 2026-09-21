@@ -35,7 +35,7 @@ selected_dashboard = st.sidebar.selectbox(
     ]
 )
 
-CONFIG = CONFIGS[selected_dashboard]
+CONFIG = CONFIG[selected_dashboard]
 
 st.title(
     CONFIG["TITLE"]
