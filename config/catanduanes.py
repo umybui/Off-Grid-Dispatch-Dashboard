@@ -4,5 +4,8 @@ CONFIG = {
         "Mainland Catanduanes Dispatch Dashboard",
 
     "SOURCE_FILE":
-        "CATANDUANES Dispatch Summary.xlsx"
+        "Catanduanes Hourly Supply and ...xlsx",
+
+    "SOURCE_SHEET":
+        "<FinalSummary>"
 }
