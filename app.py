@@ -82,6 +82,9 @@ def load_data():
 
 df = load_data()
 
+if CONFIG["SYSTEM_TYPE"] == "MINDORO":
+    df = df[df["Attribute"] == "NET MW"].copy()
+
 st.write(
     "SYSTEM TYPE:",
     CONFIG["SYSTEM_TYPE"]
