@@ -70,6 +70,11 @@ def load_data():
 
 df = load_data()
 
+st.write(
+    "SYSTEM TYPE:",
+    CONFIG["SYSTEM_TYPE"]
+)
+
 # Optional manual refresh
 if st.sidebar.button("Refresh Data"):
     st.cache_data.clear()
