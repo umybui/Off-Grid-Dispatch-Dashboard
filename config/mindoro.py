@@ -4,5 +4,8 @@ CONFIG = {
         "Mainland Mindoro Dispatch Dashboard",
 
     "SOURCE_FILE":
-        "MINDORO Dispatch Summary.xlsx"
+        "Mindoro Dispatch Summary Final.xlsx",
+
+    "SOURCE_SHEET":
+        "<Main Query>"
 }
