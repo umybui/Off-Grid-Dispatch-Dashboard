@@ -3,16 +3,39 @@ import pandas as pd
 import plotly.graph_objects as go
 from streamlit_sortables import sort_items
 
-from configs.palawan import CONFIG
+from configs.palawan import CONFIG as PALAWAN
+from configs.mindoro import CONFIG as MINDORO
+from configs.catanduanes import CONFIG as CATANDUANES
+
+CONFIGS = {
+    "Palawan": PALAWAN,
+    "Mindoro": MINDORO,
+    "Catanduanes": CATANDUANES
+}
 
 # =====================================================
 # PAGE
 # =====================================================
 
 st.set_page_config(
-    page_title=CONFIG["TITLE"],
+    page_title="Off-Grid Dispatch Dashboard",
     layout="wide"
 )
+
+# =====================================================
+# DASHBOARD SELECTION
+# =====================================================
+
+selected_dashboard = st.sidebar.selectbox(
+    "Dashboard",
+    [
+        "Palawan",
+        "Mindoro",
+        "Catanduanes"
+    ]
+)
+
+CONFIG = CONFIGS[selected_dashboard]
 
 st.title(
     CONFIG["TITLE"]
