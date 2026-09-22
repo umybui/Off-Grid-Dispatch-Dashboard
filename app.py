@@ -4310,7 +4310,6 @@ else:
             PeakEnergyMWh=("Value", "sum")
         )
     )
-``
 
 # ----------------------------------------------
 # UNIT SHARE OF TOTAL PEAK-HOUR ENERGY
