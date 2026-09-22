@@ -70,23 +70,20 @@ try:
     )
 
     df = prepare_data(
-    df,
-    config
+        df,
+        config
     )
-
-    filters = get_filters(df)
-
+    
     filtered = filter_data(
-    df,
-    filters
+        df,
+        filters
     )
-
-    st.write("Columns:")
-       
+      
     (
         total_demand,
         generation,
-        total_generation
+        total_generation,
+        transfer_flow
     ) = build_demand_generation(
         filtered,
         config
@@ -117,6 +114,12 @@ try:
         use_container_width=True
     )
 
+    st.subheader("Import Support")
+
+    st.dataframe(
+        transfer_flow.head(),
+        use_container_width=True
+    )
 except Exception as e:
 
     st.exception(e)
