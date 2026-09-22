@@ -1,7 +1,5 @@
 CONFIG = {
-    "TITLE": "Mainland Palawan Dispatch Dashboard",
-    "SOURCE_FILE": "PALECO Dispatch Summary.xlsx",
-    "SOURCE_SHEET": "2  PALECO Reports",
-
-    "SYSTEM_TYPE": "PALAWAN"
+    "SYSTEM_NAME": "Palawan",
+    "FILE_PATH": "data/PALECO Dispatch Summary.xlsx",
+    "SHEET_NAME": "2  PALECO Reports"
 }
