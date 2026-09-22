@@ -17,4 +17,6 @@ CONFIG = {
     "GENERATION_ATTRIBUTE": "OUTPUT",
 
     "PLANT_COLUMN": "Plant",
+
+    "USES_IMPORT_SUPPORT": False,
 }
