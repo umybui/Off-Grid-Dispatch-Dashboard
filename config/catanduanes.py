@@ -15,4 +15,6 @@ CONFIG = {
     "GENERATION_ATTRIBUTE": "ACTUAL (KW)",
 
     "PLANT_COLUMN": "Power Plant",
+
+    "USES_IMPORT_SUPPORT": False,
 }
