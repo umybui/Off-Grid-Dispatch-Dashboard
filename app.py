@@ -9,6 +9,11 @@ from core.data_prep import prepare_data
 from core.sidebar_filters import get_filters
 from core.filter_data import filter_data
 from core.demand_generation import build_demand_generation
+from core.reliability import build_reliability
+
+# =====================================================
+# PAGE CONFIG
+# =====================================================
 
 st.set_page_config(
     page_title="Off-Grid Dispatch Dashboard",
@@ -69,18 +74,30 @@ try:
         f"Loaded {len(df):,} records"
     )
 
+    # =================================================
+    # DATA PREP
+    # =================================================
+
     df = prepare_data(
         df,
         config
     )
-    
+
+    # =================================================
+    # FILTERS
+    # =================================================
+
     filters = get_filters(df)
-    
+
     filtered = filter_data(
         df,
         filters
     )
-    
+
+    # =================================================
+    # DEMAND / GENERATION
+    # =================================================
+
     (
         total_demand,
         generation,
@@ -90,27 +107,67 @@ try:
         filtered,
         config
     )
-    
+
+    # =================================================
+    # RELIABILITY
+    # =================================================
+
+    reliability = build_reliability(
+        total_demand,
+        total_generation,
+        transfer_flow
+    )
+
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
-    
+
+    # =================================================
+    # KPI PREVIEW
+    # =================================================
+
+    st.subheader("Reliability Summary")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "Peak Demand",
+            f"{reliability['peak_demand'\]:,.2f}"
+        )
+
+    with col2:
+        stmetric(
+            "Hours With Shortage",
+            reliability["hours_with_shortage"]
+        )
+
+    with col3:
+        st.metric(
+            "Unserved Energy",
+            f"{reliability['unserved_energy']:,.2f}"
+        )
+
+    # =================================================
+    # VALIDATION TABLES
+    # =================================================
+
     st.subheader("Total Demand")
-    
+
     st.dataframe(
         total_demand.head(),
         use_container_width=True
     )
-    
+
     st.subheader("Generation")
-    
+
     st.dataframe(
         generation.head(),
         use_container_width=True
     )
-    
+
     st.subheader("Total Generation")
-    
+
     st.dataframe(
         total_generation.head(),
         use_container_width=True
@@ -122,6 +179,14 @@ try:
         transfer_flow.head(),
         use_container_width=True
     )
+
+    st.subheader("Gap Data")
+
+    st.dataframe(
+        reliability["gap_df"].head(),
+        use_container_width=True
+    )
+
 except Exception as e:
 
     st.exception(e)
