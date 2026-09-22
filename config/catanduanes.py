@@ -8,5 +8,9 @@ CONFIG = {
 
     "DATETIME_COLUMN": "Month",
 
-    "VALUE_COLUMN": "Value"
+    "VALUE_COLUMN": "Value",
+
+    "DEMAND_ATTRIBUTE": "DEMAND (KW)",
+    
+    "GENERATION_ATTRIBUTE": "ACTUAL (KW)",
 }
