@@ -41,6 +41,11 @@ st.title(
     CONFIG["TITLE"]
 )
 
+st.write(CONFIG)
+
+st.write("SOURCE FILE =", CONFIG["SOURCE_FILE"])
+st.write("SOURCE SHEET =", CONFIG["SOURCE_SHEET"])
+
 # =====================================================
 # LOAD DATA
 # =====================================================
