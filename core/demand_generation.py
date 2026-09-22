@@ -15,6 +15,11 @@ def build_demand_generation(filtered, config):
         "DEMAND_PLANT"
     )
 
+    plant_column = config.get(
+        "PLANT_COLUMN",
+        "Plant"
+    )
+
     # ==========================================
     # TOTAL DEMAND
     # ==========================================
@@ -23,13 +28,11 @@ def build_demand_generation(filtered, config):
 
         total_demand = (
             filtered[
-                (
-                    filtered["Plant"]
-                    .astype(str)
-                    .str.upper()
-                    ==
-                    demand_plant.upper()
-                )
+                filtered[plant_column]
+                .astype(str)
+                .str.upper()
+                ==
+                demand_plant.upper()
             ]
             .copy()
         )
@@ -81,7 +84,7 @@ def build_demand_generation(filtered, config):
             generation_attribute.upper()
         ]
         .groupby(
-            ["Datetime", "Plant"],
+            ["Datetime", plant_column],
             as_index=False
         )["Value"]
         .sum()
@@ -90,7 +93,7 @@ def build_demand_generation(filtered, config):
     if demand_plant:
 
         generation = generation[
-            generation["Plant"]
+            generation[plant_column]
             .astype(str)
             .str.upper()
             != demand_plant.upper()
@@ -111,8 +114,7 @@ def build_demand_generation(filtered, config):
 
     total_generation.rename(
         columns={
-            "Value":
-            "TotalGeneration"
+            "Value": "TotalGeneration"
         },
         inplace=True
     )
