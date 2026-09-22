@@ -8,5 +8,12 @@ CONFIG = {
 
     "DATETIME_COLUMN": "Datetime",
 
-    "VALUE_COLUMN": "NumericValue"
+    "VALUE_COLUMN": "NumericValue",
+
+    "DEMAND_PLANT": "DEMAND",
+    
+    "DEMAND_ATTRIBUTE": "TOTAL GRID DEMAND",
+    
+    "GENERATION_ATTRIBUTE": "OUTPUT",
+
 }
