@@ -80,6 +80,9 @@ try:
     df,
     filters
     )
+
+    st.write("Columns:")
+    st.write(filtered.columns.tolist())    
     
     (
         total_demand,
