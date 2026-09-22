@@ -3765,21 +3765,35 @@ with a2:
 
 planning_horizon = 10
 
-cap_check = (
-    capacity_data[
-        capacity_data["Attribute"]
-        .eq(
-            "DEPENDABLE CAPACITY"
+if CONFIG["SYSTEM_TYPE"] == "MINDORO":
+
+    cap_check = (
+        capacity_reference[
+            [
+                "Plant",
+                "DependableMW"
+            ]
+        ]
+        .copy()
+    )
+
+else:
+
+    cap_check = (
+        capacity_data[
+            capacity_data["Attribute"]
+            .eq(
+                "DEPENDABLE CAPACITY"
+            )
+        ]
+        .groupby(
+            ["Plant", "Unit"],
+            as_index=False
         )
-    ]
-    .groupby(
-        ["Plant", "Unit"],
-        as_index=False
+        .agg(
+            DependableMW=("Value", "max")
+        )
     )
-    .agg(
-        DependableMW=("Value", "max")
-    )
-)
 
 cap_check["Retired"] = (
     cap_check["Plant"].isin(retired_plants)
