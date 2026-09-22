@@ -74,11 +74,13 @@ try:
         config
     )
     
+    filters = get_filters(df)
+    
     filtered = filter_data(
         df,
         filters
     )
-      
+    
     (
         total_demand,
         generation,
