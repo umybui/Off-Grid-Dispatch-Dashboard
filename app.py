@@ -29,7 +29,9 @@ else:
 # -----------------------------
 # Page Title
 # -----------------------------
-st.title(config["SYSTEM_NAME"])
+
+st.write("CONFIG CONTENTS:")
+st.write(config)
 
 # -----------------------------
 # Load Data
