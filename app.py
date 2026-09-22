@@ -145,7 +145,7 @@ try:
     with col3:
         st.metric(
             "Unserved Energy",
-            f"{reliability['unserved_energy'\]:,.2f}"
+            f"{reliability['unserved_energy']:,.2f}"
         )
 
     # =================================================
