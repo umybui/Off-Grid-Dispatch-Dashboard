@@ -193,58 +193,109 @@ filtered = df[
 ].copy()
 
 # =====================================================
-# TOTAL DEMAND
+# TOTAL DEMAND / GENERATION
 # =====================================================
 
-total_demand = (
-    filtered[
-        (
-            filtered["Plant"]
-            .astype(str)
-            .str.upper()
-            == "DEMAND"
+if CONFIG["SYSTEM_TYPE"] == "MINDORO":
+
+    total_demand = (
+        filtered[
+            filtered["Plant"] == "TOTAL DEMAND"
+        ]
+        .groupby(
+            "Datetime",
+            as_index=False
+        )["Value"]
+        .sum()
+    )
+
+    generation = filtered[
+        ~filtered["Plant"]
+        .astype(str)
+        .str.contains(
+            "TOTAL DEMAND|TOTAL GENERATION|SYNCHRO|IMPORT",
+            case=False,
+            na=False
         )
-        &
-        (
+    ].copy()
+
+    total_generation = (
+        generation
+        .groupby(
+            "Datetime",
+            as_index=False
+        )["Value"]
+        .sum()
+    )
+
+    total_generation.rename(
+        columns={
+            "Value": "TotalGeneration"
+        },
+        inplace=True
+    )
+
+else:
+
+    total_demand = (
+        filtered[
+            (
+                filtered["Plant"]
+                .astype(str)
+                .str.upper()
+                == "DEMAND"
+            )
+            &
+            (
+                filtered["Attribute"]
+                .astype(str)
+                .str.upper()
+                == "TOTAL GRID DEMAND"
+            )
+        ]
+        .groupby(
+            "Datetime",
+            as_index=False
+        )["Value"]
+        .sum()
+    )
+
+    generation = (
+        filtered[
             filtered["Attribute"]
             .astype(str)
             .str.upper()
-            == "TOTAL GRID DEMAND"
-        )
-    ]
-    .groupby(
-        "Datetime",
-        as_index=False
-    )["Value"]
-    .sum()
-)
+            .eq("OUTPUT")
+        ]
+        .groupby(
+            ["Datetime", "Plant"],
+            as_index=False
+        )["Value"]
+        .sum()
+    )
 
-# =====================================================
-# GENERATION DATA
-# =====================================================
-
-generation = (
-    filtered[
-        filtered["Attribute"]
+    generation = generation[
+        generation["Plant"]
         .astype(str)
         .str.upper()
-        .eq("OUTPUT")
+        != "DEMAND"
     ]
 
-    .groupby(
-        ["Datetime", "Plant"],
-        as_index=False
-    )["Value"]
-    .sum()
-)
+    total_generation = (
+        generation
+        .groupby(
+            "Datetime",
+            as_index=False
+        )["Value"]
+        .sum()
+    )
 
-generation = generation[
-    generation["Plant"]
-    .astype(str)
-    .str.upper()
-    != "DEMAND"
-]
-
+    total_generation.rename(
+        columns={
+            "Value": "TotalGeneration"
+        },
+        inplace=True
+    )
 # =====================================================
 # TOTAL GENERATION
 # =====================================================
