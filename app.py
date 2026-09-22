@@ -33,16 +33,29 @@ else:
 st.write("CONFIG CONTENTS:")
 st.write(config)
 
-# -----------------------------
-# Load Data
-# -----------------------------
+# =====================================================
+# LOAD DATA
+# =====================================================
+
 try:
+
+    st.write("Looking for file:")
+    st.write(config["FILE_PATH"])
+
+    st.write("Using worksheet:")
+    st.write(config["SHEET_NAME"])
+
     df = load_data(config)
 
-    st.success(f"Loaded {config['SYSTEM_NAME']} data successfully.")
+    st.success(
+        f"Loaded {config['SYSTEM_NAME']} data successfully."
+    )
 
-    st.subheader("Data Preview")
+    st.write("Rows:", len(df))
+    st.write("Columns:", len(df.columns))
+
     st.dataframe(df.head())
 
 except Exception as e:
-    st.error(f"Error loading data: {e}")
+
+    st.exception(e)
