@@ -68,7 +68,10 @@ try:
         f"Loaded {len(df):,} records"
     )
 
-    df = prepare_data(df)
+    df = prepare_data(
+    df,
+    config
+    )
 
     filters = get_filters(df)
 
