@@ -1,7 +1,5 @@
 CONFIG = {
-    "TITLE": "Mainland Mindoro Dispatch Dashboard",
-    "SOURCE_FILE": "Mindoro Dispatch Summary Final.xlsm",
-    "SOURCE_SHEET": "Main Query",
-         
-    "SYSTEM_TYPE": "MINDORO"
+    "SYSTEM_NAME": "Mindoro",
+    "FILE_PATH": "data/Mindoro Dispatch Summary Final.xlsm",
+    "SHEET_NAME": "Main Query"
 }
