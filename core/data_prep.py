@@ -1,15 +1,22 @@
-def prepare_data(df):
+import pandas as pd
+
+def prepare_data(df, config):
 
     df = df.copy()
 
-    df["Datetime"] = df["Datetime"].astype("datetime64[ns]")
+    datetime_column = config["DATETIME_COLUMN"]
 
-    df["NumericValue"] = (
-        df["NumericValue"]
-        .apply(lambda x: x)
+    value_column = config["VALUE_COLUMN"]
+
+    df["Datetime"] = pd.to_datetime(
+        df[datetime_column],
+        errors="coerce"
     )
 
-    df["Value"] = df["NumericValue"]
+    df["Value"] = pd.to_numeric(
+        df[value_column],
+        errors="coerce"
+    )
 
     df["Month"] = df["Datetime"].dt.month
 
