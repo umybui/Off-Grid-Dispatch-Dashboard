@@ -8,5 +8,9 @@ CONFIG = {
 
     "DATETIME_COLUMN": "Datetime",
 
-    "VALUE_COLUMN": "Value"
+    "VALUE_COLUMN": "Value",
+    
+    "DEMAND_PLANT": "TOTAL DEMAND",
+
+    "GENERATION_ATTRIBUTE": "NET MW",
 }
