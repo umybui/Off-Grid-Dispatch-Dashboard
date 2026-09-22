@@ -99,6 +99,50 @@ def build_demand_generation(filtered, config):
             != demand_plant.upper()
         ]
 
+        # ==========================================
+    # IMPORT SUPPORT
+    # ==========================================
+
+    transfer_flow = pd.DataFrame(
+        {
+            "Datetime": [],
+            "ImportSupport": []
+        }
+    )
+
+    if config.get("USES_IMPORT_SUPPORT", False):
+
+        import_keyword = config.get(
+            "IMPORT_KEYWORD",
+            "IMPORT"
+        )
+
+        transfer_rows = filtered[
+            filtered[plant_column]
+            .astype(str)
+            .str.contains(
+                import_keyword,
+                case=False,
+                na=False
+            )
+        ].copy()
+
+        if not transfer_rows.empty:
+
+            transfer_rows["ImportSupport"] = (
+                transfer_rows["Value"]
+                .clip(lower=0)
+            )
+
+            transfer_flow = (
+                transfer_rows
+                .groupby(
+                    "Datetime",
+                    as_index=False
+                )["ImportSupport"]
+                .sum()
+            )
+    
     # ==========================================
     # TOTAL GENERATION
     # ==========================================
