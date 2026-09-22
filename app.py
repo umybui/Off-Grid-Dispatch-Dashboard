@@ -4279,24 +4279,38 @@ peak_snapshot = peak_snapshot[
     peak_snapshot["Datetime"].isin(peak_hours)
 ]
 
-peak_snapshot = (
-    peak_snapshot
-    .groupby(
-        ["Plant", "Unit"],
-        as_index=False
-    )
-    .agg(
-        AvgPeakMW=("Value", "mean"),
-        MaxPeakMW=("Value", "max"),
-        PeakEnergyMWh=("Value", "sum")
-    )
-)
+if CONFIG["SYSTEM_TYPE"] == "MINDORO":
 
-peak_snapshot["PlantUnit"] = (
-    peak_snapshot["Plant"]
-    + " | "
-    + peak_snapshot["Unit"].astype(str)
-)
+    peak_snapshot = (
+        peak_snapshot
+        .groupby(
+            ["Plant"],
+            as_index=False
+        )
+        .agg(
+            AvgPeakMW=("Value", "mean"),
+            MaxPeakMW=("Value", "max"),
+            PeakEnergyMWh=("Value", "sum")
+        )
+    )
+
+    peak_snapshot["Unit"] = "Plant Total"
+
+else:
+
+    peak_snapshot = (
+        peak_snapshot
+        .groupby(
+            ["Plant", "Unit"],
+            as_index=False
+        )
+        .agg(
+            AvgPeakMW=("Value", "mean"),
+            MaxPeakMW=("Value", "max"),
+            PeakEnergyMWh=("Value", "sum")
+        )
+    )
+``
 
 # ----------------------------------------------
 # UNIT SHARE OF TOTAL PEAK-HOUR ENERGY
