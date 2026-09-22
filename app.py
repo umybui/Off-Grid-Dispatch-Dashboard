@@ -4,11 +4,19 @@ from config.palawan import CONFIG as PALAWAN
 from config.mindoro import CONFIG as MINDORO
 from config.catanduanes import CONFIG as CATANDUANES
 
+from core.load_data import load_data
+
+# -----------------------------
+# Dashboard Selection
+# -----------------------------
 dashboard = st.sidebar.selectbox(
     "Select Dashboard",
     ["Palawan", "Mindoro", "Catanduanes"]
 )
 
+# -----------------------------
+# Load Config
+# -----------------------------
 if dashboard == "Palawan":
     config = PALAWAN
 
@@ -18,4 +26,21 @@ elif dashboard == "Mindoro":
 else:
     config = CATANDUANES
 
+# -----------------------------
+# Page Title
+# -----------------------------
 st.title(config["SYSTEM_NAME"])
+
+# -----------------------------
+# Load Data
+# -----------------------------
+try:
+    df = load_data(config)
+
+    st.success(f"Loaded {config['SYSTEM_NAME']} data successfully.")
+
+    st.subheader("Data Preview")
+    st.dataframe(df.head())
+
+except Exception as e:
+    st.error(f"Error loading data: {e}")
