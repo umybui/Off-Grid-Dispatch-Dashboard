@@ -4638,37 +4638,52 @@ st.plotly_chart(
     use_container_width=True
 )
 
-available_capacity_tbl = (
-    capacity_data[
-        capacity_data["Attribute"]
-        .isin(
-            [
-                "DEPENDABLE CAPACITY",
-                "INSTALLED CAPACITY (MW)"
-            ]
-        )
-    ]
-    .pivot_table(
-        index=["Plant", "Unit"],
-        columns="Attribute",
-        values="Value",
-        aggfunc="max"
+if CONFIG["SYSTEM_TYPE"] == "MINDORO":
+
+    available_capacity_tbl = cap_check.copy()
+
+    available_capacity_tbl["Unit"] = "Plant Total"
+
+    available_capacity_tbl["InstalledMW"] = (
+        available_capacity_tbl["DependableMW"]
     )
-    .reset_index()
-)
 
-available_capacity_tbl.rename(
-    columns={
-        "DEPENDABLE CAPACITY": "DependableMW",
-        "INSTALLED CAPACITY (MW)": "InstalledMW"
-    },
-    inplace=True
-)
+    available_capacity_tbl["AvailableMW"] = (
+        available_capacity_tbl["DependableMW"]
+    )
 
-available_capacity_tbl["AvailableMW"] = (
-    available_capacity_tbl["DependableMW"]
-)
+else:
 
+    available_capacity_tbl = (
+        capacity_data[
+            capacity_data["Attribute"]
+            .isin(
+                [
+                    "DEPENDABLE CAPACITY",
+                    "INSTALLED CAPACITY (MW)"
+                ]
+            )
+        ]
+        .pivot_table(
+            index=["Plant", "Unit"],
+            columns="Attribute",
+            values="Value",
+            aggfunc="max"
+        )
+        .reset_index()
+    )
+
+    available_capacity_tbl.rename(
+        columns={
+            "DEPENDABLE CAPACITY": "DependableMW",
+            "INSTALLED CAPACITY (MW)": "InstalledMW"
+        },
+        inplace=True
+    )
+
+    available_capacity_tbl["AvailableMW"] = (
+        available_capacity_tbl["DependableMW"]
+    )
 # -----------------------------------------------------
 # PERFORMANCE TABLE
 # -----------------------------------------------------
