@@ -14,5 +14,5 @@ CONFIG = {
     
     "GENERATION_ATTRIBUTE": "ACTUAL (KW)",
 
-    "PLANT_COLUMN": "PowerPlant",
+    "PLANT_COLUMN": "Power Plant",
 }
