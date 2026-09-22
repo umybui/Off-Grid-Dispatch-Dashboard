@@ -133,7 +133,7 @@ try:
     with col1:
         st.metric(
             "Peak Demand",
-            f"{reliability['peak_demand']:,.2ff}"
+            f"{reliability['peak_demand']:,.2f}"
         )
     
     with col2:
