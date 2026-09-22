@@ -123,29 +123,29 @@ try:
     )
 
     # =================================================
-    # KPI PREVIEW
+    # KPI PREVIEW`
     # =================================================
 
     st.subheader("Reliability Summary")
 
     col1, col2, col3 = st.columns(3)
-
+    
     with col1:
         st.metric(
             "Peak Demand",
-            f"{reliability['peak_demand'\]:,.2f}"
+            f"{reliability['peak_demand']:,.2ff}"
         )
-
+    
     with col2:
-        stmetric(
+        st.metric(
             "Hours With Shortage",
             reliability["hours_with_shortage"]
         )
-
+    
     with col3:
         st.metric(
             "Unserved Energy",
-            f"{reliability['unserved_energy']:,.2f}"
+            f"{reliability['unserved_energy'\]:,.2f}"
         )
 
     # =================================================
