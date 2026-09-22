@@ -13,4 +13,6 @@ CONFIG = {
     "DEMAND_PLANT": "TOTAL DEMAND",
 
     "GENERATION_ATTRIBUTE": "NET MW",
+
+    "PLANT_COLUMN": "Plant",
 }
