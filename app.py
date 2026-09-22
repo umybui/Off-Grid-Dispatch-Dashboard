@@ -3767,24 +3767,65 @@ planning_horizon = 10
 
 if CONFIG["SYSTEM_TYPE"] == "MINDORO":
 
-    cap_check = (
-        capacity_reference[
-            [
-                "Plant",
-                "DependableMW"
-            ]
-        ]
-        .copy()
-    )
+    st.markdown("##### Mindoro Dependable Capacity Inputs")
+
+    default_capacity = {
+        "OMCPC SAMARICA": 21.00,
+        "OMCPC HIGH-SPEED": 8.30,
+        "OMCPC SOLAR": 6.00,
+        "OMCPC MAPSA": 5.30,
+        "OMCPC SABLAYAN": 4.00,
+        "PGCI": 1.00,
+        "DMCI REGULATING": 11.30,
+        "DMCI LOT I": 5.00,
+        "LCMHPP-UPPER": 1.63,
+        "LCMHPP-LOWER": 1.02,
+        "INABASAN MHPP": 10.00,
+        "CATUIRAN HEPP": 4.40,
+        "PHESI-WEPF": 16.00,
+        "OPI": 7.40,
+        "POC": 2.60,
+        "MHEC": 2.63,
+        "POWER PIONEERS": 5.00,
+        "GFEC": 6.25,
+        "TOPTEAM CALAPAN": 4.00,
+        "TOPTEAM SOCORRO": 2.00,
+        "SPC SOCORRO": 2.00,
+        "TPI BANSUD": 4.00,
+        "TPI CALAPAN": 4.00,
+        "REGULUS": 3.00,
+        "RMS": 4.00,
+        "TOPTEAM BONGABONG": 3.00,
+        "SPC ROXAS": 1.50
+    }
+
+    cap_rows = []
+
+    for plant, mw in default_capacity.items():
+
+        new_mw = st.number_input(
+            plant,
+            min_value=0.0,
+            value=float(mw),
+            step=0.10,
+            key=f"cap_{plant}"
+        )
+
+        cap_rows.append(
+            {
+                "Plant": plant,
+                "DependableMW": new_mw
+            }
+        )
+
+    cap_check = pd.DataFrame(cap_rows)
 
 else:
 
     cap_check = (
         capacity_data[
             capacity_data["Attribute"]
-            .eq(
-                "DEPENDABLE CAPACITY"
-            )
+            .eq("DEPENDABLE CAPACITY")
         ]
         .groupby(
             ["Plant", "Unit"],
