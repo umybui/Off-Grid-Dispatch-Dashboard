@@ -8,6 +8,7 @@ from core.load_data import load_data
 from core.data_prep import prepare_data
 from core.sidebar_filters import get_filters
 from core.filter_data import filter_data
+from core.demand_generation import build_demand_generation
 
 st.set_page_config(
     page_title="Off-Grid Dispatch Dashboard",
@@ -76,18 +77,41 @@ try:
     filters = get_filters(df)
 
     filtered = filter_data(
-        df,
-        filters
+    df,
+    filters
     )
-
+    
+    (
+        total_demand,
+        generation,
+        total_generation
+    ) = build_demand_generation(
+        filtered,
+        config
+    )
+    
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
-
-    st.subheader("Filtered Data Preview")
-
+    
+    st.subheader("Total Demand")
+    
     st.dataframe(
-        filtered.head(),
+        total_demand.head(),
+        use_container_width=True
+    )
+    
+    st.subheader("Generation")
+    
+    st.dataframe(
+        generation.head(),
+        use_container_width=True
+    )
+    
+    st.subheader("Total Generation")
+    
+    st.dataframe(
+        total_generation.head(),
         use_container_width=True
     )
 
