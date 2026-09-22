@@ -5,10 +5,9 @@ from config.mindoro import CONFIG as MINDORO
 from config.catanduanes import CONFIG as CATANDUANES
 
 from core.load_data import load_data
-
-# =====================================================
-# PAGE CONFIG
-# =====================================================
+from core.data_prep import prepare_data
+from core.sidebar_filters import get_filters
+from core.filter_data import filter_data
 
 st.set_page_config(
     page_title="Off-Grid Dispatch Dashboard",
@@ -50,6 +49,14 @@ st.title(
 )
 
 # =====================================================
+# REFRESH
+# =====================================================
+
+if st.sidebar.button("Refresh Data"):
+    st.cache_data.clear()
+    st.rerun()
+
+# =====================================================
 # LOAD DATA
 # =====================================================
 
@@ -61,14 +68,23 @@ try:
         f"Loaded {len(df):,} records"
     )
 
+    df = prepare_data(df)
+
+    filters = get_filters(df)
+
+    filtered = filter_data(
+        df,
+        filters
+    )
+
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
 
-    st.subheader("Data Preview")
+    st.subheader("Filtered Data Preview")
 
     st.dataframe(
-        df.head(),
+        filtered.head(),
         use_container_width=True
     )
 
