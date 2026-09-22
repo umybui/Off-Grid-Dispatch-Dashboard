@@ -122,5 +122,6 @@ def build_demand_generation(filtered, config):
     return (
         total_demand,
         generation,
-        total_generation
+        total_generation,
+        transfer_flow
     )
