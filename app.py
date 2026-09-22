@@ -4266,15 +4266,6 @@ peak_generation = generation[
 # PEAK HOUR SNAPSHOT
 # -----------------------------------------------------
 
-peak_snapshot = (
-    filtered[
-        filtered["Attribute"]
-        .astype(str)
-        .str.upper()
-        .eq("OUTPUT")
-    ]
-)
-
 peak_snapshot = peak_snapshot[
     peak_snapshot["Datetime"].isin(peak_hours)
 ]
@@ -4692,6 +4683,12 @@ performance = peak_snapshot.merge(
     available_capacity_tbl,
     on=["Plant","Unit"],
     how="left"
+)
+
+performance["PlantUnit"] = (
+    performance["Plant"].astype(str)
+    + " | "
+    + performance["Unit"].astype(str)
 )
 
 performance["Peak Support %"] = (
