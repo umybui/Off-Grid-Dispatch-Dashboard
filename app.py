@@ -59,10 +59,20 @@ def load_data():
         engine="openpyxl"
     )
 
-    df["Datetime"] = pd.to_datetime(
-        df["Datetime"],
-        errors="coerce"
-    )
+    # DEBUG
+    st.write("RAW SHAPE:", df.shape)
+    st.write("RAW COLUMNS:", list(df.columns))
+
+    if not df.empty:
+        st.write("FIRST 5 ROWS")
+        st.dataframe(df.head())
+
+    # Convert datetime if column exists
+    if "Datetime" in df.columns:
+        df["Datetime"] = pd.to_datetime(
+            df["Datetime"],
+            errors="coerce"
+        )
 
     # Palawan structure
     if "NumericValue" in df.columns:
@@ -83,7 +93,6 @@ def load_data():
         )
 
     return df
-
 
 df = load_data()
 
