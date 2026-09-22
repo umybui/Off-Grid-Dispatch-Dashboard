@@ -13,4 +13,6 @@ CONFIG = {
     "DEMAND_ATTRIBUTE": "DEMAND (KW)",
     
     "GENERATION_ATTRIBUTE": "ACTUAL (KW)",
+
+    "PLANT_COLUMN": "PowerPlant",
 }
