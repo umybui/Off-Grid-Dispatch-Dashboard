@@ -15,4 +15,8 @@ CONFIG = {
     "GENERATION_ATTRIBUTE": "NET MW",
 
     "PLANT_COLUMN": "Plant",
+
+    "USES_IMPORT_SUPPORT": True,
+    
+    "IMPORT_KEYWORD": "IMPORT",
 }
