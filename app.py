@@ -13,9 +13,7 @@ from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
 from core.ldc import build_ldc
-from core.ldc_segments import (
-        build_ldc_segments
-    )
+from core.ldc_segments import build_ldc_segments
 
 # =====================================================
 # PAGE CONFIG
