@@ -56,7 +56,7 @@ def optimal_ldc_segments(ldc_values, k):
                     + segment_sse(start, end)
                 )
 
-                if cost < dp[seg, end\]:
+                if cost < dp[seg, end]:
 
                     dp[seg, end] = cost
 
