@@ -20,6 +20,13 @@ CONFIG = {
     
     "IMPORT_KEYWORD": "IMPORT",
 
-    "UNIT_SCALE": 1
+    "UNIT_SCALE": 1,
+
+    "GENERATION_EXCLUDE_KEYWORDS": [
+    "TOTAL DEMAND",
+    "TOTAL GENERATION",
+    "SYNCHRO",
+    "IMPORT"
+    ]
 
 }
