@@ -161,10 +161,15 @@ try:
     ldc = build_ldc(
         total_demand
     )
-    
-    ldc_segments = build_ldc_segments(
-        ldc
+
+    st.write(
+        "LDC Rows:",
+        len(ldc)
     )
+    
+    #ldc_segments = build_ldc_segments(
+    #    ldc
+    #)
     
     st.subheader(
         "LDC Segmentation Validation"
