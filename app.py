@@ -12,6 +12,7 @@ from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
+from core.ldc import build_ldc
 
 # =====================================================
 # PAGE CONFIG
@@ -154,6 +155,29 @@ try:
         total_demand,
         total_generation,
         reliability
+    )
+
+    ldc = build_ldc(
+        total_demand
+    )
+
+    st.subheader(
+        "LDC Validation"
+    )
+    
+    st.write(
+        "Peak Load:",
+        ldc["DemandMW"].max()
+    )
+    
+    st.write(
+        "Minimum Load:",
+        ldc["DemandMW"].min()
+    )
+    
+    st.dataframe(
+        ldc.head(20),
+        use_container_width=True
     )
     
     st.subheader("KPI Validation")
