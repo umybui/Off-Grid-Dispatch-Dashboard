@@ -27,6 +27,24 @@ def prepare_data(df, config):
         / scale
     )
 
+    attribute_filter = config.get(
+        "ATTRIBUTE_FILTER"
+    )
+    
+    if (
+        attribute_filter
+        and
+        "Attribute" in df.columns
+    ):
+    
+        df = df[
+            df["Attribute"]
+            .astype(str)
+            .str.upper()
+            ==
+            attribute_filter.upper()
+        ].copy()
+    
     df["Month"] = df["Datetime"].dt.month
 
     df["Day"] = df["Datetime"].dt.day
