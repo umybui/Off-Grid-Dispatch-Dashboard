@@ -108,6 +108,40 @@ try:
         config
     )
 
+if dashboard == "Mindoro":
+
+    st.subheader("Mindoro Demand Check")
+
+    demand_raw = filtered[
+        filtered["Plant"]
+        .eq("TOTAL DEMAND")
+    ]
+
+    demand_raw = demand_raw[
+        demand_raw["Attribute"]
+        .eq("NET MW")
+    ]
+
+    st.write(
+        "Raw Demand Rows:",
+        len(demand_raw)
+    )
+
+    st.write(
+        "Grouped Peak Demand:",
+        total_demand["Value"].max()
+    )
+
+    st.write(
+        "Raw Peak Demand:",
+        demand_raw["Value"].max()
+    )
+
+    st.dataframe(
+        demand_raw.head(50),
+        use_container_width=True
+    )
+
     # =================================================
     # MINDORO VALIDATION
     # =================================================
