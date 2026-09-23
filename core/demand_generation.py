@@ -118,20 +118,9 @@ def build_demand_generation(filtered, config):
             )
     ]
 
-        # ==========================================
+    # ==========================================
     # IMPORT SUPPORT
     # ==========================================
-
-    st.write(
-        "Transfer Rows:",
-        len(transfer_flow)
-    )
-    
-    if not transfer_flow.empty:
-        st.write(
-            "Total Import:",
-            transfer_flow["ImportSupport"].sum()
-        )
 
     transfer_flow = pd.DataFrame(
         {
