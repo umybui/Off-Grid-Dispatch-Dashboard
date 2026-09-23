@@ -19,4 +19,7 @@ CONFIG = {
     "USES_IMPORT_SUPPORT": True,
     
     "IMPORT_KEYWORD": "IMPORT",
+
+    "UNIT_SCALE": 1
+
 }
