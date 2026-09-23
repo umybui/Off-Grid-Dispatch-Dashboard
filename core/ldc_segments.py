@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 def optimal_ldc_segments(ldc_values, k):
 
@@ -79,8 +80,6 @@ def optimal_ldc_segments(ldc_values, k):
     boundaries.reverse()
 
     return boundaries, dp[k, n]
-
-import pandas as pd
 
 def build_ldc_segments(
     ldc,
