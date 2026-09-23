@@ -13,6 +13,9 @@ from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
 from core.ldc import build_ldc
+from core.ldc_segments import (
+        build_ldc_segments
+    )
 
 # =====================================================
 # PAGE CONFIG
@@ -161,6 +164,34 @@ try:
         total_demand
     )
 
+    st.subheader(
+        "LDC Segmentation Validation"
+    )
+    
+    st.write(
+        "Recommended Segments:",
+        ldc_segments[
+            "recommended_segments"
+        ]
+    )
+    
+    st.write(
+        "Total SSE:",
+        round(
+            ldc_segments["total_sse"],
+            0
+        )
+    )
+    
+    st.dataframe(
+        ldc_segments["sse_df"],
+        use_container_width=True
+    )
+
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
     st.subheader(
         "LDC Validation"
     )
