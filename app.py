@@ -161,16 +161,18 @@ try:
     ldc = build_ldc(
         total_demand
     )
-
+    
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
     st.subheader(
         "LDC Segmentation Validation"
     )
     
     st.write(
         "Recommended Segments:",
-        ldc_segments[
-            "recommended_segments"
-        ]
+        ldc_segments["recommended_segments"]
     )
     
     st.write(
@@ -184,10 +186,6 @@ try:
     st.dataframe(
         ldc_segments["sse_df"],
         use_container_width=True
-    )
-
-    ldc_segments = build_ldc_segments(
-        ldc
     )
     
     st.subheader(
