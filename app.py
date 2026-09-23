@@ -110,132 +110,22 @@ try:
 
 if dashboard == "Mindoro":
 
-    st.subheader("Mindoro Demand Check")
-
-    demand_raw = filtered[
-        filtered["Plant"]
-        .eq("TOTAL DEMAND")
-    ]
-
-    demand_raw = demand_raw[
-        demand_raw["Attribute"]
-        .eq("NET MW")
-    ]
+    st.subheader("Mindoro Quick Validation")
 
     st.write(
-        "Raw Demand Rows:",
-        len(demand_raw)
-    )
-
-    st.write(
-        "Grouped Peak Demand:",
+        "Peak Demand:",
         total_demand["Value"].max()
     )
 
     st.write(
-        "Raw Peak Demand:",
-        demand_raw["Value"].max()
+        "Transfer Rows:",
+        len(transfer_flow)
     )
 
-    st.dataframe(
-        demand_raw.head(50),
-        use_container_width=True
-    )
-
-    # =================================================
-    # MINDORO VALIDATION
-    # =================================================
-    
-    if dashboard == "Mindoro":
-
-        st.subheader("Raw TOTAL DEMAND Records")
-
-        plant_column = config["PLANT_COLUMN"]
-    
-        raw_demand = filtered[
-            filtered[plant_column]
-            .astype(str)
-            .str.contains(
-                "DEMAND",
-                case=False,
-                na=False
-            )
-        ].copy()
-    
+    if not transfer_flow.empty:
         st.write(
-            "Raw Demand Rows:",
-            len(raw_demand)
-        )
-    
-        st.dataframe(
-            raw_demand[
-                [
-                    plant_column,
-                    "Attribute",
-                    "Value"
-                ]
-            ].head(100),
-            use_container_width=True
-        )
-        
-        st.subheader("Mindoro Validation")
-    
-        st.write(
-            "Demand Rows:",
-            len(total_demand)
-        )
-    
-        st.write(
-            "Peak Demand From Demand Table:",
-            total_demand["Value"].max()
-        )
-    
-        st.write(
-            "Generation Rows:",
-            len(generation)
-        )
-    
-        st.write(
-            "Peak Generation Record:",
-            generation["Value"].max()
-        )
-    
-        st.write(
-            "Peak Total Generation:",
-            total_generation["TotalGeneration"].max()
-        )
-    
-        st.write(
-            "Transfer Rows:",
-            len(transfer_flow)
-        )
-    
-        if not transfer_flow.empty:
-    
-            st.write(
-                "Total Import Support:",
-                transfer_flow["ImportSupport"].sum()
-            )
-    
-        st.subheader("Demand Sample")
-    
-        st.dataframe(
-            total_demand.head(20),
-            use_container_width=True
-        )
-    
-        st.subheader("Generation Sample")
-    
-        st.dataframe(
-            generation.head(20),
-            use_container_width=True
-        )
-    
-        st.subheader("Import Support Sample")
-    
-        st.dataframe(
-            transfer_flow.head(20),
-            use_container_width=True
+            "Total Import Support:",
+            transfer_flow["ImportSupport"].sum()
         )
     
     # =================================================
