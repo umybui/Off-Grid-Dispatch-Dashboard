@@ -1,11 +1,12 @@
 import pandas as pd
+import streamlit as st
 
+@st.cache_data
 def prepare_data(df, config):
 
     df = df.copy()
 
     datetime_column = config["DATETIME_COLUMN"]
-
     value_column = config["VALUE_COLUMN"]
 
     df["Datetime"] = pd.to_datetime(
@@ -13,12 +14,10 @@ def prepare_data(df, config):
         errors="coerce"
     )
 
-    df["Value"] = pd.to_numeric(
-        df[value_column],
-        errors="coerce"
+    scale = config.get(
+        "UNIT_SCALE",
+        1
     )
-
-    scale = config.get("UNIT_SCALE", 1)
 
     df["Value"] = (
         pd.to_numeric(
