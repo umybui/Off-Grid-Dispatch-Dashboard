@@ -83,6 +83,12 @@ try:
         config
     )
 
+    if dashboard == "Mindoro":
+        st.write(
+            "Attributes:",
+            sorted(df["Attribute"].dropna().unique())
+        )
+    
     # =================================================
     # FILTERS
     # =================================================
