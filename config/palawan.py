@@ -19,4 +19,6 @@ CONFIG = {
     "PLANT_COLUMN": "Plant",
 
     "USES_IMPORT_SUPPORT": False,
+
+    "UNIT_SCALE": 1
 }
