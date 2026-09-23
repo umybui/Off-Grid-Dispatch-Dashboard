@@ -141,7 +141,7 @@ try:
     with col1:
         st.metric(
             "Demand Energy",
-            f"{kpis['demand_energy_mwh']::,.2f}"
+            f"{kpis['demand_energy_mwh']:,.2f}"
         )
     
     with col2:
