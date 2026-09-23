@@ -124,37 +124,50 @@ try:
     )
 
     # =================================================
-    # KPI
+    # KPI VALIDATION
     # =================================================
-
+    
     kpis = build_kpis(
         total_demand,
         total_generation,
         reliability
     )
-
+    
     st.subheader("KPI Validation")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4, col5 = st.columns(5)
     
     with col1:
         st.metric(
             "Peak Generation",
-            f"{kpis['peak_generation_mw']:,.2f}"
+            f"{kpis['peak_generation_mw'\]:,.2f}"
         )
     
     with col2:
         st.metric(
-            "Energy Served %",
-            f"{kpis['energy_served_pct']:,.2f}%"
+            "Demand Energy",
+            f"{kpis['demand_energy_mwh'\]:,.2f}"
         )
     
     with col3:
         st.metric(
+            "Generated Energy",
+            f"{kpis['generated_energy_mwh'\]:,.2f}"
+        )
+    
+    with col4:
+        st.metric(
+            "Energy Served %",
+            f"{kpis['energy_served_pct'\]:,.2f}%"
+        )
+    
+    with col5:
+        st.metric(
             "Load Factor",
-            f"{kpis['load_factor']:,.2f}%"
+            f"{kpis['load_factor'\]:,.2f}%"
         )
 
+    
     # =================================================
     # KPI PREVIEW`
     # =================================================
