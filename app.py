@@ -109,6 +109,72 @@ try:
     )
 
     # =================================================
+    # MINDORO VALIDATION
+    # =================================================
+    
+    if dashboard == "Mindoro":
+    
+        st.subheader("Mindoro Validation")
+    
+        st.write(
+            "Demand Rows:",
+            len(total_demand)
+        )
+    
+        st.write(
+            "Peak Demand From Demand Table:",
+            total_demand["Value"].max()
+        )
+    
+        st.write(
+            "Generation Rows:",
+            len(generation)
+        )
+    
+        st.write(
+            "Peak Generation Record:",
+            generation["Value"].max()
+        )
+    
+        st.write(
+            "Peak Total Generation:",
+            total_generation["TotalGeneration"].max()
+        )
+    
+        st.write(
+            "Transfer Rows:",
+            len(transfer_flow)
+        )
+    
+        if not transfer_flow.empty:
+    
+            st.write(
+                "Total Import Support:",
+                transfer_flow["ImportSupport"].sum()
+            )
+    
+        st.subheader("Demand Sample")
+    
+        st.dataframe(
+            total_demand.head(20),
+            use_container_width=True
+        )
+    
+        st.subheader("Generation Sample")
+    
+        st.dataframe(
+            generation.head(20),
+            use_container_width=True
+        )
+    
+        st.subheader("Import Support Sample")
+    
+        st.dataframe(
+            transfer_flow.head(20),
+            use_container_width=True
+        )
+    
+    # =================================================
     # RELIABILITY
     # =================================================
 
