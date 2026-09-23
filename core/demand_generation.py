@@ -99,9 +99,39 @@ def build_demand_generation(filtered, config):
             != demand_plant.upper()
         ]
 
+    exclude_keywords = config.get(
+        "GENERATION_EXCLUDE_KEYWORDS",
+        []
+    )
+
+    if exclude_keywords:
+
+        pattern = "|".join(exclude_keywords)
+    
+        generation = generation[
+            ~generation[plant_column]
+            .astype(str)
+            .str.contains(
+                pattern,
+                case=False,
+                na=False
+            )
+    ]
+
         # ==========================================
     # IMPORT SUPPORT
     # ==========================================
+
+    st.write(
+        "Transfer Rows:",
+        len(transfer_flow)
+    )
+    
+    if not transfer_flow.empty:
+        st.write(
+            "Total Import:",
+            transfer_flow["ImportSupport"].sum()
+        )
 
     transfer_flow = pd.DataFrame(
         {
