@@ -11,6 +11,7 @@ from core.filter_data import filter_data
 from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
 from core.kpis import build_kpis
+from core.reserve import build_reserve_assessment
 
 # =====================================================
 # PAGE CONFIG
@@ -119,6 +120,28 @@ try:
         transfer_flow
     )
 
+    reserve = build_reserve_assessment(
+        reliability
+    )
+
+    st.subheader(
+        "Reserve Validation"
+    )
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric(
+            "Low Reserve Hours",
+            reserve["hours_low_reserve"]
+        )
+    
+    with col2:
+        st.metric(
+            "Reserve Compliance %",
+            f"{reserve['reserve_compliance_pct'\]:.2f}%"
+        )
+    
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
