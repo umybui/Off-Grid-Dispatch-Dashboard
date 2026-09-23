@@ -147,19 +147,19 @@ try:
     with col2:
         st.metric(
             "Generated Energy",
-            f"{kpis['generated_energy_mwh'\]:,.2f}"
+            f"{kpis['generated_energy_mwh']:,.2f}"
         )
     
     with col3:
         st.metric(
             "Energy Served %",
-            f"{kpis['energy_served_pct'\]:,.2f}%"
+            f"{kpis['energy_served_pct']:,.2f}%"
         )
     
     with col4:
         st.metric(
             "Load Factor",
-            f"{kpis['load_factor'\]:,.2f}%"
+            f"{kpis['load_factor']:,.2f}%"
         )
     
     # =================================================
