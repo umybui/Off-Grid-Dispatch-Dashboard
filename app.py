@@ -139,7 +139,7 @@ try:
     with col2:
         st.metric(
             "Reserve Compliance %",
-            f"{reserve['reserve_compliance_pct'\]:.2f}%"
+            f"{reserve['reserve_compliance_pct']:.2f}%"
         )
     
     st.success(
