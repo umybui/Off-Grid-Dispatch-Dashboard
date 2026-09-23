@@ -172,8 +172,8 @@ try:
     # =================================================
 
     st.subheader("Reliability Summary")
-
-    col1, col2, col3 = st.columns(3)
+    
+    col1, col2, col3, col4, col5 = st.columns(5)
     
     with col1:
         st.metric(
@@ -189,8 +189,20 @@ try:
     
     with col3:
         st.metric(
+            "Low Reserve Hours",
+            reliability["hours_low_reserve"]
+        )
+    
+    with col4:
+        st.metric(
             "Unserved Energy",
             f"{reliability['unserved_energy']:,.2f}"
+        )
+    
+    with col5:
+        st.metric(
+            "Peak Demand Time",
+            str(reliability["peak_datetime"])
         )
 
     # =================================================
