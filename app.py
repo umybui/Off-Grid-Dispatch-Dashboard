@@ -10,6 +10,7 @@ from core.sidebar_filters import get_filters
 from core.filter_data import filter_data
 from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
+from core.kpis import build_kpis
 
 # =====================================================
 # PAGE CONFIG
@@ -121,6 +122,38 @@ try:
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
+
+    # =================================================
+    # KPI
+    # =================================================
+
+    kpis = build_kpis(
+        total_demand,
+        total_generation,
+        reliability
+    )
+
+    st.subheader("KPI Validation")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "Peak Generation",
+            f"{kpis['peak_generation_mw']:,.2f}"
+        )
+    
+    with col2:
+        st.metric(
+            "Energy Served %",
+            f"{kpis['energy_served_pct']:,.2f}%"
+        )
+    
+    with col3:
+        st.metric(
+            "Load Factor",
+            f"{kpis['load_factor']:,.2f}%"
+        )
 
     # =================================================
     # KPI PREVIEW`
