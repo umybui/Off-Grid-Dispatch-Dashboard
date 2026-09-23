@@ -113,7 +113,37 @@ try:
     # =================================================
     
     if dashboard == "Mindoro":
+
+        st.subheader("Raw TOTAL DEMAND Records")
+
+        plant_column = config["PLANT_COLUMN"]
     
+        raw_demand = filtered[
+            filtered[plant_column]
+            .astype(str)
+            .str.contains(
+                "DEMAND",
+                case=False,
+                na=False
+            )
+        ].copy()
+    
+        st.write(
+            "Raw Demand Rows:",
+            len(raw_demand)
+        )
+    
+        st.dataframe(
+            raw_demand[
+                [
+                    plant_column,
+                    "Attribute",
+                    "Value"
+                ]
+            ].head(100),
+            use_container_width=True
+        )
+        
         st.subheader("Mindoro Validation")
     
         st.write(
