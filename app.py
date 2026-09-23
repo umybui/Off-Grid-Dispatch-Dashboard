@@ -82,13 +82,7 @@ try:
         df,
         config
     )
-
-    if dashboard == "Mindoro":
-        st.write(
-            "Attributes:",
-            sorted(df["Attribute"].dropna().unique())
-        )
-    
+   
     # =================================================
     # FILTERS
     # =================================================
@@ -113,27 +107,7 @@ try:
         filtered,
         config
     )
-
-    if dashboard == "Mindoro":
-    
-        st.subheader("Mindoro Quick Validation")
-    
-        st.write(
-            "Peak Demand:",
-            total_demand["Value"].max()
-        )
-    
-        st.write(
-            "Transfer Rows:",
-            len(transfer_flow)
-        )
-    
-        if not transfer_flow.empty:
-            st.write(
-                "Total Import Support:",
-                transfer_flow["ImportSupport"].sum()
-            )
-    
+  
     # =================================================
     # RELIABILITY
     # =================================================
