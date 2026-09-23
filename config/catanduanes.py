@@ -17,4 +17,6 @@ CONFIG = {
     "PLANT_COLUMN": "Power Plant",
 
     "USES_IMPORT_SUPPORT": False,
+
+    "UNIT_SCALE": 1000
 }
