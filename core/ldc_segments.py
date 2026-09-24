@@ -83,7 +83,7 @@ def optimal_ldc_segments(ldc_values, k):
 
 def build_ldc_segments(
     ldc,
-    max_segments_to_test=20
+    max_segments_to_test=5
 ):
 
     max_points = 200
