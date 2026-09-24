@@ -190,7 +190,7 @@ try:
     # =================================================
     # LDC VALIDATION
     # =================================================
-    
+        
     ldc = build_ldc(
         total_demand
     )
@@ -198,6 +198,15 @@ try:
     ldc_segments = build_ldc_segments(
         ldc
     )
+    
+    segment_table = build_segment_table(
+        ldc,
+        ldc_segments["boundaries"]
+    )
+    
+    # =================================================
+    # LDC SEGMENTATION VALIDATION
+    # =================================================
     
     st.subheader(
         "LDC Segmentation Validation"
@@ -226,13 +235,30 @@ try:
     with col4:
         st.metric(
             "Total SSE",
-            f"{ldc_segments['total_sse']:,.0f}"
+            f"{ldc_segments['total_sse'\]:,.0f}"
         )
     
     st.dataframe(
         ldc_segments["sse_df"],
         use_container_width=True
     )
+    
+    # =================================================
+    # SEGMENT TABLE
+    # =================================================
+    
+    st.subheader(
+        "Segment Table Validation"
+    )
+    
+    st.dataframe(
+        segment_table,
+        use_container_width=True
+    )
+    
+    # =================================================
+    # LDC VALIDATION
+    # =================================================
     
     st.subheader(
         "LDC Validation"
