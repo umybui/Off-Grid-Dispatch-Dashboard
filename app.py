@@ -229,7 +229,7 @@ try:
     with col4:
         st.metric(
             "Total SSE",
-            f"{ldc_segments['total_sse'\]:,.0f}"
+            f"{ldc_segments['total_sse']:,.0f}"
         )
     
     st.dataframe(
