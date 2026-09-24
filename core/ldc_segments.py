@@ -6,17 +6,35 @@ def build_ldc_segments(
     max_segments_to_test=5
 ):
 
+    boundaries = [
+        (0, int(len(ldc) * 0.10)),
+        (
+            int(len(ldc) * 0.10),
+            int(len(ldc) * 0.40)
+        ),
+        (
+            int(len(ldc) * 0.40),
+            len(ldc)
+        )
+    ]
+
     return {
-        "recommended_segments": 4,
-        "boundaries": [],
+
+        "recommended_segments": 3,
+
+        "boundaries": boundaries,
+
         "sse_df": pd.DataFrame(
             {
-                "Segments": [1, 2, 3, 4],
-                "SSE": [1000, 600, 300, 200]
+                "Segments": [1, 2, 3],
+                "SSE": [1000, 600, 300]
             }
         ),
-        "total_sse": 200,
+
+        "total_sse": 300,
+
         "compressed_points": 200,
+
         "original_points": len(ldc)
     }
 
@@ -42,7 +60,8 @@ def build_segment_table(
         segment_sse = (
             (
                 segment_data
-                - segment_mean
+                -
+                segment_mean
             ) ** 2
         ).sum()
 
@@ -65,9 +84,7 @@ def build_segment_table(
                 2
             ),
 
-            "Hours": len(
-                segment_data
-            ),
+            "Hours": len(segment_data),
 
             "% Time": round(
                 len(segment_data)
