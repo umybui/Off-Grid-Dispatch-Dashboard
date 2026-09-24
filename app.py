@@ -58,6 +58,8 @@ st.title(
     f"{config['SYSTEM_NAME']} Dispatch Dashboard"
 )
 
+st.error("APP VERSION 9")
+
 # =====================================================
 # REFRESH
 # =====================================================
