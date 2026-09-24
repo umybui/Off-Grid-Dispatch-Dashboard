@@ -17,6 +17,7 @@ from core.ldc_segments import (
     build_ldc_segments,
     build_segment_table
 )
+from core.ldc_chart import build_ldc_chart
 
 # =====================================================
 # PAGE CONFIG
@@ -207,6 +208,14 @@ try:
         ldc_segments["boundaries"],
         ldc_segments["compressed_points"]
     )
+
+    ldc_fig, segment_summary = (
+        build_ldc_chart(
+            ldc,
+            ldc_segments["boundaries"],
+            ldc_segments["compressed_points"]
+        )
+    )
     
     # =================================================
     # LDC SEGMENTATION VALIDATION
@@ -259,6 +268,57 @@ try:
         segment_table,
         use_container_width=True
     )
+
+    st.subheader(
+        "Load Duration Curve"
+    )
+    
+    st.plotly_chart(
+        ldc_fig,
+        use_container_width=True
+    )
+
+    st.markdown(
+        "##### Segment Summary"
+    )
+    
+    st.dataframe(
+        segment_summary,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    with st.expander(
+        "Advanced LDC Segmentation Analysis",
+        expanded=False
+    ):
+    
+        st.metric(
+            "Current Segmentation SSE",
+            f"{ldc_segments['total_sse'\]:,.0f}"
+        )
+    
+        st.markdown(
+            f"""
+    ### Recommended Segmentation
+    
+    Recommended Segments:
+    **{ldc_segments['recommended_segments']}**
+    
+    Current Selection:
+    **{ldc_segments['recommended_segments']}**
+    
+    The elbow method indicates
+    that additional segmentation
+    beyond this point provides
+    diminishing improvement.
+    """
+        )
+    
+        st.dataframe(
+            segment_table,
+            use_container_width=True
+        )
     
     # =================================================
     # LDC VALIDATION
