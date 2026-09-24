@@ -135,7 +135,8 @@ try:
 
     reserve_dashboard = (
         build_reserve_dashboard(
-            reserve
+            reserve,
+            reliability
         )
     )
 
