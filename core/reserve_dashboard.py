@@ -1,17 +1,14 @@
-import pandas as pd
-
 def build_reserve_dashboard(
-    reserve
+    reserve,
+    reliability
 ):
 
-    reserve_df = reserve["reserve_df"]
+    gap_df = reliability["gap_df"]
 
-    total_hours = len(
-        reserve_df
-    )
+    total_hours = len(gap_df)
 
     unserved_hours = (
-        reserve_df["ShortageMW"] > 0
+        gap_df["ShortageMW"] > 0
     ).sum()
 
     served_hours = (
@@ -19,19 +16,18 @@ def build_reserve_dashboard(
         - unserved_hours
     )
 
-    adequate_hours = (
-        reserve_df["ReserveCompliant"]
+    reserve_deficient_hours = (
+        gap_df["ReserveMargin"]
+        <
+        gap_df["RequiredReserve"]
     ).sum()
 
-    reserve_deficient_hours = (
-        served_hours
-        - adequate_hours
-    )
-
     worst_reserve_deficiency = (
-        reserve_df[
-            "ReserveDeficiency"
-        ].min()
+        (
+            gap_df["ReserveMargin"]
+            -
+            gap_df["RequiredReserve"]
+        ).min()
     )
 
     return {
@@ -39,21 +35,15 @@ def build_reserve_dashboard(
         "total_hours":
             total_hours,
 
-        "unserved_hours":
-            unserved_hours,
-
         "served_hours":
             served_hours,
 
-        "adequate_hours":
-            adequate_hours,
+        "unserved_hours":
+            unserved_hours,
 
         "reserve_deficient_hours":
             reserve_deficient_hours,
 
         "worst_reserve_deficiency":
-            worst_reserve_deficiency,
-
-        "reserve_df":
-            reserve_df
+            worst_reserve_deficiency
     }
