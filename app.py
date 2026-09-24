@@ -161,10 +161,14 @@ try:
     ldc = build_ldc(
     total_demand
     )
+        
+    st.write("Starting LDC Segmentation...")
     
     ldc_segments = build_ldc_segments(
         ldc
     )
+    
+    st.write("Finished LDC Segmentation")
     
     st.subheader(
         "LDC Segmentation Validation"
