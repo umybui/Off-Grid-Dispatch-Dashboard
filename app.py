@@ -201,7 +201,12 @@ try:
     ldc_segments = build_ldc_segments(
         ldc
     )
-       
+
+    segment_table = build_segment_table(
+        ldc,
+        ldc_segments["boundaries"]
+    )
+    
     # =================================================
     # LDC SEGMENTATION VALIDATION
     # =================================================
