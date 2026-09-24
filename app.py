@@ -295,7 +295,7 @@ try:
     
         st.metric(
             "Current Segmentation SSE",
-            f"{ldc_segments['total_sse'\]:,.0f}"
+            f"{ldc_segments['total_sse']:,.0f}"
         )
     
         st.markdown(
