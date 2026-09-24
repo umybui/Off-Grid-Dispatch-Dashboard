@@ -13,7 +13,10 @@ from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
 from core.ldc import build_ldc
-from core.ldc_segments import build_ldc_segments
+from core.ldc_segments import (
+        build_ldc_segments,
+        build_segment_table
+    )
 
 # =====================================================
 # PAGE CONFIG
@@ -186,6 +189,104 @@ try:
             "Load Factor",
             f"{kpis['load_factor']:,.2f}%"
         )
+
+    # =================================================
+    # LDC VALIDATION
+    # =================================================
+    
+    ldc = build_ldc(
+        total_demand
+    )
+    
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
+    st.subheader(
+        "LDC Segmentation Validation"
+    )
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            "Original Points",
+            ldc_segments["original_points"]
+        )
+    
+    with col2:
+        st.metric(
+            "Compressed Points",
+            ldc_segments["compressed_points"]
+        )
+    
+    with col3:
+        st.metric(
+            "Recommended Segments",
+            ldc_segments["recommended_segments"]
+        )
+    
+    with col4:
+        st.metric(
+            "Total SSE",
+            f"{ldc_segments['total_sse'\]:,.0f}"
+        )
+    
+    st.dataframe(
+        ldc_segments["sse_df"],
+        use_container_width=True
+    )
+    
+    # Temporary Segment Table Validation
+    
+    test_boundaries = [
+        (0, int(len(ldc) * 0.10)),
+        (
+            int(len(ldc) * 0.10),
+            int(len(ldc) * 0.40)
+        ),
+        (
+            int(len(ldc) * 0.40),
+            len(ldc)
+        )
+    ]
+    
+    segment_table = build_segment_table(
+        ldc,
+        test_boundaries
+    )
+    
+    st.subheader(
+        "Segment Table Validation"
+    )
+    
+    st.dataframe(
+        segment_table,
+        use_container_width=True
+    )
+    
+    st.subheader(
+        "LDC Validation"
+    )
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.metric(
+            "Peak Load",
+            f"{ldc['DemandMW'].max():,.2f}"
+        )
+    
+    with col2:
+        st.metric(
+            "Minimum Load",
+            f"{ldc['DemandMW'].min():,.2f}"
+        )
+    
+    st.dataframe(
+        ldc.head(20),
+        use_container_width=True
+    )    
     
     # =================================================
     # KPI PREVIEW`
