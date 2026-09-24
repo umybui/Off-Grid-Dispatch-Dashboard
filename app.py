@@ -163,10 +163,18 @@ try:
     )
         
     st.write("Starting LDC Segmentation...")
+        
+    st.write("Before LDC Segments")
     
-    ldc_segments = build_ldc_segments(
-        ldc
-    )
+    ldc_segments = {
+        "original_points": len(ldc),
+        "compressed_points": 0,
+        "recommended_segments": 0,
+        "total_sse": 0,
+        "sse_df": []
+    }
+    
+    st.write("After LDC Segments")
     
     st.write("Finished LDC Segmentation")
     
