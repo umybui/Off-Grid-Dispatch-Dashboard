@@ -148,15 +148,21 @@ try:
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
 
+    st.error("CHECKPOINT A")
+    
     # =================================================
     # KPI VALIDATION
     # =================================================
+    
+    st.error("CHECKPOINT B")
     
     kpis = build_kpis(
         total_demand,
         total_generation,
         reliability
     )
+
+    st.error("CHECKPOINT C")
 
     ldc = build_ldc(
     total_demand
