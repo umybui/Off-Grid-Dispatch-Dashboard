@@ -201,7 +201,12 @@ try:
     ldc_segments = build_ldc_segments(
         ldc
     )
-    
+
+        segment_table = build_segment_table(
+            ldc,
+            ldc_segments["boundaries"]
+        )
+        
     st.subheader(
         "LDC Segmentation Validation"
     )
@@ -236,7 +241,16 @@ try:
         ldc_segments["sse_df"],
         use_container_width=True
     )
+
+    st.subheader(
+        "Segment Table Validation"
+    )
     
+    st.dataframe(
+        segment_table,
+        use_container_width=True
+    )
+
     # Temporary Segment Table Validation
     
     test_boundaries = [
