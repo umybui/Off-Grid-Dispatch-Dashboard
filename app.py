@@ -21,6 +21,9 @@ from core.ldc_chart import build_ldc_chart
 from core.reserve_dashboard import (
     build_reserve_dashboard
 )
+from core.reserve_trend import (
+    build_reserve_trend
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -140,6 +143,12 @@ try:
         )
     )
 
+    reserve_trend = (
+        build_reserve_trend(
+            reliability
+        )
+    )
+    
     st.subheader(
         "Reserve Security Assessment"
     )
@@ -197,7 +206,26 @@ try:
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
-   
+
+    st.subheader(
+        "Monthly Reserve Compliance Trend"
+    )
+    
+    st.plotly_chart(
+        reserve_trend["figure"],
+        use_container_width=True
+    )
+
+    with st.expander(
+        "Monthly Reserve Compliance Data",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            reserve_trend["monthly"],
+            use_container_width=True
+        )
+    
     # =================================================
     # KPI VALIDATION
     # =================================================
