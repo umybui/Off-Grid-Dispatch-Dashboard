@@ -58,8 +58,6 @@ st.title(
     f"{config['SYSTEM_NAME']} Dispatch Dashboard"
 )
 
-st.error("APP VERSION 9")
-
 # =====================================================
 # REFRESH
 # =====================================================
@@ -149,14 +147,10 @@ try:
     st.success(
         f"{config['SYSTEM_NAME']} data loaded successfully."
     )
-
-    st.error("CHECKPOINT A")
-    
+   
     # =================================================
     # KPI VALIDATION
     # =================================================
-    
-    st.error("CHECKPOINT B")
     
     kpis = build_kpis(
         total_demand,
@@ -164,79 +158,6 @@ try:
         reliability
     )
 
-    st.error("CHECKPOINT C")
-
-    ldc = build_ldc(
-    total_demand
-    )
-        
-    st.write("Starting LDC Segmentation...")
-        
-    st.write("Before LDC Segments")
-    
-    ldc_segments = {
-        "original_points": len(ldc),
-        "compressed_points": 0,
-        "recommended_segments": 0,
-        "total_sse": 0,
-        "sse_df": []
-    }
-    
-    st.write("After LDC Segments")
-    
-    st.write("Finished LDC Segmentation")
-    
-    st.subheader(
-        "LDC Segmentation Validation"
-    )
-    
-    st.write(
-        "Original Points:",
-        ldc_segments["original_points"]
-    )
-    
-    st.write(
-        "Compressed Points:",
-        ldc_segments["compressed_points"]
-    )
-    
-    st.write(
-        "Recommended Segments:",
-        ldc_segments["recommended_segments"]
-    )
-    
-    st.write(
-        "Total SSE:",
-        round(
-            ldc_segments["total_sse"],
-            0
-        )
-    )
-    
-    st.dataframe(
-        ldc_segments["sse_df"],
-        use_container_width=True
-    )
-    
-    st.subheader(
-        "LDC Validation"
-    )
-    
-    st.write(
-        "Peak Load:",
-        ldc["DemandMW"].max()
-    )
-    
-    st.write(
-        "Minimum Load:",
-        ldc["DemandMW"].min()
-    )
-    
-    st.dataframe(
-        ldc.head(20),
-        use_container_width=True
-    )
-    
     st.subheader("KPI Validation")
     
 
