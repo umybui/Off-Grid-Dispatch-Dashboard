@@ -13,10 +13,7 @@ from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
 from core.ldc import build_ldc
-from core.ldc_segments import (
-        build_ldc_segments,
-        build_segment_table
-    )
+from core.ldc_segments import build_ldc_segments
 
 # =====================================================
 # PAGE CONFIG
@@ -201,12 +198,7 @@ try:
     ldc_segments = build_ldc_segments(
         ldc
     )
-
-        segment_table = build_segment_table(
-            ldc,
-            ldc_segments["boundaries"]
-        )
-        
+    
     st.subheader(
         "LDC Segmentation Validation"
     )
@@ -234,48 +226,11 @@ try:
     with col4:
         st.metric(
             "Total SSE",
-            f"{ldc_segments['total_sse']:,.0f}"
+            f"{ldc_segments['total_sse'\]:,.0f}"
         )
     
     st.dataframe(
         ldc_segments["sse_df"],
-        use_container_width=True
-    )
-
-    st.subheader(
-        "Segment Table Validation"
-    )
-    
-    st.dataframe(
-        segment_table,
-        use_container_width=True
-    )
-
-    # Temporary Segment Table Validation
-    
-    test_boundaries = [
-        (0, int(len(ldc) * 0.10)),
-        (
-            int(len(ldc) * 0.10),
-            int(len(ldc) * 0.40)
-        ),
-        (
-            int(len(ldc) * 0.40),
-            len(ldc)
-        )
-    ]
-    
-    segment_table = build_segment_table(
-        ldc,
-        test_boundaries
-    )
-    
-    st.subheader(
-        "Segment Table Validation"
-    )
-    
-    st.dataframe(
-        segment_table,
         use_container_width=True
     )
     
@@ -300,7 +255,7 @@ try:
     st.dataframe(
         ldc.head(20),
         use_container_width=True
-    )    
+    )
     
     # =================================================
     # KPI PREVIEW`
