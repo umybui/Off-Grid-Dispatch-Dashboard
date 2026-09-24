@@ -159,12 +159,43 @@ try:
     )
 
     ldc = build_ldc(
-        total_demand
+    total_demand
     )
-
+    
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
+    st.subheader(
+        "LDC Segmentation Validation"
+    )
+    
     st.write(
-        "LDC Rows:",
-        len(ldc)
+        "Original Points:",
+        ldc_segments["original_points"]
+    )
+    
+    st.write(
+        "Compressed Points:",
+        ldc_segments["compressed_points"]
+    )
+    
+    st.write(
+        "Recommended Segments:",
+        ldc_segments["recommended_segments"]
+    )
+    
+    st.write(
+        "Total SSE:",
+        round(
+            ldc_segments["total_sse"],
+            0
+        )
+    )
+    
+    st.dataframe(
+        ldc_segments["sse_df"],
+        use_container_width=True
     )
     
     st.subheader(
