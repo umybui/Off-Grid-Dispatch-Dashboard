@@ -204,7 +204,8 @@ try:
 
     segment_table = build_segment_table(
         ldc,
-        ldc_segments["boundaries"]
+        ldc_segments["boundaries"],
+        ldc_segments["compressed_points"]
     )
     
     # =================================================
