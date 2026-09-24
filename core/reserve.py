@@ -1,5 +1,4 @@
-def build_reserve_dashboard(
-    reserve,
+def build_reserve_assessment(
     reliability
 ):
 
@@ -7,43 +6,42 @@ def build_reserve_dashboard(
 
     total_hours = len(gap_df)
 
-    unserved_hours = (
-        gap_df["ShortageMW"] > 0
-    ).sum()
-
-    served_hours = (
-        total_hours
-        - unserved_hours
-    )
-
-    reserve_deficient_hours = (
+    hours_low_reserve = (
         gap_df["ReserveMargin"]
         <
         gap_df["RequiredReserve"]
     ).sum()
 
-    worst_reserve_deficiency = (
+    reserve_compliance_pct = (
         (
-            gap_df["ReserveMargin"]
+            total_hours
             -
-            gap_df["RequiredReserve"]
-        ).min()
+            hours_low_reserve
+        )
+        /
+        total_hours
+        * 100
+        if total_hours > 0
+        else 0
     )
 
     return {
 
-        "total_hours":
-            total_hours,
+        "hours_low_reserve":
+            hours_low_reserve,
 
-        "served_hours":
-            served_hours,
+        "reserve_compliance_pct":
+            reserve_compliance_pct,
 
-        "unserved_hours":
-            unserved_hours,
+        "max_reserve_margin":
+            gap_df["ReserveMargin"].max(),
 
-        "reserve_deficient_hours":
-            reserve_deficient_hours,
+        "min_reserve_margin":
+            gap_df["ReserveMargin"].min(),
 
-        "worst_reserve_deficiency":
-            worst_reserve_deficiency
+        "average_reserve_margin":
+            gap_df["ReserveMargin"].mean(),
+
+        "average_required_reserve":
+            gap_df["RequiredReserve"].mean()
     }
