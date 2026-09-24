@@ -86,6 +86,32 @@ def build_ldc_segments(
     max_segments_to_test=20
 ):
 
+    max_points = 200
+
+    if len(ldc) > max_points:
+
+        step = max(
+            len(ldc) // max_points,
+            1
+        )
+
+        ldc_seg = (
+            ldc.groupby(
+                ldc.index // step
+            )["DemandMW"]
+            .mean()
+            .reset_index(
+                drop=True
+            )
+        )
+
+    else:
+
+        ldc_seg = (
+            ldc["DemandMW"]
+            .copy()
+        )
+
     sse_results = []
 
     for k in range(
@@ -94,7 +120,7 @@ def build_ldc_segments(
     ):
 
         _, sse = optimal_ldc_segments(
-            ldc["DemandMW"].values,
+            ldc_seg.values,
             k
         )
 
@@ -148,22 +174,28 @@ def build_ldc_segments(
 
     boundaries, total_sse = (
         optimal_ldc_segments(
-            ldc["DemandMW"].values,
+            ldc_seg.values,
             recommended_segments
         )
     )
 
     return {
-
+    
         "recommended_segments":
             recommended_segments,
-
+    
         "boundaries":
             boundaries,
-
+    
         "sse_df":
             sse_df,
-
+    
         "total_sse":
-            total_sse
+            total_sse,
+    
+        "compressed_points":
+            len(ldc_seg),
+    
+        "original_points":
+            len(ldc)
     }
