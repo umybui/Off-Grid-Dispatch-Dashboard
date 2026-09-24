@@ -172,7 +172,7 @@ try:
     with c4:
         st.metric(
             "Worst Deficiency",
-            f"{reserve_dashboard['worst_reserve_deficiency'\]:,.2f}"
+            f"{reserve_dashboard['worst_reserve_deficiency']:,.2f}"
         )
 
     st.subheader(
