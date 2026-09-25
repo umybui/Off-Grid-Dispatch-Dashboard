@@ -33,6 +33,9 @@ from core.reserve_deficiency import (
 from core.peak_hour import (
     build_peak_hour_analysis
 )
+from core.peak_hour_share import (
+    build_peak_hour_share_chart
+)
 
 
 # =====================================================
@@ -138,7 +141,15 @@ try:
             generation
         )
     )
-  
+
+    peak_hour_share_fig = (
+        build_peak_hour_share_chart(
+            peak_hour[
+                "peak_snapshot"
+            ]
+        )
+    )
+    
     # =================================================
     # RELIABILITY
     # =================================================
@@ -532,7 +543,34 @@ try:
         "Peak Hour Snapshot",
         expanded=False
     ):
+
+    st.plotly_chart(
+        peak_hour_share_fig,
+        use_container_width=True
+    )
+
+    with st.expander(
+        "Peak Hour Energy Share Data",
+        expanded=False
+    ):
     
+        st.dataframe(
+            peak_hour[
+                "peak_snapshot"
+            ][
+                [
+                    "Plant",
+                    "AvgPeakMW",
+                    "MaxPeakMW",
+                    "PeakEnergyMWh",
+                    "PeakEnergySharePct"
+                ]
+            ].round(2),
+    
+            use_container_width=True,
+            hide_index=True
+        )
+
         st.dataframe(
             snapshot.round(2),
             use_container_width=True,
