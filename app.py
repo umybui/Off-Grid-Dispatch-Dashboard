@@ -27,6 +27,9 @@ from core.reserve_trend import (
 from core.operating_condition import (
     build_operating_condition_breakdown
 )
+from core.reserve_deficiency import (
+    build_reserve_deficiency_table
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -157,6 +160,12 @@ try:
             reliability
         )
     )
+
+    reserve_deficiency_table = (
+        build_reserve_deficiency_table(
+            reliability
+        )
+    )
     
     st.subheader(
         "Reserve Security Assessment"
@@ -262,6 +271,25 @@ try:
         st.write(
             f"Unserved Demand Hours: "
             f"{operating_condition['shortage_hours']:,}"
+        )
+
+    with st.expander(
+        "Reserve Deficient Hours",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            reserve_deficiency_table.round(
+                {
+                    "TotalDemand": 2,
+                    "TotalSupply": 2,
+                    "ReserveMargin": 2,
+                    "RequiredReserve": 2,
+                    "ReserveDeficiency": 2
+                }
+            ),
+            use_container_width=True,
+            hide_index=True
         )
     
     # =================================================
