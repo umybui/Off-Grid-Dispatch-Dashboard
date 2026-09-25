@@ -543,12 +543,18 @@ try:
         "Peak Hour Snapshot",
         expanded=False
     ):
-
+    
+        st.dataframe(
+            snapshot.round(2),
+            use_container_width=True,
+            hide_index=True
+        )
+    
     st.plotly_chart(
         peak_hour_share_fig,
         use_container_width=True
     )
-
+    
     with st.expander(
         "Peak Hour Energy Share Data",
         expanded=False
@@ -567,12 +573,6 @@ try:
                 ]
             ].round(2),
     
-            use_container_width=True,
-            hide_index=True
-        )
-
-        st.dataframe(
-            snapshot.round(2),
             use_container_width=True,
             hide_index=True
         )
