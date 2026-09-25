@@ -24,6 +24,9 @@ from core.reserve_dashboard import (
 from core.reserve_trend import (
     build_reserve_trend
 )
+from core.operating_condition import (
+    build_operating_condition_breakdown
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -148,6 +151,12 @@ try:
             reliability
         )
     )
+
+    operating_condition = (
+        build_operating_condition_breakdown(
+            reliability
+        )
+    )
     
     st.subheader(
         "Reserve Security Assessment"
@@ -224,6 +233,35 @@ try:
         st.dataframe(
             reserve_trend["monthly"],
             use_container_width=True
+        )
+
+    st.subheader(
+        "Operating Condition Breakdown"
+    )
+    
+    st.plotly_chart(
+        operating_condition["figure"],
+        use_container_width=True
+    )
+
+    with st.expander(
+        "Operating Condition Data",
+        expanded=False
+    ):
+    
+        st.write(
+            f"Adequate Reserve Hours: "
+            f"{operating_condition['adequate_hours']:,}"
+        )
+    
+        st.write(
+            f"Reserve Deficient Hours: "
+            f"{operating_condition['reserve_deficient_hours']:,}"
+        )
+    
+        st.write(
+            f"Unserved Demand Hours: "
+            f"{operating_condition['shortage_hours']:,}"
         )
     
     # =================================================
