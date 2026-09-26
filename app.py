@@ -36,6 +36,9 @@ from core.peak_hour import (
 from core.peak_hour_share import (
     build_peak_hour_share_chart
 )
+from core.capacity_reference import (
+    build_capacity_reference
+)
 
 
 # =====================================================
@@ -109,7 +112,22 @@ try:
         df,
         config
     )
-   
+
+    capacity_reference = (
+        build_capacity_reference(
+            df
+        )
+    )
+
+    st.subheader(
+        "Capacity Reference Validation"
+    )
+    
+    st.dataframe(
+        capacity_reference,
+        use_container_width=True
+    )
+    
     # =================================================
     # FILTERS
     # =================================================
