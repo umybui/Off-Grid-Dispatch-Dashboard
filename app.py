@@ -59,6 +59,8 @@ from core.unit_capability_chart import (
 )
 from core.capacity_planning import (
     build_capacity_planning
+from core.reliability_monitor import (
+    build_reliability_monitor
 )
 
 # =====================================================
@@ -258,9 +260,56 @@ try:
                 capacity_reference
             )
         )
+
+    # =================================================
+    # KPI VALIDATION
+    # =================================================
     
+    kpis = build_kpis(
+        total_demand,
+        total_generation,
+        reliability
+    )
+
+    st.subheader("KPI Validation")
+    
+
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric(
+            "Demand Energy",
+            f"{kpis['demand_energy_mwh']:,.2f}"
+        )
+    
+    with col2:
+        st.metric(
+            "Generated Energy",
+            f"{kpis['generated_energy_mwh']:,.2f}"
+        )
+    
+    with col3:
+        st.metric(
+            "Energy Served %",
+            f"{kpis['energy_served_pct']:,.2f}%"
+        )
+    
+    with col4:
+        st.metric(
+            "Load Factor",
+            f"{kpis['load_factor']:,.2f}%"
+        )
+   
     reserve = build_reserve_assessment(
         reliability
+    )
+
+    reliability_monitor = (
+        build_reliability_monitor(
+            reliability,
+            reserve,
+            kpis
+        )
     )
 
     reserve_dashboard = (
@@ -413,45 +462,6 @@ try:
             hide_index=True
         )
     
-    # =================================================
-    # KPI VALIDATION
-    # =================================================
-    
-    kpis = build_kpis(
-        total_demand,
-        total_generation,
-        reliability
-    )
-
-    st.subheader("KPI Validation")
-    
-
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric(
-            "Demand Energy",
-            f"{kpis['demand_energy_mwh']:,.2f}"
-        )
-    
-    with col2:
-        st.metric(
-            "Generated Energy",
-            f"{kpis['generated_energy_mwh']:,.2f}"
-        )
-    
-    with col3:
-        st.metric(
-            "Energy Served %",
-            f"{kpis['energy_served_pct']:,.2f}%"
-        )
-    
-    with col4:
-        st.metric(
-            "Load Factor",
-            f"{kpis['load_factor']:,.2f}%"
-        )
-
     # =================================================
     # LDC VALIDATION
     # =================================================
@@ -775,7 +785,41 @@ try:
     st.subheader(
         "Capacity Outlook"
     )
+
+    st.subheader(
+        "Reliability Health Monitor"
+    )
     
+    c1, c2, c3, c4 = st.columns(4)
+    
+    with c1:
+        st.metric(
+            "Energy Served %",
+            f"{reliability_monitor['energy_served_pct']:.2f}%"
+        )
+    
+    with c2:
+        st.metric(
+            "Reserve Compliance %",
+            f"{reliability_monitor['reserve_compliance_pct']:.2f}%"
+        )
+    
+    with c3:
+        st.metric(
+            "Shortage Hours",
+            reliability_monitor[
+                "shortage_hours"
+            ]
+        )
+    
+    with c4:
+        st.metric(
+            "System Health",
+            reliability_monitor[
+                "overall_status"
+            ]
+        )
+
     c1, c2, c3, c4 = st.columns(4)
     
     with c1:
