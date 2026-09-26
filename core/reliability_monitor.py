@@ -25,16 +25,19 @@ def build_reliability_monitor(
         and
         reserve_compliance >= 95
     ):
+
         overall_status = "Healthy"
 
     elif (
         energy_served >= 95
         and
-        reserve_compliance >=
+        reserve_compliance >= 80
     ):
+
         overall_status = "Monitor"
 
     else:
+
         overall_status = "Critical"
 
     return {
