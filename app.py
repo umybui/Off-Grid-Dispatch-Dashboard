@@ -45,6 +45,9 @@ from core.peak_support_data import (
 from core.peak_support_chart import (
     build_peak_support_chart
 )
+from core.asset_performance import (
+    build_asset_performance
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -189,6 +192,13 @@ try:
         )
     )
 
+    asset_performance = (
+        build_asset_performance(
+            generation,
+            capacity_reference
+        )
+    )
+    
     peak_support_chart = (
         build_peak_support_chart(
             peak_support
@@ -626,6 +636,33 @@ try:
             hide_index=True
         )
 
+    st.subheader(
+        "Plant Asset Performance Assessment"
+    )
+    
+    with st.expander(
+        "Asset Performance Table",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            asset_performance[
+                [
+                    "Plant",
+                    "DependableMW",
+                    "AvgMW",
+                    "MaxObservedMW",
+                    "UtilizationFactorPct",
+                    "CapabilityRealizationPct",
+                    "RiskFlag",
+                    "Remarks"
+                ]
+            ].round(2),
+    
+            use_container_width=True,
+            hide_index=True
+        )
+    
     st.subheader(
         "Peak Support Performance"
     )
