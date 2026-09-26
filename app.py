@@ -122,6 +122,9 @@ try:
         )
     )
 
+    st.write(capacity_reference.columns.tolist())
+    st.dataframe(capacity_reference.head())
+    
     st.subheader(
         "Capacity Reference Validation"
     )
