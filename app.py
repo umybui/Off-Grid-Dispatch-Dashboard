@@ -743,8 +743,30 @@ try:
     with col2:
         st.metric(
             "Monitor",
-            
+            (
+                asset_performance[
+                    "RiskFlag"
+                ]
+                == "Monitor"
+            ).sum()
+        )
     
+    with col3:
+        st.metric(
+            "Underperforming",
+            (
+                asset_performance[
+                    "RiskFlag"
+                ]
+                == "Underperforming"
+            ).sum()
+        )
+    
+    st.plotly_chart(
+        asset_performance_chart,
+        use_container_width=True
+    )
+                
     # =================================================
     # KPI PREVIEW`
     # =================================================
