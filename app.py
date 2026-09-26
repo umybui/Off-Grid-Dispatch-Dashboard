@@ -48,6 +48,9 @@ from core.peak_support_chart import (
 from core.asset_performance import (
     build_asset_performance
 )
+from core.asset_performance_chart import (
+    build_asset_performance_chart
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -198,6 +201,13 @@ try:
             capacity_reference
         )
     )
+
+    asset_performance_chart = (
+        build_asset_performance_chart(
+            asset_performance
+        )
+    )
+
     
     peak_support_chart = (
         build_peak_support_chart(
@@ -716,7 +726,25 @@ try:
                 == "Underperforming"
             ).sum()
         )
-              
+
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "OK",
+            (
+                asset_performance[
+                    "RiskFlag"
+                ]
+                == "OK"
+            ).sum()
+        )
+    
+    with col2:
+        st.metric(
+            "Monitor",
+            
+    
     # =================================================
     # KPI PREVIEW`
     # =================================================
