@@ -51,6 +51,9 @@ from core.asset_performance import (
 from core.asset_performance_chart import (
     build_asset_performance_chart
 )
+from core.unit_capability import (
+    build_unit_capability
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -202,6 +205,13 @@ try:
         )
     )
 
+    unit_capability = (
+        build_unit_capability(
+            generation,
+            capacity_reference
+        )
+    )
+    
     asset_performance_chart = (
         build_asset_performance_chart(
             asset_performance
@@ -664,6 +674,36 @@ try:
                     "MaxObservedMW",
                     "UtilizationFactorPct",
                     "CapabilityRealizationPct",
+                    "RiskFlag",
+                    "Remarks"
+                ]
+            ].round(2),
+    
+            use_container_width=True,
+            hide_index=True
+        )
+
+    st.subheader(
+        "Unit Capability Realization"
+    )
+    
+    with st.expander(
+        "Unit Capability Table",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            unit_capability[
+                [
+                    "Plant",
+                    "DependableMW",
+                    "AvgMW",
+                    "MaxObservedMW",
+                    "OperatingHours",
+                    "HoursAbove80Pct",
+                    "UtilizationFactorPct",
+                    "CapabilityRealizationPct",
+                    "SustainedCapabilityPct",
                     "RiskFlag",
                     "Remarks"
                 ]
