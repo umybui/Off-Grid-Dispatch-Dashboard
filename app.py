@@ -39,6 +39,9 @@ from core.peak_hour_share import (
 from core.capacity_reference import (
     build_capacity_reference
 )
+from core.peak_support_data import (
+    build_peak_support_analysis
+)
 
 
 # =====================================================
@@ -165,6 +168,13 @@ try:
             peak_hour[
                 "peak_snapshot"
             ]
+        )
+    )
+
+    peak_support = (
+        build_peak_support_analysis(
+            peak_hour,
+            capacity_reference
         )
     )
     
@@ -577,7 +587,71 @@ try:
         "Peak Hour Energy Share Data",
         expanded=False
     ):
+
+    st.subheader(
+        "Peak Support Performance"
+    )
     
+    with st.expander(
+        "Peak Support Table",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            peak_support[
+                [
+                    "Plant",
+                    "AvgPeakMW",
+                    "MaxPeakMW",
+                    "DependableMW",
+                    "PeakSupportPct",
+                    "RiskFlag",
+                    "Remarks"
+                ]
+            ].round(2),
+    
+            use_container_width=True,
+            hide_index=True
+        )
+
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "OK",
+            (
+                peak_support[
+                    "RiskFlag"
+                ]
+                ==
+                "OK"
+            ).sum()
+        )
+    
+    with col2:
+        st.metric(
+            "Monitor",
+            (
+                peak_support[
+                    "RiskFlag"
+                ]
+                ==
+                "Monitor"
+            ).sum()
+        )
+    
+    with col3:
+        st.metric(
+            "Underperforming",
+            (
+                peak_support[
+                    "RiskFlag"
+                ]
+                ==
+                "Underperforming"
+            ).sum()
+        )
+        
         st.dataframe(
             peak_hour[
                 "peak_snapshot"
