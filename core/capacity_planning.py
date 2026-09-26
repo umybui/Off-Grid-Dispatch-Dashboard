@@ -115,4 +115,3 @@ def build_capacity_planning(
         "projection_df":
             projection_df
     }
-``
