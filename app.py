@@ -122,6 +122,12 @@ try:
         )
     )
 
+    capacity_reference = capacity_reference.rename(
+        columns={
+            "Dependable Capacity": "DependableMW"
+        }
+    )
+    
     st.write(capacity_reference.columns.tolist())
     st.dataframe(capacity_reference.head())
     
