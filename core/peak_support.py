@@ -65,8 +65,6 @@ def build_peak_support_table(
             how="left"
         )
     )
-
-    st.write(performance.columns.tolist())
     
     performance["PeakSupportPct"] = (
         performance["MaxPeakMW"]
