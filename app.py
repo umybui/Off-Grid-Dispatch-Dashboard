@@ -54,6 +54,9 @@ from core.asset_performance_chart import (
 from core.unit_capability import (
     build_unit_capability
 )
+from core.unit_capability_chart import (
+    build_unit_capability_chart
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -209,6 +212,12 @@ try:
         build_unit_capability(
             generation,
             capacity_reference
+        )
+    )
+
+    unit_capability_chart = (
+        build_unit_capability_chart(
+            unit_capability
         )
     )
     
@@ -712,6 +721,46 @@ try:
             use_container_width=True,
             hide_index=True
         )
+
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "OK",
+            (
+                unit_capability[
+                    "RiskFlag"
+                ]
+                == "OK"
+            ).sum()
+        )
+    
+    with col2:
+        st.metric(
+            "Monitor",
+            (
+                unit_capability[
+                    "RiskFlag"
+                ]
+                == "Monitor"
+            ).sum()
+        )
+    
+    with col3:
+        st.metric(
+            "Underperforming",
+            (
+                unit_capability[
+                    "RiskFlag"
+                ]
+                == "Underperforming"
+            ).sum()
+        )
+    
+    st.plotly_chart(
+        unit_capability_chart,
+        use_container_width=True
+    )
     
     st.subheader(
         "Peak Support Performance"
