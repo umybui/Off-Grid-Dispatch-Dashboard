@@ -42,7 +42,9 @@ from core.capacity_reference import (
 from core.peak_support_data import (
     build_peak_support_analysis
 )
-
+from core.peak_support_chart import (
+    build_peak_support_chart
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -185,6 +187,17 @@ try:
             peak_hour,
             capacity_reference
         )
+    )
+
+    peak_support_chart = (
+        build_peak_support_chart(
+            peak_support
+        )
+    )
+
+    st.plotly_chart(
+        peak_support_chart,
+        use_container_width=True
     )
     
     # =================================================
