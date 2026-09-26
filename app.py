@@ -217,14 +217,7 @@ try:
             capacity_reference
         )
     )
-
-    capacity_planning = (
-        build_capacity_planning(
-            reliability,
-            capacity_reference
-        )
-    )
-    
+   
     unit_capability_chart = (
         build_unit_capability_chart(
             unit_capability
@@ -259,6 +252,13 @@ try:
         transfer_flow
     )
 
+    capacity_planning = (
+            build_capacity_planning(
+                reliability,
+                capacity_reference
+            )
+        )
+    
     reserve = build_reserve_assessment(
         reliability
     )
