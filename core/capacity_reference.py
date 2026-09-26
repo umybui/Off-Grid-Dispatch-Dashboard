@@ -1,5 +1,7 @@
 import pandas as pd
+import streamlit as st
 
+st.warning("USING CAPACITY_REFERENCE.PY VERSION 2026-09-26")
 
 def build_capacity_reference(
     df
