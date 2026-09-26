@@ -583,91 +583,74 @@ try:
         use_container_width=True
     )
     
-    with st.expander(
-        "Peak Hour Energy Share Data",
-        expanded=False
-    ):
+with st.expander(
+    "Peak Hour Energy Share Data",
+    expanded=False
+):
 
-    st.subheader(
-        "Peak Support Performance"
+st.subheader(
+    "Peak Support Performance"
+)
+
+with st.expander(
+    "Peak Support Table",
+    expanded=False
+):
+
+    st.dataframe(
+        peak_support[
+            [
+                "Plant",
+                "AvgPeakMW",
+                "MaxPeakMW",
+                "DependableMW",
+                "PeakSupportPct",
+                "RiskFlag",
+                "Remarks"
+            ]
+        ].round(2),
+
+        use_container_width=True,
+        hide_index=True
     )
-    
-    with st.expander(
-        "Peak Support Table",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            peak_support[
-                [
-                    "Plant",
-                    "AvgPeakMW",
-                    "MaxPeakMW",
-                    "DependableMW",
-                    "PeakSupportPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
-            ].round(2),
-    
-            use_container_width=True,
-            hide_index=True
-        )
 
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "OK",
-            (
-                peak_support[
-                    "RiskFlag"
-                ]
-                ==
-                "OK"
-            ).sum()
-        )
-    
-    with col2:
-        st.metric(
-            "Monitor",
-            (
-                peak_support[
-                    "RiskFlag"
-                ]
-                ==
-                "Monitor"
-            ).sum()
-        )
-    
-    with col3:
-        st.metric(
-            "Underperforming",
-            (
-                peak_support[
-                    "RiskFlag"
-                ]
-                ==
-                "Underperforming"
-            ).sum()
-        )
-        
-        st.dataframe(
-            peak_hour[
-                "peak_snapshot"
-            ][
-                [
-                    "Plant",
-                    "AvgPeakMW",
-                    "MaxPeakMW",
-                    "PeakEnergyMWh",
-                    "PeakEnergySharePct"
-                ]
-            ].round(2),
-    
-            use_container_width=True,
-            hide_index=True
-        )
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        "OK",
+        (
+            peak_support[
+                "RiskFlag"
+            ]
+            ==
+            "OK"
+        ).sum()
+    )
+
+with col2:
+    st.metric(
+        "Monitor",
+        (
+            peak_support[
+                "RiskFlag"
+            ]
+            ==
+            "Monitor"
+        ).sum()
+    )
+
+with col3:
+    st.metric(
+        "Underperforming",
+        (
+            peak_support[
+                "RiskFlag"
+            ]
+            ==
+            "Underperforming"
+        ).sum()
+    )
     
     # =================================================
     # KPI PREVIEW`
