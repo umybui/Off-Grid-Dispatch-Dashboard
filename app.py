@@ -64,6 +64,9 @@ from core.capacity_planning import (
 from core.reliability_monitor import (
     build_reliability_monitor
 )
+from core.plant_role_matrix import (
+    build_plant_role_matrix
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -215,6 +218,13 @@ try:
         )
     )
 
+    plant_role_matrix = (
+        build_plant_role_matrix(
+            asset_performance,
+            peak_hour["peak_snapshot"]
+        )
+    )
+    
     unit_capability = (
         build_unit_capability(
             generation,
@@ -788,6 +798,38 @@ try:
         "Capacity Outlook"
     )
 
+    st.subheader(
+        "Plant Role Matrix"
+    )
+    
+    with st.expander(
+        "Plant Role Classification",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            plant_role_matrix[
+                [
+                    "Plant",
+                    "EnergySharePct",
+                    "PeakSharePct",
+                    "Role"
+                ]
+            ].round(2),
+    
+            use_container_width=True,
+            hide_index=True
+        )
+
+    role_counts = (
+        plant_role_matrix["Role"]
+        .value_counts()
+    )
+    
+    st.write(
+        role_counts
+    )
+    
     st.subheader(
         "Reliability Health Monitor"
     )
