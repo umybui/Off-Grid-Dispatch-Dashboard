@@ -104,7 +104,7 @@ else:
     config = CATANDUANES
 
 # =====================================================
-# TITLE
+# PAGE TITLE
 # =====================================================
 
 st.title(
@@ -132,7 +132,7 @@ try:
     )
 
     # =================================================
-    # DATA PREP
+    # DATA PREPARATION
     # =================================================
 
     df = prepare_data(
@@ -151,21 +151,9 @@ try:
             "Dependable Capacity": "DependableMW"
         }
     )
-    
-    st.write(capacity_reference.columns.tolist())
-    st.dataframe(capacity_reference.head())
-    
-    st.subheader(
-        "Capacity Reference Validation"
-    )
-    
-    st.dataframe(
-        capacity_reference,
-        use_container_width=True
-    )
-    
+      
     # =================================================
-    # FILTERS
+    # DASHBOARD FILTERS
     # =================================================
 
     filters = get_filters(df)
@@ -176,7 +164,7 @@ try:
     )
 
     # =================================================
-    # DEMAND / GENERATION
+    # DEMAND / GENERATION MODEL
     # =================================================
 
     (
@@ -189,6 +177,10 @@ try:
         config
     )
 
+    # =====================================================
+    # PEAK HOUR ANALYTICS
+    # =====================================================
+    
     peak_hour = (
         build_peak_hour_analysis(
             total_demand,
@@ -211,6 +203,16 @@ try:
         )
     )
 
+    peak_support_chart = (
+            build_peak_support_chart(
+                peak_support
+            )
+        )
+        
+    # =====================================================
+    # ASSET AND CAPABILITY ANALYTICS
+    # =====================================================
+    
     asset_performance = (
         build_asset_performance(
             generation,
@@ -231,40 +233,61 @@ try:
             capacity_reference
         )
     )
-   
+
+    asset_performance_chart = (
+            build_asset_performance_chart(
+                asset_performance
+            )
+        )
+    
     unit_capability_chart = (
         build_unit_capability_chart(
             unit_capability
         )
     )
-    
-    asset_performance_chart = (
-        build_asset_performance_chart(
-            asset_performance
-        )
-    )
 
-    
-    peak_support_chart = (
-        build_peak_support_chart(
-            peak_support
-        )
-    )
-
-    st.plotly_chart(
-        peak_support_chart,
-        use_container_width=True
-    )
-    
     # =================================================
-    # RELIABILITY
+    # RELIABILITY ANALYTICS
     # =================================================
-
+    
     reliability = build_reliability(
         total_demand,
         total_generation,
         transfer_flow
     )
+    
+    reserve = build_reserve_assessment(
+        reliability
+    )
+    
+    reserve_dashboard = (
+        build_reserve_dashboard(
+            reserve,
+            reliability
+        )
+    )
+    
+    reserve_trend = (
+        build_reserve_trend(
+            reliability
+        )
+    )
+    
+    operating_condition = (
+        build_operating_condition_breakdown(
+            reliability
+        )
+    )
+    
+    reserve_deficiency_table = (
+        build_reserve_deficiency_table(
+            reliability
+        )
+    )
+
+    # =====================================================
+    # CAPACITY PLANNING
+    # =====================================================
 
     capacity_planning = (
             build_capacity_planning(
@@ -312,9 +335,7 @@ try:
             f"{kpis['load_factor']:,.2f}%"
         )
    
-    reserve = build_reserve_assessment(
-        reliability
-    )
+    
 
     reliability_monitor = (
         build_reliability_monitor(
@@ -324,30 +345,9 @@ try:
         )
     )
 
-    reserve_dashboard = (
-        build_reserve_dashboard(
-            reserve,
-            reliability
-        )
-    )
-
-    reserve_trend = (
-        build_reserve_trend(
-            reliability
-        )
-    )
-
-    operating_condition = (
-        build_operating_condition_breakdown(
-            reliability
-        )
-    )
-
-    reserve_deficiency_table = (
-        build_reserve_deficiency_table(
-            reliability
-        )
-    )
+    # =====================================================
+    # RESERVE SECURITY ASSESSMENT
+    # =====================================================
     
     st.subheader(
         "Reserve Security Assessment"
@@ -552,6 +552,10 @@ try:
         use_container_width=True
     )
 
+    # =====================================================
+    # LOAD DURATION CURVE
+    # =====================================================
+    
     st.subheader(
         "Load Duration Curve"
     )
@@ -607,29 +611,34 @@ try:
     # LDC VALIDATION
     # =================================================
     
-    st.subheader(
-        "LDC Validation"
-    )
+    with st.expander(
+        "LDC Validation",
+        expanded=False
+    ):
     
-    col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2)
     
-    with col1:
-        st.metric(
-            "Peak Load",
-            f"{ldc['DemandMW'].max():,.2f}"
+        with col1:
+            st.metric(
+                "Peak Load",
+                f"{ldc['DemandMW'].max():,.2f}"
+            )
+    
+        with col2:
+            st.metric(
+                "Minimum Load",
+                f"{ldc['DemandMW'].min():,.2f}"
+            )
+    
+        st.dataframe(
+            ldc.head(20),
+            use_container_width=True
         )
-    
-    with col2:
-        st.metric(
-            "Minimum Load",
-            f"{ldc['DemandMW'].min():,.2f}"
-        )
-    
-    st.dataframe(
-        ldc.head(20),
-        use_container_width=True
-    )
 
+    # =====================================================
+    # PEAK HOUR PERFORMANCE ANALYSIS
+    # =====================================================
+    
     st.subheader(
         "Peak Hour Performance Analysis"
     )
@@ -697,6 +706,10 @@ try:
             hide_index=True
         )
 
+    # =====================================================
+    # PLANT ASSET PERFORMANCE ASSESSMENT
+    # =====================================================
+    
     st.subheader(
         "Plant Asset Performance Assessment"
     )
@@ -723,7 +736,45 @@ try:
             use_container_width=True,
             hide_index=True
         )
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "OK",
+            (
+                asset_performance["RiskFlag"]
+                == "OK"
+            ).sum()
+        )
+    
+    with col2:
+        st.metric(
+            "Monitor",
+            (
+                asset_performance["RiskFlag"]
+                == "Monitor"
+            ).sum()
+        )
+    
+    with col3:
+        st.metric(
+            "Underperforming",
+            (
+                asset_performance["RiskFlag"]
+                == "Underperforming"
+            ).sum()
+        )
+    
+    st.plotly_chart(
+        asset_performance_chart,
+        use_container_width=True
+    )
 
+    # =====================================================
+    # UNIT CAPABILITY REALIZATION
+    # =====================================================
+    
     st.subheader(
         "Unit Capability Realization"
     )
@@ -794,10 +845,55 @@ try:
         use_container_width=True
     )
 
+    # =====================================================
+    # CAPACITY OUTLOOK
+    # =====================================================
+    
     st.subheader(
         "Capacity Outlook"
     )
+    
+    c1, c2, c3, c4 = st.columns(4)
+    
+    with c1:
+        st.metric(
+            "Current Peak Demand",
+            f"{capacity_planning['peak_demand']:,.2f}"
+        )
+    
+    with c2:
+        st.metric(
+            "Projected Peak Demand",
+            f"{capacity_planning['projected_peak']:,.2f}"
+        )
+    
+    with c3:
+        st.metric(
+            "Available Capacity",
+            f"{capacity_planning['available_capacity']:,.2f}"
+        )
+    
+    with c4:
+        st.metric(
+            "Additional Capacity Needed",
+            f"{capacity_planning['required_capacity']:,.2f}"
+        )
+    
+    with st.expander(
+        "10-Year Capacity Planning Outlook",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            capacity_planning["projection_df"],
+            use_container_width=True,
+            hide_index=True
+        )
 
+    # =====================================================
+    # PLANT ROLE MATRIX
+    # =====================================================
+    
     st.subheader(
         "Plant Role Matrix"
     )
@@ -824,11 +920,23 @@ try:
     role_counts = (
         plant_role_matrix["Role"]
         .value_counts()
+        .reset_index()
     )
     
-    st.write(
-        role_counts
+    role_counts.columns = [
+        "Role",
+        "Count"
+    ]
+    
+    st.dataframe(
+        role_counts,
+        use_container_width=True,
+        hide_index=True
     )
+
+    # =====================================================
+    # RELIABILITY HEALTH MONITOR
+    # =====================================================
     
     st.subheader(
         "Reliability Health Monitor"
@@ -864,44 +972,9 @@ try:
             ]
         )
 
-    c1, c2, c3, c4 = st.columns(4)
-    
-    with c1:
-        st.metric(
-            "Current Peak Demand",
-            f"{capacity_planning['peak_demand']:,.2f}"
-        )
-    
-    with c2:
-        st.metric(
-            "Projected Peak Demand",
-            f"{capacity_planning['projected_peak']:,.2f}"
-        )
-    
-    with c3:
-        st.metric(
-            "Available Capacity",
-            f"{capacity_planning['available_capacity']:,.2f}"
-        )
-    
-    with c4:
-        st.metric(
-            "Additional Capacity Needed",
-            f"{capacity_planning['required_capacity']:,.2f}"
-        )
-    
-    with st.expander(
-        "10-Year Capacity Planning Outlook",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            capacity_planning[
-                "projection_df"
-            ],
-            use_container_width=True,
-            hide_index=True
-        )
+    # =====================================================
+    # PEAK SUPPORT PERFORMANCE
+    # =====================================================
     
     st.subheader(
         "Peak Support Performance"
@@ -957,49 +1030,14 @@ try:
             ).sum()
         )
 
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "OK",
-            (
-                asset_performance[
-                    "RiskFlag"
-                ]
-                == "OK"
-            ).sum()
-        )
-    
-    with col2:
-        st.metric(
-            "Monitor",
-            (
-                asset_performance[
-                    "RiskFlag"
-                ]
-                == "Monitor"
-            ).sum()
-        )
-    
-    with col3:
-        st.metric(
-            "Underperforming",
-            (
-                asset_performance[
-                    "RiskFlag"
-                ]
-                == "Underperforming"
-            ).sum()
-        )
-    
     st.plotly_chart(
-        asset_performance_chart,
+        peak_support_chart,
         use_container_width=True
     )
-                
-    # =================================================
-    # KPI PREVIEW`
-    # =================================================
+                   
+    # =====================================================
+    # RELIABILITY SUMMARY
+    # =====================================================
 
     st.subheader("Reliability Summary")
     
@@ -1036,7 +1074,7 @@ try:
         )
 
     # =================================================
-    # VALIDATION TABLES
+    # TECHNICAL VALIDATION TABLES
     # =================================================
 
     st.subheader("Total Demand")
@@ -1073,6 +1111,10 @@ try:
         reliability["gap_df"].head(),
         use_container_width=True
     )
+
+# =====================================================
+# ERROR HANDLING
+# =====================================================
 
 except Exception as e:
 
