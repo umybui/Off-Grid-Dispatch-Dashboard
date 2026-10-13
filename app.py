@@ -146,6 +146,13 @@ try:
         )
     )
 
+    st.write("Capacity Reference Columns")
+    st.write(capacity_reference.columns.tolist())
+    
+    st.dataframe(
+        capacity_reference.head()
+    )
+    
     capacity_reference = capacity_reference.rename(
         columns={
             "Dependable Capacity": "DependableMW"
@@ -188,6 +195,16 @@ try:
         )
     )
 
+    st.write("Peak Snapshot Columns")
+    
+    st.write(
+        peak_hour["peak_snapshot"].columns.tolist()
+    )
+    
+    st.dataframe(
+        peak_hour["peak_snapshot"].head()
+    )
+    
     peak_hour_share_fig = (
         build_peak_hour_share_chart(
             peak_hour[
