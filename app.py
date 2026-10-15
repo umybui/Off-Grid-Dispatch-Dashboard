@@ -303,8 +303,190 @@ try:
         total_generation,
         reliability
     )
+#$$$$$$$$$$$$$$$$$$$
+    # =====================================================
+    # PALAWAN MIGRATION
+    # KPI SUMMARY
+    # =====================================================
+    
+    peak_row = reliability["gap_df"].loc[
+        reliability["gap_df"]["TotalDemand"].idxmax()
+    ]
+    
+    peak_datetime = peak_row["Datetime"]
+    
+    r1c1, r1c2, r1c3, r1c4, r1c5 = st.columns(5)
+    
+    with r1c1:
+        st.metric(
+            "Peak Demand",
+            f"{reliability['peak_demand']:,.2f} MWW"
+        )
+    
+    with r1c2:
+        st.metric(
+            "Demand Energy",
+            f"{kpis['demand_energy_mwh']:,.2f} MWh"
+        )
+    
+    with r1c3:
+        st.metric(
+            "Generated Energy",
+            f"{kpis['generated_energy_mwh']:,.2f} MWh"
+        )
+    
+    with r1c4:
+        st.metric(
+            "Unserved Energy",
+            f"{reliability['unserved_energy']:,.2f} MWh"
+        )
+    
+    with r1c5:
+        st.metric(
+            "Energy Served",
+            f"{kpis['energy_served_pct']:.2f}%"
+        )
+    
+    r2c1, r2c2, r2c3, r2c4 = st.columns(4)
+    
+    with r2c1:
+        st.metric(
+            "Hours with Shortage",
+            f"{reliability['hours_with_shortage']:,}"
+        )
+    
+    with r2c2:
+        st.metric(
+            "Low Reserve Hours",
+            f"{reliability['hours_low_reserve']:,}"
+        )
+    
+    with r2c3:
+        st.metric(
+            "Load Factor",
+            f"{kpis['load_factor']:.1f}%"
+        )
+    
+    with r2c4:
+        st.metric(
+            "Peak Demand Time",
+            peak_datetime.strftime(
+                "%Y-%m-%d %H:%M"
+            )
+        )
 
+    show_breakdown = st.toggle(
+        "Break down by power plant",
+        value=False
+    )
 
+    def get_technology(plant):
+    
+        plant = str(plant).upper()
+    
+        if (
+            "E-DELTA" in plant
+            or "EDELTA" in plant
+            or "ABORLAN" in plant
+        ):
+            return "Bunker"
+    
+        if "NARRA" in plant:
+            return "Thermal"
+    
+        if any(
+            x in plant
+            for x in [
+                "T-DELTA",
+                "TDELTA",
+                "QUEZON",
+                "IRAWAN",
+                "EPSA",
+                "RIO TUBA",
+                "VPOWER"
+            ]
+        ):
+            return "Diesel"
+    
+        return "Other"
+
+    generation_mix = generation.copy()
+    
+    generation_mix["Technology"] = (
+        generation_mix["Plant"]
+        .apply(get_technology)
+    )
+    
+    tech_mix = (
+        generation_mix
+        .groupby(
+            "Technology",
+            as_index=False
+        )["Value"]
+        .sum()
+    )
+    
+    tech_mix["Share"] = (
+        tech_mix["Value"]
+        /
+        tech_mix["Value"].sum()
+        * 100
+    )
+    
+    tech_mix = tech_mix.sort_values(
+        "Share",
+        ascending=False
+    )
+    
+    tech_colors = {
+        "Diesel": "#1565C0",
+        "Thermal": "#E53935",
+        "Bunker": "#FB8C00",
+        "Other": "#757575"
+    }
+
+fig_tech = go.Figure()
+
+for _, row in tech_mix.iterrows():
+
+    fig_tech.add_trace(
+        go.Bar(
+            y=[""],
+            x=[row["Share"]],
+            name=row["Technology"],
+            orientation="h",
+            marker_color=tech_colors.get(
+                row["Technology"],
+                "#757575"
+            ),
+            text=(
+                f"{row['Technology']}<br>"
+                f"{row['Share'\]:.1f}%"
+            ),
+            textposition="inside"
+        )
+    )
+
+    fig_tech.update_layout(
+        barmode="stack",
+        height=220,
+        margin=dict(
+            l=20,
+            r=20,
+            t=20,
+            b=40
+        ),
+        xaxis_title=
+            "Share of Generated Energy (%)",
+        showlegend=False
+    )
+    
+    st.plotly_chart(
+        fig_tech,
+        use_container_width=True
+    )
+    
+#$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
         build_reliability_monitor(
             reliability,
