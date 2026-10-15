@@ -6,6 +6,14 @@ def prepare_data(df, config):
 
     df = df.copy()
 
+    if "Power Plant" in df.columns:
+    
+        df = df.rename(
+            columns={
+                "Power Plant": "Plant"
+            }
+        )
+    
     datetime_column = config["DATETIME_COLUMN"]
     value_column = config["VALUE_COLUMN"]
 
