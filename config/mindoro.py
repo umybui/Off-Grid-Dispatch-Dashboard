@@ -1,3 +1,45 @@
+DEPENDABLE_REFERENCE = [
+    {"Plant":"OMCPC SAMARICA","DependableMW":21.00},
+    {"Plant":"OMCPC HIGH-SPEED","DependableMW":8.30},
+    {"Plant":"OMCPC SOLAR","DependableMW":6.00},
+    {"Plant":"OMCPC MAPSA","DependableMW":5.30},
+    {"Plant":"OMCPC SABLAYAN","DependableMW":4.00},
+    {"Plant":"PGCI","DependableMW":1.00},
+
+    {"Plant":"DMCI REGULATING","DependableMW":11.30},
+    {"Plant":"DMCI LOT I","DependableMW":5.00},
+
+    {"Plant":"LCMHPP-UPPER","DependableMW":1.63},
+    {"Plant":"LCMHPP-LOWER","DependableMW":1.02},
+
+    {"Plant":"INABASAN MHPP","DependableMW":10.00},
+    {"Plant":"CATUIRAN HEPP","DependableMW":4.40},
+
+    {"Plant":"PHESI-WEPF","DependableMW":16.00},
+
+    {"Plant":"OPI","DependableMW":7.40},
+    {"Plant":"POC","DependableMW":2.60},
+    {"Plant":"MHEC","DependableMW":2.63},
+
+    {"Plant":"POWER PIONEERS","DependableMW":5.00},
+
+    {"Plant":"GFEC","DependableMW":6.25},
+
+    {"Plant":"TOPTEAM CALAPAN","DependableMW":4.00},
+    {"Plant":"TOPTEAM SOCORRO","DependableMW":2.00},
+
+    {"Plant":"SPC SOCORRO","DependableMW":2.00},
+
+    {"Plant":"TPI BANSUD","DependableMW":4.00},
+    {"Plant":"TPI CALAPAN","DependableMW":4.00},
+
+    {"Plant":"REGULUS","DependableMW":3.00},
+
+    {"Plant":"RMS","DependableMW":4.00},
+    {"Plant":"TOPTEAM BONGABONG","DependableMW":3.00},
+    {"Plant":"SPC ROXAS","DependableMW":1.50}
+]
+
 CONFIG = {
 
     "SYSTEM_NAME": "Mindoro",
@@ -31,46 +73,6 @@ CONFIG = {
     "IMPORT"
     ]
 
-    DEPENDABLE_REFERENCE = [
-        {"Plant":"OMCPC SAMARICA","DependableMW":21.00},
-        {"Plant":"OMCPC HIGH-SPEED","DependableMW":8.30},
-        {"Plant":"OMCPC SOLAR","DependableMW":6.00},
-        {"Plant":"OMCPC MAPSA","DependableMW":5.30},
-        {"Plant":"OMCPC SABLAYAN","DependableMW":4.00},
-        {"Plant":"PGCI","DependableMW":1.00},
-    
-        {"Plant":"DMCI REGULATING","DependableMW":11.30},
-        {"Plant":"DMCI LOT I","DependableMW":5.00},
-    
-        {"Plant":"LCMHPP-UPPER","DependableMW":1.63},
-        {"Plant":"LCMHPP-LOWER","DependableMW":1.02},
-    
-        {"Plant":"INABASAN MHPP","DependableMW":10.00},
-        {"Plant":"CATUIRAN HEPP","DependableMW":4.40},
-    
-        {"Plant":"PHESI-WEPF","DependableMW":16.00},
-    
-        {"Plant":"OPI","DependableMW":7.40},
-        {"Plant":"POC","DependableMW":2.60},
-        {"Plant":"MHEC","DependableMW":2.63},
-    
-        {"Plant":"POWER PIONEERS","DependableMW":5.00},
-    
-        {"Plant":"GFEC","DependableMW":6.25},
-    
-        {"Plant":"TOPTEAM CALAPAN","DependableMW":4.00},
-        {"Plant":"TOPTEAM SOCORRO","DependableMW":2.00},
-    
-        {"Plant":"SPC SOCORRO","DependableMW":2.00},
-    
-        {"Plant":"TPI BANSUD","DependableMW":4.00},
-        {"Plant":"TPI CALAPAN","DependableMW":4.00},
-    
-        {"Plant":"REGULUS","DependableMW":3.00},
-    
-        {"Plant":"RMS","DependableMW":4.00},
-        {"Plant":"TOPTEAM BONGABONG","DependableMW":3.00},
-        {"Plant":"SPC ROXAS","DependableMW":1.50}
-    ]
-    
+    "DEPENDABLE_REFERENCE": DEPENDABLE_REFERENCE,
+
 }
