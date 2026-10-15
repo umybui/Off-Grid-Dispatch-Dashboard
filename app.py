@@ -461,7 +461,7 @@ try:
                 ),
                 text=(
                     f"{row['Technology']}<br>"
-                    f"{row['Share'\]:.1f}%"
+                    f"{row['Share']:.1f}%"
                 ),
                 textposition="inside"
             )
