@@ -142,7 +142,8 @@ try:
 
     capacity_reference = (
         build_capacity_reference(
-            df
+            df,
+            config
         )
     )
 
