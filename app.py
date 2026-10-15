@@ -440,10 +440,6 @@ try:
             "Reserve Compliance %",
             f"{reserve['reserve_compliance_pct']:.2f}%"
         )
-    
-    st.success(
-        f"{config['SYSTEM_NAME']} data loaded successfully."
-    )
 
     st.subheader(
         "Monthly Reserve Compliance Trend"
@@ -735,6 +731,10 @@ try:
     st.plotly_chart(
         peak_hour_share_fig,
         use_container_width=True
+    )
+
+    st.markdown(
+        "##### Peak Hour Energy Contribution Share"
     )
     
     with st.expander(
