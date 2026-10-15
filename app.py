@@ -826,21 +826,21 @@ try:
     )
  
         
-        st.dataframe(
-            peak_hour[
-                "peak_snapshot"
-            ][
-                [
-                    "Plant",
-                    "AvgPeakMW",
-                    "MaxPeakMW",
-                    "PeakEnergyMWh",
-                    "PeakEnergySharePct"
-                ]
-            ].round(2),
-            use_container_width=True,
-            hide_index=True
-        )
+    st.dataframe(
+        peak_hour[
+            "peak_snapshot"
+        ][
+            [
+                "Plant",
+                "AvgPeakMW",
+                "MaxPeakMW",
+                "PeakEnergyMWh",
+                "PeakEnergySharePct"
+            ]
+        ].round(2),
+        use_container_width=True,
+        hide_index=True
+    )
 
     # =====================================================
     # PLANT ASSET PERFORMANCE ASSESSMENT
