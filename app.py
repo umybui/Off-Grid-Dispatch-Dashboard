@@ -1072,49 +1072,55 @@ try:
             str(reliability["peak_datetime"])
         )
 
-# =================================================
-# TECHNICAL VALIDATION TABLES
-# =================================================
+    # =================================================
+    # TECHNICAL VALIDATION TABLES
+    # =================================================
 
-with st.expander(
-    "Technical Validation Tables",
-    expanded=False
-):
+    with st.expander(
+        "Technical Validation Tables",
+        expanded=False
+    ):
 
-    st.markdown("### Total Demand")
+        st.markdown("### Total Demand")
 
-    st.dataframe(
-        total_demand.head(),
-        use_container_width=True
-    )
+        st.dataframe(
+            total_demand.head(),
+            use_container_width=True
+        )
 
-    st.markdown("### Generation")
+        st.markdown("### Generation")
 
-    st.dataframe(
-        generation.head(),
-        use_container_width=True
-    )
+        st.dataframe(
+            generation.head(),
+            use_container_width=True
+        )
 
-    st.markdown("### Total Generation")
+        st.markdown("### Total Generation")
 
-    st.dataframe(
-        total_generation.head(),
-        use_container_width=True
-    )
+        st.dataframe(
+            total_generation.head(),
+            use_container_width=True
+        )
 
-    st.markdown("### Import Support")
+        st.markdown("### Import Support")
 
-    st.dataframe(
-        transfer_flow.head(),
-        use_container_width=True
-    )
+        st.dataframe(
+            transfer_flow.head(),
+            use_container_width=True
+        )
 
-    st.markdown("### Gap Data")
+        st.markdown("### Gap Data")
 
-    st.dataframe(
-        reliability["gap_df"].head(),
-        use_container_width=True
-    )
+        st.dataframe(
+            reliability["gap_df"].head(),
+            use_container_width=True
+        )
+
+except Exception as e:
+
+    st.exception(e)
+
+    st.stop()
 
 # =====================================================
 # ERROR HANDLING
