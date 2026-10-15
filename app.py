@@ -307,6 +307,15 @@ try:
         reliability
     )
 
+
+    reliability_monitor = (
+        build_reliability_monitor(
+            reliability,
+            reserve,
+            kpis
+        )
+    )
+    
     st.subheader("KPI Validation")
     
 
@@ -373,14 +382,6 @@ try:
                 "overall_status"
             ]
         )  
-
-    reliability_monitor = (
-        build_reliability_monitor(
-            reliability,
-            reserve,
-            kpis
-        )
-    )
 
     # =====================================================
     # RESERVE SECURITY ASSESSMENT
