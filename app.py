@@ -147,6 +147,15 @@ try:
         )
     )
 
+    st.subheader("CAPACITY REFERENCE DEBUG")
+    
+    st.write(capacity_reference.columns.tolist())
+    
+    st.dataframe(
+        capacity_reference.head(20),
+        use_container_width=True
+    )
+    
     st.write(
         "CAPACITY REFERENCE COLUMNS"
     )
