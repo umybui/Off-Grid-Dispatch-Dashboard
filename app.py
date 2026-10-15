@@ -380,50 +380,97 @@ try:
         value=False
     )
 
-    def get_technology(plant):
+    with st.sidebar.expander(
+        "Technology Mapping",
+        expanded=False
+    ):
     
-        plant = str(plant).upper()
+        plant_mapping = pd.DataFrame(
+            {
+                "Plant": sorted(
+                    generation["Plant"]
+                    .dropna()
+                    .unique()
+                )
+            }
+        )
     
-        if (
-            "E-DELTA" in plant
-            or "EDELTA" in plant
-            or "ABORLAN" in plant
-        ):
-            return "Bunker"
+        plant_mapping["Technology"] = (
+            plant_mapping["Plant"]
+            .map(
+                config["TECHNOLOGY_MAPPING"]
+            )
+            .fillna("Other")
+        )
     
-        if "NARRA" in plant:
-            return "Thermal"
+        plant_mapping = st.data_editor(
+            plant_mapping,
+            column_config={
+                "Technology":
+                st.column_config.SelectboxColumn(
+                    "Technology",
+                    options=[
+                        "Bunker",
+                        "Diesel",
+                        "Thermal",
+                        "Solar",
+                        "Hydro",
+                        "Wind",
+                        "Biomass",
+                        "Other"
+                    ]
+                )
+            },
+            hide_index=True,
+            use_container_width=True
+        )
     
-        if any(
-            x in plant
-            for x in [
-                "T-DELTA",
-                "TDELTA",
-                "QUEZON",
-                "IRAWAN",
-                "EPSA",
-                "RIO TUBA",
-                "VPOWER"
-            ]
-        ):
-            return "Diesel"
-    
-        return "Other"
+        technology_map = dict(
+            zip(
+                plant_mapping["Plant"],
+                plant_mapping["Technology"]
+            )
+        )
 
+        st.caption(
+            "Copy this dictionary into TECHNOLOGY_MAPPING in config."
+        )
+    
+        st.code(
+            repr(technology_map),
+            language="python"
+        )
+    
     generation_mix = generation.copy()
     
     generation_mix["Technology"] = (
         generation_mix["Plant"]
-        .apply(get_technology)
+        .map(
+            technology_map
+        )
+        .fillna("Other")
+    )
+    
+    group_col = (
+        "Plant"
+        if show_breakdown
+        else "Technology"
     )
     
     tech_mix = (
         generation_mix
         .groupby(
-            "Technology",
+            group_col,
             as_index=False
         )["Value"]
         .sum()
+    )
+    
+    tech_mix.rename(
+        columns={
+            group_col: "Display"
+        },
+        inplace=True
     )
     
     tech_mix["Share"] = (
@@ -442,6 +489,10 @@ try:
         "Diesel": "#1565C0",
         "Thermal": "#E53935",
         "Bunker": "#FB8C00",
+        "Solar": "#FDD835",
+        "Hydro": "#00ACC1",
+        "Wind": "#26A69A",
+        "Biomass": "#7CB342",
         "Other": "#757575"
     }
 
@@ -453,14 +504,25 @@ try:
             go.Bar(
                 y=[""],
                 x=[row["Share"]],
-                name=row["Technology"],
+                name=row["Display"],
                 orientation="h",
-                marker_color=tech_colors.get(
-                    row["Technology"],
+            marker_color=(
+                tech_colors.get(
+                    technology_map.get(
+                        row["Display"],
+                        "Other"
+                    ),
                     "#757575"
-                ),
+                )
+                if show_breakdown
+                else
+                tech_colors.get(
+                    row["Display"],
+                    "#757575"
+                )
+            ),
                 text=(
-                    f"{row['Technology']}<br>"
+                    f"{row['Display']}<br>"
                     f"{row['Share']:.1f}%"
                 ),
                 textposition="inside"
