@@ -550,6 +550,23 @@ try:
             ldc_segments["compressed_points"]
         )
     )
+
+    # ============================================================================
+    # ============================================================================
+    # MIGRATION BOUNDARY
+    #
+    # ABOVE THIS LINE:
+    #     Production dashboard content migrated from the approved
+    #     working Palawan/Mindoro/Catanduanes dashboards.
+    #
+    # BELOW THIS LINE:
+    #     Temporary validation, diagnostics, framework testing,
+    #     migration-era QA outputs, comparison tables, and
+    #     development checkpoints.
+    #
+    # DELETE EVERYTHING BELOW THIS SECTION ONCE MIGRATION IS COMPLETE.
+    # ============================================================================
+    # ============================================================================
     
     # =================================================
     # LDC SEGMENTATION VALIDATION
@@ -1224,3 +1241,7 @@ except Exception as e:
     st.exception(e)
 
     st.stop()
+
+# ============================================================================
+# END OF TEMPORARY VALIDATION SECTION
+# ============================================================================
