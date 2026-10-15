@@ -20,5 +20,20 @@ CONFIG = {
 
     "USES_IMPORT_SUPPORT": False,
 
-    "UNIT_SCALE": 1
+    "UNIT_SCALE": 1,
+
+    "TECHNOLOGY_MAPPING": {
+
+        "e-Delta P": "Bunker",
+        "DMCI ABORLAN": "Bunker",
+
+        "DMCI NARRA": "Thermal",
+
+        "tDelta P": "Diesel",
+        "DMCI IRAWAN": "Diesel",
+        "DMCI QUEZON": "Diesel",
+        "VPOWER": "Diesel"
+
+    }
+    
 }
