@@ -37,7 +37,11 @@ def build_capacity_reference(
             .isin(
                 [
                     "INSTALLED CAPACITY (MW)",
-                    "DEPENDABLE CAPACITY"
+                    "DEPENDABLE CAPACITY",
+            
+                    "INSTALLED CAPACITY (KW)",
+                    "GUARANTEED DEPENDABLE CAPACITY (KW)",
+                    "AVAILABLE CAPACITY (KW)"
                 ]
             )
         ]
@@ -60,17 +64,33 @@ def build_capacity_reference(
 
     available_capacity_tbl.rename(
         columns={
+    
             "DEPENDABLE CAPACITY":
                 "DependableMW",
-
+    
+            "GUARANTEED DEPENDABLE CAPACITY (KW)":
+                "DependableMW",
+    
             "INSTALLED CAPACITY (MW)":
-                "InstalledMW"
+                "InstalledMW",
+    
+            "INSTALLED CAPACITY (KW)":
+                "InstalledMW",
+    
+            "AVAILABLE CAPACITY (KW)":
+                "AvailableMW"
         },
         inplace=True
     )
 
-    if "DependableMW" in available_capacity_tbl.columns:
-
+    if (
+        "AvailableMW"
+        not in available_capacity_tbl.columns
+        and
+        "DependableMW"
+        in available_capacity_tbl.columns
+    ):
+    
         available_capacity_tbl[
             "AvailableMW"
         ] = (
@@ -78,5 +98,5 @@ def build_capacity_reference(
                 "DependableMW"
             ]
         )
-
+    
     return available_capacity_tbl
