@@ -445,27 +445,27 @@ try:
         "Other": "#757575"
     }
 
-fig_tech = go.Figure()
-
-for _, row in tech_mix.iterrows():
-
-    fig_tech.add_trace(
-        go.Bar(
-            y=[""],
-            x=[row["Share"]],
-            name=row["Technology"],
-            orientation="h",
-            marker_color=tech_colors.get(
-                row["Technology"],
-                "#757575"
-            ),
-            text=(
-                f"{row['Technology']}<br>"
-                f"{row['Share'\]:.1f}%"
-            ),
-            textposition="inside"
+    fig_tech = go.Figure()
+    
+    for _, row in tech_mix.iterrows():
+    
+        fig_tech.add_trace(
+            go.Bar(
+                y=[""],
+                x=[row["Share"]],
+                name=row["Technology"],
+                orientation="h",
+                marker_color=tech_colors.get(
+                    row["Technology"],
+                    "#757575"
+                ),
+                text=(
+                    f"{row['Technology']}<br>"
+                    f"{row['Share'\]:.1f}%"
+                ),
+                textposition="inside"
+            )
         )
-    )
 
     fig_tech.update_layout(
         barmode="stack",
