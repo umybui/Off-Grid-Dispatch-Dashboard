@@ -67,6 +67,9 @@ from core.reliability_monitor import (
 from core.plant_role_matrix import (
     build_plant_role_matrix
 )
+from core.demand_distribution import (
+    build_demand_distribution
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -523,6 +526,12 @@ try:
     ldc = build_ldc(
         total_demand
     )
+
+    demand_distribution = (
+        build_demand_distribution(
+            total_demand
+        )
+    )
     
     ldc_segments = build_ldc_segments(
         ldc
@@ -593,6 +602,58 @@ try:
         segment_table,
         use_container_width=True
     )
+
+    # =====================================================
+    # DEMAND DISTRIBUTION ANALYSIS
+    # =====================================================
+    
+    st.subheader(
+        "Demand Distribution Analysis"
+    )
+    
+    b1, b2 = st.columns(2)
+    
+    with b1:
+    
+        st.plotly_chart(
+            demand_distribution[
+                "daily_peak_fig"
+            ],
+            use_container_width=True
+        )
+    
+    with b2:
+    
+        st.plotly_chart(
+            demand_distribution[
+                "hourly_fig"
+            ],
+            use_container_width=True
+        )
+    
+    st.metric(
+        "Load Factor",
+        f"{demand_distribution['load_factor']:.1f}%"
+    )
+    
+    st.plotly_chart(
+        demand_distribution[
+            "heatmap_fig"
+        ],
+        use_container_width=True
+    )
+    
+    with st.expander(
+        "View Heatmap Source Data",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            demand_distribution[
+                "heatmap_table"
+            ].round(1),
+            use_container_width=True
+        )
     
     # =====================================================
     # LOAD DURATION CURVE
