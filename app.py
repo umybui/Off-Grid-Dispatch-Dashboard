@@ -480,17 +480,17 @@ try:
     
         st.write(
             f"Adequate Reserve Hours: "
-            f"{operating_condition['adequate_hours'\]:,}"
+            f"{operating_condition['adequate_hours']:,}"
         )
     
         st.write(
             f"Reserve Deficient Hours: "
-            f"{operating_condition['reserve_deficient_hours'\]:,}"
+            f"{operating_condition['reserve_deficient_hours']:,}"
         )
     
         st.write(
             f"Unserved Demand Hours: "
-            f"{operating_condition['shortage_hours'\]:,}"
+            f"{operating_condition['shortage_hours']:,}"
         )
     
     with st.expander(
@@ -704,7 +704,7 @@ try:
     with col1:
         st.metric(
             "Peak Threshold",
-            f"{peak_hour['peak_threshold'\]:,.2f}"
+            f"{peak_hour['peak_threshold']:,.2f}"
         )
     
     with col2:
