@@ -1,190 +1,199 @@
 import pandas as pd
+import plotly.graph_objects as go
+import math
 
 
-def build_demand_generation(filtered, config):
+def build_demand_distribution(
+    total_demand
+):
 
-    demand_attribute = config.get(
-        "DEMAND_ATTRIBUTE"
+    peak_demand = total_demand["Value"].max()
+
+    average_load = total_demand["Value"].mean()
+
+    load_factor = (
+        average_load
+        / peak_demand
+        * 100
+        if peak_demand > 0
+        else 0
     )
 
-    generation_attribute = config.get(
-        "GENERATION_ATTRIBUTE"
-    )
+    # -----------------------------------------
+    # Daily Peak Demand by Month
+    # -----------------------------------------
 
-    demand_plant = config.get(
-        "DEMAND_PLANT"
-    )
-
-    plant_column = config.get(
-        "PLANT_COLUMN",
-        "Plant"
-    )
-
-    # ==========================================
-    # TOTAL DEMAND
-    # ==========================================
-
-    if demand_plant:
-
-        total_demand = (
-            filtered[
-                filtered[plant_column]
-                .astype(str)
-                .str.upper()
-                ==
-                demand_plant.upper()
-            ]
-            .copy()
+    daily_peak = (
+        total_demand.assign(
+            Date=total_demand["Datetime"].dt.date,
+            Month=total_demand["Datetime"].dt.strftime("%b")
         )
-
-        if demand_attribute:
-
-            total_demand = (
-                total_demand[
-                    total_demand["Attribute"]
-                    .astype(str)
-                    .str.upper()
-                    ==
-                    demand_attribute.upper()
-                ]
-            )
-
-    else:
-
-        total_demand = (
-            filtered[
-                filtered["Attribute"]
-                .astype(str)
-                .str.upper()
-                ==
-                demand_attribute.upper()
-            ]
-            .copy()
+        .groupby(
+            ["Month", "Date"],
+            as_index=False
         )
-
-    total_demand = (
-        total_demand
-        .groupby(
-            "Datetime",
-            as_index=False
-        )["Value"]
-        .sum()
+        .agg(
+            DailyPeak=("Value", "max")
+        )
     )
 
-    # ==========================================
-    # GENERATION
-    # ==========================================
-
-    generation = (
-        filtered[
-            filtered["Attribute"]
-            .astype(str)
-            .str.upper()
-            ==
-            generation_attribute.upper()
-        ]
-        .groupby(
-            ["Datetime", plant_column],
-            as_index=False
-        )["Value"]
-        .sum()
-    )
-
-    if demand_plant:
-
-        generation = generation[
-            generation[plant_column]
-            .astype(str)
-            .str.upper()
-            != demand_plant.upper()
-        ]
-
-    exclude_keywords = config.get(
-        "GENERATION_EXCLUDE_KEYWORDS",
-        []
-    )
-
-    if exclude_keywords:
-
-        pattern = "|".join(exclude_keywords)
-    
-        generation = generation[
-            ~generation[plant_column]
-            .astype(str)
-            .str.contains(
-                pattern,
-                case=False,
-                na=False
-            )
+    month_order = [
+        "Jan","Feb","Mar","Apr",
+        "May","Jun","Jul","Aug",
+        "Sep","Oct","Nov","Dec"
     ]
 
-    # ==========================================
-    # IMPORT SUPPORT
-    # ==========================================
+    hourly_profile = total_demand.copy()
 
-    transfer_flow = pd.DataFrame(
-        {
-            "Datetime": [],
-            "ImportSupport": []
-        }
+    hourly_profile["Hour"] = (
+        hourly_profile["Datetime"]
+        .dt.hour
     )
 
-    if config.get("USES_IMPORT_SUPPORT", False):
+    common_min = min(
+        daily_peak["DailyPeak"].quantile(0.01),
+        hourly_profile["Value"].quantile(0.01)
+    )
 
-        import_keyword = config.get(
-            "IMPORT_KEYWORD",
-            "IMPORT"
+    common_max = max(
+        daily_peak["DailyPeak"].quantile(0.99),
+        hourly_profile["Value"].quantile(0.99)
+    )
+
+    y_min = math.floor(common_min / 5) * 5
+    y_max = math.ceil(common_max / 5) * 5
+
+    y_range = y_max - y_min
+
+    if y_range <= 50:
+        y_tick = 5
+    elif y_range <= 100:
+        y_tick = 10
+    elif y_range <= 200:
+        y_tick = 20
+    else:
+        y_tick = math.ceil(y_range / 10 / 5) * 5
+
+    fig_peak = go.Figure()
+
+    for month in month_order:
+
+        temp = daily_peak[
+            daily_peak["Month"] == month
+        ]
+
+        if len(temp) == 0:
+            continue
+
+        fig_peak.add_trace(
+            go.Box(
+                y=temp["DailyPeak"],
+                name=month,
+                boxmean=True
+            )
         )
 
-        transfer_rows = filtered[
-            filtered[plant_column]
-            .astype(str)
-            .str.contains(
-                import_keyword,
-                case=False,
-                na=False
-            )
-        ].copy()
-
-        if not transfer_rows.empty:
-
-            transfer_rows["ImportSupport"] = (
-                transfer_rows["Value"]
-                .clip(lower=0)
-            )
-
-            transfer_flow = (
-                transfer_rows
-                .groupby(
-                    "Datetime",
-                    as_index=False
-                )["ImportSupport"]
-                .sum()
-            )
-    
-    # ==========================================
-    # TOTAL GENERATION
-    # ==========================================
-
-    total_generation = (
-        generation
-        .groupby(
-            "Datetime",
-            as_index=False
-        )["Value"]
-        .sum()
+    fig_peak.update_layout(
+        title="Daily Peak Demand by Month",
+        yaxis_title="MW",
+        height=450
     )
 
-    total_generation.rename(
-        columns={
-            "Value": "TotalGeneration"
-        },
-        inplace=True
+    fig_peak.update_yaxes(
+        range=[y_min, y_max],
+        dtick=y_tick
     )
 
-    return (
-        total_demand,
-        generation,
-        total_generation,
-        transfer_flow
+    # -----------------------------------------
+    # Hourly Demand Distribution
+    # -----------------------------------------
+
+    fig_hour = go.Figure()
+
+    for hr in range(24):
+
+        temp = hourly_profile[
+            hourly_profile["Hour"] == hr
+        ]
+
+        if len(temp) == 0:
+            continue
+
+        fig_hour.add_trace(
+            go.Box(
+                y=temp["Value"],
+                name=str(hr),
+                boxmean=True
+            )
+        )
+
+    fig_hour.update_layout(
+        title="Hourly Demand Distribution",
+        xaxis_title="Hour of Day",
+        yaxis_title="MW",
+        height=450
     )
+
+    fig_hour.update_yaxes(
+        range=[y_min, y_max],
+        dtick=y_tick
+    )
+
+    # -----------------------------------------
+    # Heatmap
+    # -----------------------------------------
+
+    heat_source = total_demand.copy()
+
+    heat_source["Date"] = (
+        heat_source["Datetime"]
+        .dt.strftime("%Y-%m-%d")
+    )
+
+    heat_source["Hour"] = (
+        heat_source["Datetime"]
+        .dt.hour
+    )
+
+    heat_source["DemandPctPeak"] = (
+        heat_source["Value"]
+        / peak_demand
+        * 100
+    )
+
+    heat_tbl = (
+        heat_source
+        .pivot_table(
+            index="Hour",
+            columns="Date",
+            values="DemandPctPeak",
+            aggfunc="mean"
+        )
+    )
+
+    fig_heat = go.Figure(
+        data=go.Heatmap(
+            z=heat_tbl.values,
+            x=heat_tbl.columns,
+            y=heat_tbl.index,
+            colorscale="RdYlGn_r",
+            zmin=0,
+            zmax=100,
+            colorbar_title="% Peak"
+        )
+    )
+
+    fig_heat.update_layout(
+        title="Demand Heatmap (% of System Peak)",
+        xaxis_title="Date",
+        yaxis_title="Hour",
+        height=500
+    )
+
+    return {
+        "daily_peak_fig": fig_peak,
+        "hourly_fig": fig_hour,
+        "load_factor": load_factor,
+        "heatmap_fig": fig_heat,
+        "heatmap_table": heat_tbl
+    }
