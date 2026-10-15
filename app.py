@@ -478,21 +478,6 @@ try:
         expanded=False
     ):
     
-        st.write(
-            f"Adequate Reserve Hours: "
-            f"{operating_condition['adequate_hours']:,}"
-        )
-    
-        st.write(
-            f"Reserve Deficient Hours: "
-            f"{operating_condition['reserve_deficient_hours']:,}"
-        )
-    
-        st.write(
-            f"Unserved Demand Hours: "
-            f"{operating_condition['shortage_hours']:,}"
-        )
-
     with st.expander(
         "Reserve Deficient Hours",
         expanded=False
@@ -690,7 +675,7 @@ try:
     with col1:
         st.metric(
             "Peak Threshold",
-            f"{peak_hour['peak_threshold']:,.2f}"
+            f"{peak_hour['peak_threshold'\]:,.2f}"
         )
     
     with col2:
@@ -727,7 +712,91 @@ try:
         "Peak Hour Energy Share Data",
         expanded=False
     ):
+    
+        st.dataframe(
+            peak_hour[
+                "peak_snapshot"
+            ][
+                [
+                    "Plant",
+                    "AvgPeakMW",
+                    "MaxPeakMW",
+                    "PeakEnergyMWh",
+                    "PeakEnergySharePct"
+                ]
+            ].round(2),
+            use_container_width=True,
+            hide_index=True
+        )
 
+    # =====================================================
+    # PEAK SUPPORT PERFORMANCE
+    # =====================================================
+    
+    st.subheader(
+        "Peak Support Performance"
+    )
+
+    with st.expander(
+        "Peak Support Table",
+        expanded=False
+    ):
+
+        st.dataframe(
+            peak_support[
+                [
+                    "Plant",
+                    "AvgPeakMW",
+                    "MaxPeakMW",
+                    "DependableMW",
+                    "PeakSupportPct",
+                    "RiskFlag",
+                    "Remarks"
+                ]
+            ].round(2),
+            use_container_width=True,
+            hide_index=True
+        )
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "OK",
+            (
+                peak_support["RiskFlag"]
+                == "OK"
+            ).sum()
+        )
+
+    with col2:
+        st.metric(
+            "Monitor",
+            (
+                peak_support["RiskFlag"]
+                == "Monitor"
+            ).sum()
+        )
+
+    with col3:
+        st.metric(
+            "Underperforming",
+            (
+                peak_support["RiskFlag"]
+                == "Underperforming"
+            ).sum()
+        )
+
+    st.markdown(
+        "##### Peak Support Achievement Chart"
+    )
+    
+    st.plotly_chart(
+        peak_support_chart,
+        use_container_width=True
+    )
+ 
+        
         st.dataframe(
             peak_hour[
                 "peak_snapshot"
@@ -804,6 +873,10 @@ try:
             ).sum()
         )
     
+    st.markdown(
+        "##### Capability Realization by Plant"
+    )
+    
     st.plotly_chart(
         asset_performance_chart,
         use_container_width=True
@@ -877,6 +950,10 @@ try:
                 == "Underperforming"
             ).sum()
         )
+    
+    st.markdown(
+        "##### Unit Sustained Capability Assessment"
+    )
     
     st.plotly_chart(
         unit_capability_chart,
@@ -971,70 +1048,7 @@ try:
         use_container_width=True,
         hide_index=True
     )
-
-    # =====================================================
-    # PEAK SUPPORT PERFORMANCE
-    # =====================================================
-    
-    st.subheader(
-        "Peak Support Performance"
-    )
-
-    with st.expander(
-        "Peak Support Table",
-        expanded=False
-    ):
-
-        st.dataframe(
-            peak_support[
-                [
-                    "Plant",
-                    "AvgPeakMW",
-                    "MaxPeakMW",
-                    "DependableMW",
-                    "PeakSupportPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
-            ].round(2),
-            use_container_width=True,
-            hide_index=True
-        )
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(
-            "OK",
-            (
-                peak_support["RiskFlag"]
-                == "OK"
-            ).sum()
-        )
-
-    with col2:
-        st.metric(
-            "Monitor",
-            (
-                peak_support["RiskFlag"]
-                == "Monitor"
-            ).sum()
-        )
-
-    with col3:
-        st.metric(
-            "Underperforming",
-            (
-                peak_support["RiskFlag"]
-                == "Underperforming"
-            ).sum()
-        )
-
-    st.plotly_chart(
-        peak_support_chart,
-        use_container_width=True
-    )
-                   
+                  
     # =====================================================
     # RELIABILITY SUMMARY
     # =====================================================
@@ -1116,12 +1130,6 @@ try:
             reliability["gap_df"].head(),
             use_container_width=True
         )
-
-except Exception as e:
-
-    st.exception(e)
-
-    st.stop()
 
 # =====================================================
 # ERROR HANDLING
