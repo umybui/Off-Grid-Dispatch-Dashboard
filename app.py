@@ -146,34 +146,6 @@ try:
             config
         )
     )
-
-    st.subheader("CAPACITY REFERENCE DEBUG")
-    
-    st.write(capacity_reference.columns.tolist())
-    
-    st.dataframe(
-        capacity_reference.head(20),
-        use_container_width=True
-    )
-    
-    st.write(
-        "CAPACITY REFERENCE COLUMNS"
-    )
-    
-    st.write(
-        capacity_reference.columns.tolist()
-    )
-    
-    st.dataframe(
-        capacity_reference.head(20)
-    )
-    
-    st.write("Capacity Reference Columns")
-    st.write(capacity_reference.columns.tolist())
-    
-    st.dataframe(
-        capacity_reference.head()
-    )
     
     capacity_reference = capacity_reference.rename(
         columns={
@@ -216,27 +188,7 @@ try:
             generation
         )
     )
-
-    st.write("GENERATION COLUMNS")
-    
-    st.write(
-        generation.columns.tolist()
-    )
-    
-    st.dataframe(
-        generation.head()
-    )
-    
-    st.write("Peak Snapshot Columns")
-    
-    st.write(
-        peak_hour["peak_snapshot"].columns.tolist()
-    )
-    
-    st.dataframe(
-        peak_hour["peak_snapshot"].head()
-    )
-    
+      
     peak_hour_share_fig = (
         build_peak_hour_share_chart(
             peak_hour[
@@ -384,7 +336,43 @@ try:
             f"{kpis['load_factor']:,.2f}%"
         )
    
+    # =====================================================
+    # RELIABILITY HEALTH MONITOR
+    # =====================================================
     
+    st.subheader(
+        "Reliability Health Monitor"
+    )
+    
+    c1, c2, c3, c4 = st.columns(4)
+    
+    with c1:
+        st.metric(
+            "Energy Served %",
+            f"{reliability_monitor['energy_served_pct']:.2f}%"
+        )
+    
+    with c2:
+        st.metric(
+            "Reserve Compliance %",
+            f"{reliability_monitor['reserve_compliance_pct']:.2f}%"
+        )
+    
+    with c3:
+        st.metric(
+            "Shortage Hours",
+            reliability_monitor[
+                "shortage_hours"
+            ]
+        )
+    
+    with c4:
+        st.metric(
+            "System Health",
+            reliability_monitor[
+                "overall_status"
+            ]
+        )  
 
     reliability_monitor = (
         build_reliability_monitor(
@@ -984,44 +972,6 @@ try:
     )
 
     # =====================================================
-    # RELIABILITY HEALTH MONITOR
-    # =====================================================
-    
-    st.subheader(
-        "Reliability Health Monitor"
-    )
-    
-    c1, c2, c3, c4 = st.columns(4)
-    
-    with c1:
-        st.metric(
-            "Energy Served %",
-            f"{reliability_monitor['energy_served_pct']:.2f}%"
-        )
-    
-    with c2:
-        st.metric(
-            "Reserve Compliance %",
-            f"{reliability_monitor['reserve_compliance_pct']:.2f}%"
-        )
-    
-    with c3:
-        st.metric(
-            "Shortage Hours",
-            reliability_monitor[
-                "shortage_hours"
-            ]
-        )
-    
-    with c4:
-        st.metric(
-            "System Health",
-            reliability_monitor[
-                "overall_status"
-            ]
-        )
-
-    # =====================================================
     # PEAK SUPPORT PERFORMANCE
     # =====================================================
     
@@ -1122,39 +1072,44 @@ try:
             str(reliability["peak_datetime"])
         )
 
-    # =================================================
-    # TECHNICAL VALIDATION TABLES
-    # =================================================
+# =================================================
+# TECHNICAL VALIDATION TABLES
+# =================================================
 
-    st.subheader("Total Demand")
+with st.expander(
+    "Technical Validation Tables",
+    expanded=False
+):
+
+    st.markdown("### Total Demand")
 
     st.dataframe(
         total_demand.head(),
         use_container_width=True
     )
 
-    st.subheader("Generation")
+    st.markdown("### Generation")
 
     st.dataframe(
         generation.head(),
         use_container_width=True
     )
 
-    st.subheader("Total Generation")
+    st.markdown("### Total Generation")
 
     st.dataframe(
         total_generation.head(),
         use_container_width=True
     )
 
-    st.subheader("Import Support")
+    st.markdown("### Import Support")
 
     st.dataframe(
         transfer_flow.head(),
         use_container_width=True
     )
 
-    st.subheader("Gap Data")
+    st.markdown("### Gap Data")
 
     st.dataframe(
         reliability["gap_df"].head(),
