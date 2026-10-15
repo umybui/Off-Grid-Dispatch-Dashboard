@@ -62,23 +62,29 @@ def build_capacity_reference(
         .reset_index()
     )
 
+    available_capacity_tbl.columns = [
+        str(col).strip()
+        for col in available_capacity_tbl.columns
+    ]
+    
     available_capacity_tbl.rename(
         columns={
     
-            "DEPENDABLE CAPACITY":
+            "Dependable Capacity":
                 "DependableMW",
     
-            "GUARANTEED DEPENDABLE CAPACITY (KW)":
+            "Guaranteed Dependable Capacity (kW)":
                 "DependableMW",
     
-            "INSTALLED CAPACITY (MW)":
+            "Installed Capacity (kW)":
                 "InstalledMW",
     
-            "INSTALLED CAPACITY (KW)":
+            "Installed Capacity (MW)":
                 "InstalledMW",
     
-            "AVAILABLE CAPACITY (KW)":
+            "Available Capacity (kW)":
                 "AvailableMW"
+    
         },
         inplace=True
     )
