@@ -2,9 +2,30 @@ import pandas as pd
 import streamlit as st
 
 def build_capacity_reference(
-    df
+    df,
+    config=None
 ):
 
+    if (
+        config is not None
+        and
+        "DEPENDABLE_REFERENCE" in config
+    ):
+    
+        capacity_reference = pd.DataFrame(
+            config["DEPENDABLE_REFERENCE"]
+        )
+    
+        capacity_reference["InstalledMW"] = (
+            capacity_reference["DependableMW"]
+        )
+    
+        capacity_reference["AvailableMW"] = (
+            capacity_reference["DependableMW"]
+        )
+    
+        return capacity_reference
+    
     if "Attribute" not in df.columns:
         return pd.DataFrame()
 
