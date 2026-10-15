@@ -1,5 +1,5 @@
 import streamlit as st
-
+import plotly.graph_objects as go
 from config.palawan import CONFIG as PALAWAN
 from config.mindoro import CONFIG as MINDORO
 from config.catanduanes import CONFIG as CATANDUANES
