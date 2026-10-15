@@ -146,13 +146,7 @@ try:
             config
         )
     )
-    
-    capacity_reference = capacity_reference.rename(
-        columns={
-            "Dependable Capacity": "DependableMW"
-        }
-    )
-      
+         
     # =================================================
     # DASHBOARD FILTERS
     # =================================================
