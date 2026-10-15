@@ -208,6 +208,16 @@ try:
         )
     )
 
+    st.write("GENERATION COLUMNS")
+    
+    st.write(
+        generation.columns.tolist()
+    )
+    
+    st.dataframe(
+        generation.head()
+    )
+    
     st.write("Peak Snapshot Columns")
     
     st.write(
