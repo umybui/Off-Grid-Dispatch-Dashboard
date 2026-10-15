@@ -146,6 +146,18 @@ try:
         )
     )
 
+    st.write(
+        "CAPACITY REFERENCE COLUMNS"
+    )
+    
+    st.write(
+        capacity_reference.columns.tolist()
+    )
+    
+    st.dataframe(
+        capacity_reference.head(20)
+    )
+    
     st.write("Capacity Reference Columns")
     st.write(capacity_reference.columns.tolist())
     
