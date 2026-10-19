@@ -1550,15 +1550,9 @@ try:
         ldc_segments["recommended_segments"]
     )
 
-    st.write(segment_summary)
-    
-    peak_segment = (
-        segment_summary.iloc[0]
-    )
-    
-    base_segment = (
-        segment_summary.iloc[-1]
-    )
+    peak_segment = segment_summary[0]
+
+    base_segment = segment_summary[-1]
     
     st.markdown(
         f"""
@@ -1567,11 +1561,11 @@ try:
     **{recommended_segments} natural demand regimes**.
     
     • Highest demand segment occurs during approximately
-    **{peak_segment['DurationPct']:.1f}%**
+    **{peak_segment['Duration %']:.1f}%**
     of the study period.
     
     • Lowest demand segment occupies approximately
-    **{base_segment['DurationPct']:.1f}%**
+    **{base_segment['Duration %']:.1f}%**
     of the study period and represents
     the system baseload regime
     
