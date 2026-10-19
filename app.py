@@ -1808,6 +1808,24 @@ try:
         hide_index=True
     )
    
+    # =====================================================
+    # RESERVE SECURITY SCORE
+    # =====================================================
+ 
+    reserve_security_score = (
+        hours_meeting_requirement
+        / demand_served_hours
+        * 100
+    )
+
+    st.metric(
+        "Reserve Security Score",
+        f"{reserve_security_score:.1f}/100"
+    )
+
+
+
+
     
 #$$$$$$$$$$$$$$$$$$$
     
