@@ -1210,8 +1210,10 @@ try:
         (Hours Meeting Reserve Requirement ÷ Total Hours) × 100
         """
     )
-    
-    #Monthly Reliability Details Table
+
+    # =====================================================
+    # MONTHLY RELIABILITY DETAILS TABLE
+    # =====================================================
     monthly_detail = (
         monthly_gap
         .groupby(
@@ -1241,6 +1243,7 @@ try:
                             df["RequiredReserve"]
                         ).sum(),
     
+                    # Compliance checked HOURLY
                     "ReserveAdequacyPct":
                         (
                             (
@@ -1253,16 +1256,17 @@ try:
                             * 100
                         ),
     
-                    "RegulatingReserveMW":
+                    # Audit values only (not used for compliance)
+                    "AveRegulatingReserveMW":
                         df["RegulatingReserve"].mean(),
     
-                    "ContingencyReserveMW":
+                    "AveContingencyReserveMW":
                         df["ContingencyReserve"].mean(),
     
-                    "RequiredReserveMW":
+                    "AveRequiredReserveMW":
                         df["RequiredReserve"].mean(),
     
-                    "AverageReserveMarginMW":
+                    "AveReserveMarginMW":
                         df["ReserveMargin"].mean(),
     
                     "UnservedEnergy":
@@ -1271,7 +1275,9 @@ try:
             )
         )
         .reset_index()
-        .sort_values("MonthSort")
+        .sort_values(
+            "MonthSort"
+        )
     )
 
     #load factor
@@ -1282,7 +1288,27 @@ try:
         * 100
     )
 
-    #reserve adequacy
+    monthly_detail["ReliabilityScore"] = (
+        100
+        -
+        (
+            monthly_detail["HoursWithShortage"]
+            * 0.25
+        )
+        -
+        (
+            monthly_detail["LowReserveHours"]
+            * 0.05
+        )
+    )
+    
+    monthly_detail["ReliabilityScore"] = (
+        monthly_detail["ReliabilityScore"]
+        .clip(
+            lower=0,
+            upper=100
+        )
+    )
 
     with st.expander(
         "Monthly Reliability Details",
@@ -1299,12 +1325,13 @@ try:
                     "HoursWithShortage",
                     "LowReserveHours",
                     "ReserveAdequacyPct",
-                    "RegulatingReserveMW",
-                    "ContingencyReserveMW",
-                    "RequiredReserveMW",
-                    "AverageReserveMarginMW",
+                    "AveRegulatingReserveMW",
+                    "AveContingencyReserveMW",
+                    "AveRequiredReserveMW",
+                    "AveReserveMarginMW",
                     "UnservedEnergy",
-                    "LoadFactor"
+                    "LoadFactor",
+                    "ReliabilityScore"
                 ]
             ].round(2),
             use_container_width=True,
@@ -1313,46 +1340,24 @@ try:
     
         st.caption(
             """
-            Regulating Reserve MW = Average Demand × 2.8%
+            Regulating Reserve (MW)
+            = Average Demand × 2.8%
     
-            Contingency Reserve MW = Average Synchronized Generation × 10%
+            Contingency Reserve (MW)
+            = Average Synchronized Generation × 10%
     
-            Required Reserve MW =
-            Regulating Reserve MW + Contingency Reserve MW
+            Required Reserve (MW)
+            = Regulating Reserve + Contingency Reserve
     
-            Average Reserve Margin MW =
-            Average (Total Supply − Total Demand)
+            Reserve Adequacy (%)
+            = (Hours Meeting Required Reserve ÷ Total Hours) × 100
     
-            Reserve Adequacy (%) =
-            (Hours Meeting Required Reserve ÷ Total Hours) × 100
+            Compliance is evaluated hourly using:
+    
+            Reserve Margin ≥ Required Reserve
             """
         )
     
-    # reliability score
-    monthly_detail["ReliabilityScore"] = (
-        100
-        -
-        (
-            monthly_detail["HoursWithShortage"]
-            * 0.25
-        )
-        -
-        (
-            monthly_detail["LowReserveHours"]
-            * 0.05
-        )
-    )
-
-    #clip
-    monthly_detail["ReliabilityScore"] = (
-        monthly_detail[
-            "ReliabilityScore"
-        ].clip(
-            lower=0,
-            upper=100
-        )
-    )
-   
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
         build_reliability_monitor(
