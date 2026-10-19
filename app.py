@@ -762,7 +762,251 @@ try:
             use_container_width=True
         )
 
+    # =====================================================
+    # Reliability Health Monitor
+    # =====================================================
+
+    st.subheader(
+        "Reliability Health Monitor"
+    )
+
+    # =====================================================
+    # User Weights
+    # =====================================================
+
+    w1, w2, w3 = st.columns(3)
     
+    with w1:
+    
+        unserved_weight = st.number_input(
+            "Unserved Energy Weight (%)",
+            min_value=0,
+            max_value=100,
+            value=50,
+            step=5
+        )
+    
+    with w2:
+    
+        shortage_weight = st.number_input(
+            "Shortage Hours Weight (%)",
+            min_value=0,
+            max_value=100,
+            value=25,
+            step=5
+        )
+    
+    with w3:
+    
+        reserve_weight = st.number_input(
+            "Low Reserve Hours Weight (%)",
+            min_value=0,
+            max_value=100,
+            value=25,
+            step=5
+        )
+
+
+    # =====================================================
+    # Validation
+    # =====================================================
+
+    weight_total = (
+        unserved_weight
+        + shortage_weight
+        + reserve_weight
+    )
+    
+    if weight_total != 100:
+    
+        st.error(
+            f"Weight Total = {weight_total}% "
+            f"(must equal 100%)"
+        )
+    
+    else:
+    
+        st.success(
+            "✓ Weight Total = 100%"
+        )
+
+    # =====================================================
+    # Score
+    # =====================================================
+
+    unserved_penalty = min(
+        reliability["unserved_energy"] /
+        max(
+            kpis["demand_energy_mwh"],
+            1
+        ),
+        1
+    )
+    
+    shortage_penalty = min(
+        reliability["hours_with_shortage"] /
+        len(reliability["gap_df"]),
+        1
+    )
+    
+    reserve_penalty = min(
+        reliability["hours_low_reserve"] /
+        len(reliability["gap_df"]),
+        1
+    )
+
+    reliability_score = 100 - (
+    
+        unserved_penalty
+        *
+        unserved_weight
+    
+        +
+    
+        shortage_penalty
+        *
+        shortage_weight
+    
+        +
+    
+        reserve_penalty
+        *
+        reserve_weight
+    
+    )
+    #Create limit    
+    reliability_score = max(
+        0,
+        min(100, reliability_score)
+    )
+
+    # =====================================================
+    # Status
+    # =====================================================
+
+    if reliability_score >= 85:
+    
+        health_status = "Excellent"
+    
+    elif reliability_score >= 70:
+    
+        health_status = "Good"
+    
+    elif reliability_score >= 50:
+    
+        health_status = "Fair"
+    
+    else:
+    
+        health_status = "Poor"
+
+    # =====================================================
+    # KPI Cards
+    # =====================================================
+
+    c1, c2, c3, c4 = st.columns(4)
+    
+    with c1:
+    
+        st.metric(
+            "Reliability Score",
+            f"{reliability_score:.0f}"
+        )
+    
+    with c2:
+    
+        st.metric(
+            "Unserved Energy",
+            f"{reliability['unserved_energy'\]:,.1f} MWh"
+        )
+    
+    with c3:
+    
+        reserve_adequacy = 100 * (
+            1
+            -
+            (
+                reliability["hours_low_reserve"]
+                /
+                len(reliability["gap_df"])
+            )
+        )
+    
+        st.metric(
+            "Reserve Adequacy",
+            f"{reserve_adequacy:.1f}%"
+        )
+    
+    with c4:
+    
+        st.metric(
+            "Low Reserve Hours",
+            reliability["hours_low_reserve"]
+        )
+
+    # =====================================================
+    # Month-by-Month Traffic Lights
+    # =====================================================
+
+    monthly_gap = (
+        reliability["gap_df"]
+        .copy()
+    )
+
+    monthly_gap["Month"] = (
+        monthly_gap["Datetime"]
+        .dt.strftime("%b")
+    )
+    #Create aggregate
+    monthly_status = (
+        monthly_gap
+        .groupby("Month")
+        .agg(
+            UnservedEnergy=(
+                "EnergyShortage",
+                "sum"
+            ),
+    
+            ShortageHours=(
+                "SupplyGap",
+                lambda x: (x > 0).sum()
+            )
+        )
+        .reset_index()
+    )
+    #Create indicator
+    traffic = []
+    
+    for _, row in monthly_status.iterrows():
+    
+        if row["ShortageHours"] == 0:
+    
+            traffic.append("🟢")
+    
+        elif row["ShortageHours"] < 24:
+    
+            traffic.append("🟡")
+    
+        elif row["ShortageHours"] < 72:
+    
+            traffic.append("🟠")
+    
+        else:
+    
+            traffic.append("🔴")
+    #Create display
+    st.markdown(
+        " ".join(
+            [
+                f"{m} {c}"
+                for m, c in zip(
+                    monthly_status["Month"],
+                    traffic
+                )
+            ]
+        )
+    )
+
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
         build_reliability_monitor(
