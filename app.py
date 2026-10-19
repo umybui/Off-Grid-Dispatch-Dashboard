@@ -323,23 +323,10 @@ try:
         total_demand
     )
 
-    # temporary default build
+    # Initial recommendation run
+    
     ldc_segments = build_ldc_segments(
         ldc
-    )
-    
-    segment_table = build_segment_table(
-        ldc,
-        ldc_segments["boundaries"],
-        ldc_segments["compressed_points"]
-    )
-    
-    ldc_fig, segment_summary = (
-        build_ldc_chart(
-            ldc,
-            ldc_segments["boundaries"],
-            ldc_segments["compressed_points"]
-        )
     )
        
 #$$$$$$$$$$$$$$$$$$$
@@ -1593,21 +1580,19 @@ try:
         value=True
     )
 
-    ldc_segments = build_ldc_segments(
-        ldc,
-        max_segments_to_test=max_segments
-    )
-    
+    # Determine recommendation
     recommended_segments = (
         ldc_segments["recommended_segments"]
     )
     
+    # User selection
     selected_segments = (
         recommended_segments
         if use_recommended
         else max_segments
     )
     
+    # Rebuild segmentation using selected value
     ldc_segments = build_ldc_segments(
         ldc,
         max_segments_to_test=max_segments,
@@ -1753,9 +1738,9 @@ try:
         
         st.markdown(
             f"""
-        The selected **{recommended_segments}-segment**
+        The selected **{selected_segments}-segment**
         model divides the Load Duration Curve into
-        **{recommended_segments} natural demand regimes**.
+        **{selected_segments} natural demand regimes**.
         
         • Highest demand segment (S1) occurs during approximately
         **{highest_segment['% Time']:.1f}%**
