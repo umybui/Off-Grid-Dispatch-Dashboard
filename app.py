@@ -1497,6 +1497,132 @@ try:
             ].round(1),
             use_container_width=True
         )
+
+    # =====================================================
+    # DEMAND DISTRIBUTION
+    # =====================================================
+    
+    demand_distribution = (
+        build_demand_distribution(
+            total_demand
+        )
+    )
+    
+    # =====================================================
+    # LOAD DURATION CURVE
+    # =====================================================
+    
+    ldc = build_ldc(
+        total_demand
+    )
+    
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
+    segment_table = build_segment_table(
+        ldc,
+        ldc_segments["boundaries"],
+        ldc_segments["compressed_points"]
+    )
+    
+    ldc_fig, segment_summary = (
+        build_ldc_chart(
+            ldc,
+            ldc_segments["boundaries"],
+            ldc_segments["compressed_points"]
+        )
+    )
+
+    # =====================================================
+    # LOAD DURATION CURVE
+    # =====================================================
+    
+    st.subheader(
+        "Load Duration Curve"
+    )
+
+    st.markdown(
+        "### Operational Interpretation"
+    )
+    
+    recommended_segments = (
+        ldc_segments["recommended_segments"]
+    )
+    
+    peak_segment = (
+        segment_summary.iloc[0]
+    )
+    
+    base_segment = (
+        segment_summary.iloc[-1]
+    )
+    
+    st.markdown(
+        f"""
+    The selected **{recommended_segments}-segment**
+    model divides the Load Duration Curve into
+    **{recommended_segments} natural demand regimes**.
+    
+    • Highest demand segment occurs during approximately
+    **{peak_segment['DurationPct']:.1f}%**
+    of the study period.
+    
+    • Lowest demand segment occupies approximately
+    **{base_segment['DurationPct']:.1f}%**
+    of the study period and represents
+    the system baseload regime
+    
+    • Total segmentation error:
+    **{ldc_segments['total_sse']:,.0f} SSE**
+    
+    • These segments can be used for dispatch planning,
+    capacity adequacy assessment, reserve studies,
+    and generation portfolio analysis.
+    """
+    )
+
+    st.dataframe(
+        segment_table.round(2),
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.plotly_chart(
+        ldc_fig,
+        use_container_width=True
+    )
+
+    st.caption(
+        """
+        The Load Duration Curve ranks all demand observations
+        from highest to lowest, illustrating how often
+        different demand levels occur throughout the study period.
+    
+        Segment boundaries identify natural operating regimes
+        such as peaking, upper mid-merit, lower mid-merit,
+        and baseload demand conditions.
+    
+        The segmentation model provides a simplified
+        representation of system demand suitable for
+        capacity planning, reserve adequacy assessment,
+        dispatch optimization, and generation portfolio studies.
+        """
+    )
+
+    st.markdown(
+        "##### Segment Summary"
+    )
+    
+    segment_display = segment_summary.copy()
+    
+    st.dataframe(
+        segment_display.round(2),
+        use_container_width=True,
+        hide_index=True
+    )
+
+    
     
 #$$$$$$$$$$$$$$$$$$$
     
