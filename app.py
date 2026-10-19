@@ -1474,6 +1474,10 @@ try:
         intraday load behavior.
         """
     )
+
+    st.subheader(
+        "Hour-Date Demand Heatmap (% of Peak Demand)"
+    )
     
     st.plotly_chart(
         demand_distribution[
@@ -1494,23 +1498,6 @@ try:
             use_container_width=True
         )
     
-    st.caption(
-        """
-        Daily Peak Demand by Month summarizes the distribution
-        of daily peak demand values for each month, showing
-        median demand, variability, and extreme peak events.
-    
-        Hourly Demand Distribution summarizes demand behavior
-        by hour of day across the selected study period,
-        highlighting recurring load patterns, peak-demand
-        hours, and operational variability.
-    
-        Both charts use a common MW scale for direct
-        comparison between monthly peak behavior and
-        hourly load characteristics.
-        """
-    )
-
 #$$$$$$$$$$$$$$$$$$$
     
     reliability_monitor = (
