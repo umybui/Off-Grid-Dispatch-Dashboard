@@ -917,7 +917,7 @@ try:
     
         st.metric(
             "Unserved Energy",
-            f"{reliability['unserved_energy'\]:,.1f} MWh"
+            f"{reliability['unserved_energy']:,.1f} MWh"
         )
     
     with c3:
