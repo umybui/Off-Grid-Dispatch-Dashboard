@@ -770,6 +770,10 @@ try:
         "Reliability Health Monitor"
     )
 
+    st.caption(
+        "The three weights must total exactly 100%."
+    )
+    
     # =====================================================
     # User Weights
     # =====================================================
@@ -1014,6 +1018,17 @@ try:
                 )
             ]
         )
+    )
+
+    st.caption(
+        """
+        Traffic Light Legend:
+    
+        🟢 Excellent (Score ≥ 85) |
+        🟡 Good (70-84) |
+        🟠 Fair (50-69) |
+        🔴 Poor (<50)
+        """
     )
     
     # =====================================================
