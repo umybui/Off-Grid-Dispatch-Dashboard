@@ -117,6 +117,21 @@ def build_ldc_chart(
             )
         )
 
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker=dict(
+                    size=10,
+                    color=segment_colors[
+                        i % len(segment_colors)
+                    ]
+                ),
+                name=segment_name
+            )
+        )
+        
         fig.add_vrect(
             x0=start_pct,
             x1=end_pct,
@@ -169,6 +184,33 @@ def build_ldc_chart(
             }
         )
 
+        transition_x = end_pct
+        
+        transition_y = segment_min
+        
+        marker_color = (
+            "red"
+            if i == 0
+            else
+            "green"
+            if i == len(boundaries) - 1
+            else
+            "orange"
+        )
+        
+        fig.add_trace(
+            go.Scatter(
+                x=[transition_x],
+                y=[transition_y],
+                mode="markers",
+                marker=dict(
+                    size=8,
+                    color=marker_color
+                ),
+                showlegend=False
+            )
+        )
+    
     average_load = (
         ldc["DemandMW"]
         .mean()
@@ -181,9 +223,27 @@ def build_ldc_chart(
             f"Average Load ({average_load:.2f} MW)"
     )
 
+    peak_load = (
+    ldc["DemandMW"]
+    .max()
+    )
+    
+    fig.add_trace(
+        go.Scatter(
+            x=[0],
+            y=[peak_load],
+            mode="markers",
+            marker=dict(
+                color="red",
+                size=10
+            ),
+            showlegend=False
+        )
+    )
+
     fig.add_annotation(
         x=0,
-        y=ldc["DemandMW"].max(),
+        y=peak_load,
         text=(
             "Peak Demand<br>"
             f"{ldc['DemandMW'].max():.2f} MW"
@@ -191,9 +251,27 @@ def build_ldc_chart(
         showarrow=True
     )
 
+    base_load = (
+    ldc["DemandMW"]
+    .min()
+    )
+    
+    fig.add_trace(
+        go.Scatter(
+            x=[100],
+            y=[base_load],
+            mode="markers",
+            marker=dict(
+                color="green",
+                size=10
+            ),
+            showlegend=False
+        )
+    )
+
     fig.add_annotation(
         x=100,
-        y=ldc["DemandMW"].min(),
+        y=base_load,
         text=(
             "Minimum Demand<br>"
             f"{ldc['DemandMW'].min():.2f} MW"
@@ -202,7 +280,14 @@ def build_ldc_chart(
     )
 
     fig.update_layout(
-        title="Load Duration Curve",
+        legend_title="Segment",
+        legend=dict(
+            orientation="v"
+        ),
+        title=(
+        f"Load Duration Curve "
+        f"({len(boundaries)} Segments)"
+        ),
         xaxis_title="Percent of Time Exceeded (%)",
         yaxis_title="Demand (MW)",
         hovermode="x unified",
