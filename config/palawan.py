@@ -26,15 +26,12 @@ CONFIG = {
 
         "e-Delta P": "Bunker",
         "DMCI ABORLAN": "Bunker",
-
         "DMCI NARRA": "Thermal",
-
         "tDelta P": "Diesel",
         "DMCI IRAWAN": "Diesel",
         "DMCI QUEZON": "Diesel",
         "VPOWER": "Diesel",
-        "DMCI Rio Tuba": "Diesel",
-
+        "DMCI RIO TUBA": "Diesel",
     }
     
 }
