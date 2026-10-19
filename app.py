@@ -1664,16 +1664,19 @@ try:
     """
         )
     
-        st.success(
-            f"""
-    The current selection matches the recommended value.
-    
-    A {selected_segments}-segment model provides a
-    balanced representation of the Load Duration Curve
-    while keeping the segmentation simple enough for
-    planning and dispatch analysis.
-    """
-        )
+        if selected_segments == recommended_segments:
+        
+            st.success(
+                f"Current Selection: {selected_segments} segments "
+                f"(recommended value)"
+            )
+        
+        else:
+        
+            st.info(
+                f"Current Selection: {selected_segments} segments "
+                f"(recommended: {recommended_segments})"
+            )
     
         # =====================================================
         # ELBOW METHOD CHART
@@ -1746,7 +1749,7 @@ try:
         **{highest_segment['% Time']:.1f}%**
         of the study period.
         
-        • Lowest demand segment (S{recommended_segments})
+        • Lowest demand segment (S{selected_segments})
         occurs during approximately
         **{lowest_segment['% Time']:.1f}%**
         of the study period.
