@@ -92,6 +92,17 @@ CONFIG = {
         "OPI": "Bunker",
         "POC": "Bunker",
         "MHEC": "Bunker",
+        "POWER PIONEERS": "Others",
+        "GFEC": "Others",
+        "TOPTEAM CALAPAN": "Others",
+        "TOPTEAM SOCORRO": "Others",
+        "SPC SOCORRO": "Others",
+        "TPI BANSUD": "Others",
+        "TPI CALAPAN": "Others",
+        "REGULUS": "Others",
+        "RMS": "Others",
+        "TOPTEAM BONGABONG": "Others",
+        "SPC ROXAS": "Others",       
     }
 
 }
