@@ -914,7 +914,7 @@ try:
     
         st.metric(
             "Study Period Reliability Score",
-            f"{reliability_score:.0f}"
+            f"{reliability_score:.0f}/100"
         )
     
     with c2:
@@ -950,17 +950,36 @@ try:
 
     st.caption(
         """
-        Study Period Reliability Score is calculated using
-        the full selected analysis period and is not a
-        monthly score.
+        Study Period Reliability Score is evaluated over the
+        entire selected analysis period.
     
-        Score components:
+        Score Formula:
     
-        • Unserved Energy Weight = 50%
-        • Shortage Hours Weight = 25%
-        • Low Reserve Hours Weight = 25%
+        Reliability Score =
+        100 − (
+            Unserved Energy Penalty × Weight
+            + Shortage Hours Penalty × Weight
+            + Low Reserve Hours Penalty × Weight
+        )
     
-        Higher scores indicate better system reliability.
+        Where:
+    
+        • Unserved Energy Penalty =
+          Unserved Energy ÷ Demand Energy
+    
+        • Shortage Hours Penalty =
+          Hours with Shortage ÷ Total Hours
+    
+        • Low Reserve Hours Penalty =
+          Low Reserve Hours ÷ Total Hours
+    
+        Default Weights:
+    
+        • Unserved Energy = 50%
+        • Shortage Hours = 25%
+        • Low Reserve Hours = 25%
+    
+        Higher scores indicate better overall reliability.
         """
     )
     
