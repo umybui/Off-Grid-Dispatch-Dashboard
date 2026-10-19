@@ -1165,6 +1165,22 @@ try:
         use_container_width=True
     )
 
+    st.caption(
+        """
+        Reserve Adequacy Legend:
+    
+        ≥95% = Excellent | 90-94.9% = Good |
+        80-89.9% = Fair | <80% = Poor
+        """
+    )
+    
+    st.caption(
+        """
+        Reserve Adequacy (%) =
+        (Hours Meeting Reserve Requirement ÷ Total Hours) × 100
+        """
+    )
+    
     #Monthly Reliability Details Table
     monthly_detail = (
         monthly_gap
