@@ -615,25 +615,31 @@ try:
     st.subheader(
         "Monthly Generation Share by Technology"
     )
-
+    
     monthly_tech = generation_mix.copy()
     
     monthly_tech["Month"] = (
         monthly_tech["Datetime"]
         .dt.strftime("%b %Y")
     )
-
+    
+    # Hidden chronological sort column
+    monthly_tech["MonthSort"] = (
+        monthly_tech["Datetime"]
+        .dt.to_period("M")
+    )
+    
     monthly_tech = (
         monthly_tech
         .groupby(
-            ["Month", "Technology"],
+            ["Month", "MonthSort", "Technology"],
             as_index=False
         )["Value"]
         .sum()
     )
-
+    
     # =====================================================
-    # COMPUTE MONTLY SHARE
+    # COMPUTE MONTHLY SHARE
     # =====================================================
     
     monthly_total = (
@@ -648,9 +654,9 @@ try:
         monthly_total
         * 100
     )
-
+    
     # =====================================================
-    # Create Matrix
+    # CREATE MATRIX
     # =====================================================
     
     tech_matrix = (
@@ -662,9 +668,28 @@ try:
         )
         .fillna(0)
     )
-
+    
     # =====================================================
-    # Consistent Technology Order
+    # ENSURE MONTHS ARE PROPERLY SORTED
+    # =====================================================
+    
+    month_order = (
+        monthly_tech[
+            ["Month", "MonthSort"]
+        ]
+        .drop_duplicates()
+        .sort_values(
+            "MonthSort"
+        )["Month"]
+        .tolist()
+    )
+    
+    tech_matrix = tech_matrix[
+        month_order
+    ]
+    
+    # =====================================================
+    # CONSISTENT TECHNOLOGY ORDER
     # =====================================================
     
     technology_order = [
@@ -676,9 +701,9 @@ try:
     tech_matrix = tech_matrix.reindex(
         technology_order
     )
-
+    
     # =====================================================
-    # Heatmap
+    # HEATMAP
     # =====================================================
     
     fig_heatmap = go.Figure(
@@ -699,9 +724,9 @@ try:
             )
         )
     )
-
+    
     # =====================================================
-    # Format Layout of Heatmap
+    # FORMAT LAYOUT OF HEATMAP
     # =====================================================
     
     fig_heatmap.update_layout(
@@ -713,16 +738,16 @@ try:
             b=20
         )
     )
-
+    
     # =====================================================
-    # Display Heatmap
+    # DISPLAY HEATMAP
     # =====================================================
     
     st.plotly_chart(
         fig_heatmap,
         use_container_width=True
     )
-
+    
     # =====================================================
     # Matrix Table
     # =====================================================
