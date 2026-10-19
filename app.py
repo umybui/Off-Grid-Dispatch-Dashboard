@@ -1089,22 +1089,27 @@ try:
         use_container_width=True
     )
 
-    #Monthly reserve statistics
+    # =====================================================
+    # MONTHLY RESERVE STATISTICS
+    # =====================================================
+    
     monthly_reserve = (
         monthly_gap
         .groupby(
             ["Month", "MonthSort"]
         )
-        .agg(
-            TotalHours=(
-                "ReserveMargin",
-                "size"
-            ),
-            AdequateHours=(
-                "ReserveMargin",
-                lambda x: (
-                    x > 0
-                ).sum()
+        .apply(
+            lambda df: pd.Series(
+                {
+                    "TotalHours": len(df),
+    
+                    "AdequateHours":
+                    (
+                        df["ReserveMargin"]
+                        >=
+                        df["RequiredReserve"]
+                    ).sum()
+                }
             )
         )
         .reset_index()
@@ -1112,15 +1117,23 @@ try:
             "MonthSort"
         )
     )
-
-        #reserve adequacy
+    
+    # =====================================================
+    # RESERVE ADEQUACY
+    # =====================================================
+    
     monthly_reserve["ReserveAdequacyPct"] = (
         monthly_reserve["AdequateHours"]
         /
         monthly_reserve["TotalHours"]
         * 100
     )
-
+    
+    # =====================================================
+    # CHART
+    # =====================================================
+    
+    fig_reserve = go.Figure()
     #chart
     fig_reserve = go.Figure()
 
