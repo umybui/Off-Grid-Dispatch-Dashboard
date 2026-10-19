@@ -913,14 +913,14 @@ try:
     with c1:
     
         st.metric(
-            "Reliability Score",
+            "Study Period Reliability Score",
             f"{reliability_score:.0f}"
         )
     
     with c2:
     
         st.metric(
-            "Unserved Energy",
+            "Study Period Unserved Energy",
             f"{reliability['unserved_energy']:,.1f} MWh"
         )
     
@@ -937,17 +937,33 @@ try:
         )
     
         st.metric(
-            "Reserve Adequacy",
+            "Study Period Reserve Adequacy",
             f"{reserve_adequacy:.1f}%"
         )
     
     with c4:
     
         st.metric(
-            "Low Reserve Hours",
+            "Study Period Low Reserve Hours",
             reliability["hours_low_reserve"]
         )
 
+    st.caption(
+        """
+        Study Period Reliability Score is calculated using
+        the full selected analysis period and is not a
+        monthly score.
+    
+        Score components:
+    
+        • Unserved Energy Weight = 50%
+        • Shortage Hours Weight = 25%
+        • Low Reserve Hours Weight = 25%
+    
+        Higher scores indicate better system reliability.
+        """
+    )
+    
     # =====================================================
     # MONTH-BY-MONTH TRAFFIC LIGHTS
     # =====================================================
