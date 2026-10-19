@@ -1213,63 +1213,66 @@ try:
     
     #Monthly Reliability Details Table
     monthly_detail = (
-    monthly_gap
-    .groupby(
-        ["Month", "MonthSort"]
-    )
-    .apply(
-        lambda df: pd.Series(
-            {
-                "PeakDemand":
-                    df["TotalDemand"].max(),
-
-                "AverageDemand":
-                    df["TotalDemand"].mean(),
-
-                "MaxShortage":
-                    df["ShortageMW"].max(),
-
-                "HoursWithShortage":
-                    (
-                        df["ShortageMW"] > 0
-                    ).sum(),
-
-                "LowReserveHours":
-                    (
-                        df["ReserveMargin"]
-                        <
-                        df["RequiredReserve"]
-                    ).sum(),
-
-                "ReserveAdequacyPct":
-                    (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
+        )
+        .apply(
+            lambda df: pd.Series(
+                {
+                    "PeakDemand":
+                        df["TotalDemand"].max(),
+    
+                    "AverageDemand":
+                        df["TotalDemand"].mean(),
+    
+                    "MaxShortage":
+                        df["ShortageMW"].max(),
+    
+                    "HoursWithShortage":
+                        (
+                            df["ShortageMW"] > 0
+                        ).sum(),
+    
+                    "LowReserveHours":
                         (
                             df["ReserveMargin"]
-                            >=
+                            <
                             df["RequiredReserve"]
-                        ).sum()
-                        /
-                        len(df)
-                        * 100
-                    ),
-
-                "RegulatingReserveMW":
-                    df["RegulatingReserve"].mean(),
-
-                "ContingencyReserveMW":
-                    df["ContingencyReserve"].mean(),
-
-                "RequiredReserveMW":
-                    df["RequiredReserve"].mean(),
-
-                "UnservedEnergy":
-                    df["ShortageMW"].sum()
-            }
+                        ).sum(),
+    
+                    "ReserveAdequacyPct":
+                        (
+                            (
+                                df["ReserveMargin"]
+                                >=
+                                df["RequiredReserve"]
+                            ).sum()
+                            /
+                            len(df)
+                            * 100
+                        ),
+    
+                    "RegulatingReserveMW":
+                        df["RegulatingReserve"].mean(),
+    
+                    "ContingencyReserveMW":
+                        df["ContingencyReserve"].mean(),
+    
+                    "RequiredReserveMW":
+                        df["RequiredReserve"].mean(),
+    
+                    "AverageReserveMarginMW":
+                        df["ReserveMargin"].mean(),
+    
+                    "UnservedEnergy":
+                        df["ShortageMW"].sum()
+                }
+            )
         )
+        .reset_index()
+        .sort_values("MonthSort")
     )
-    .reset_index()
-    .sort_values("MonthSort")
-)
 
     #load factor
     monthly_detail["LoadFactor"] = (
@@ -1299,12 +1302,30 @@ try:
                     "RegulatingReserveMW",
                     "ContingencyReserveMW",
                     "RequiredReserveMW",
+                    "AverageReserveMarginMW",
                     "UnservedEnergy",
                     "LoadFactor"
                 ]
             ].round(2),
             use_container_width=True,
             hide_index=True
+        )
+    
+        st.caption(
+            """
+            Regulating Reserve MW = Average Demand × 2.8%
+    
+            Contingency Reserve MW = Average Synchronized Generation × 10%
+    
+            Required Reserve MW =
+            Regulating Reserve MW + Contingency Reserve MW
+    
+            Average Reserve Margin MW =
+            Average (Total Supply − Total Demand)
+    
+            Reserve Adequacy (%) =
+            (Hours Meeting Required Reserve ÷ Total Hours) × 100
+            """
         )
     
     # reliability score
