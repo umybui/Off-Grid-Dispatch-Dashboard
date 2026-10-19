@@ -304,6 +304,44 @@ try:
         total_generation,
         reliability
     )
+
+    # =====================================================
+    # DEMAND DISTRIBUTION
+    # =====================================================
+    
+    demand_distribution = (
+        build_demand_distribution(
+            total_demand
+        )
+    )
+    
+    # =====================================================
+    # LOAD DURATION CURVE
+    # =====================================================
+    
+    ldc = build_ldc(
+        total_demand
+    )
+    
+    ldc_segments = build_ldc_segments(
+        ldc
+    )
+    
+    segment_table = build_segment_table(
+        ldc,
+        ldc_segments["boundaries"],
+        ldc_segments["compressed_points"]
+    )
+    
+    ldc_fig, segment_summary = (
+        build_ldc_chart(
+            ldc,
+            ldc_segments["boundaries"],
+            ldc_segments["compressed_points"]
+        )
+    )
+
+    
 #$$$$$$$$$$$$$$$$$$$
     # =====================================================
     # PALAWAN MIGRATION
@@ -1443,10 +1481,25 @@ try:
             use_container_width=True
         )
     
-
-
+    st.caption(
+        """
+        Daily Peak Demand by Month summarizes the distribution
+        of daily peak demand values for each month, showing
+        median demand, variability, and extreme peak events.
     
+        Hourly Demand Distribution summarizes demand behavior
+        by hour of day across the selected study period,
+        highlighting recurring load patterns, peak-demand
+        hours, and operational variability.
+    
+        Both charts use a common MW scale for direct
+        comparison between monthly peak behavior and
+        hourly load characteristics.
+        """
+    )
+
 #$$$$$$$$$$$$$$$$$$$
+    
     reliability_monitor = (
         build_reliability_monitor(
             reliability,
@@ -1660,38 +1713,6 @@ try:
             use_container_width=True,
             hide_index=True
         )
-    
-    # =================================================
-    # LDC VALIDATION
-    # =================================================
-        
-    ldc = build_ldc(
-        total_demand
-    )
-
-    demand_distribution = (
-        build_demand_distribution(
-            total_demand
-        )
-    )
-    
-    ldc_segments = build_ldc_segments(
-        ldc
-    )
-
-    segment_table = build_segment_table(
-        ldc,
-        ldc_segments["boundaries"],
-        ldc_segments["compressed_points"]
-    )
-
-    ldc_fig, segment_summary = (
-        build_ldc_chart(
-            ldc,
-            ldc_segments["boundaries"],
-            ldc_segments["compressed_points"]
-        )
-    )
 
     # ============================================================================
     # ============================================================================
