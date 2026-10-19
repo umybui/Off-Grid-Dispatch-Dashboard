@@ -1128,6 +1128,8 @@ try:
         monthly_reserve["TotalHours"]
         * 100
     )
+
+    st.write(monthly_reserve)
     
     # =====================================================
     # CHART
@@ -1215,39 +1217,33 @@ try:
         .groupby(
             ["Month", "MonthSort"]
         )
-        .agg(
-            PeakDemand=(
-                "TotalDemand",
-                "max"
-            ),
+        .apply(
+            lambda df: pd.Series(
+                {
+                    "PeakDemand":
+                        df["TotalDemand"].max(),
     
-            AverageDemand=(
-                "TotalDemand",
-                "mean"
-            ),
+                    "AverageDemand":
+                        df["TotalDemand"].mean(),
     
-            MaxShortage=(
-                "ShortageMW",
-                "max"
-            ),
+                    "MaxShortage":
+                        df["ShortageMW"].max(),
     
-            HoursWithShortage=(
-                "ShortageMW",
-                lambda x: (
-                    x > 0
-                ).sum()
-            ),
+                    "HoursWithShortage":
+                        (
+                            df["ShortageMW"] > 0
+                        ).sum(),
     
-            LowReserveHours=(
-                "ReserveMargin",
-                lambda x: (
-                    x <= 0
-                ).sum()
-            ),
+                    "LowReserveHours":
+                        (
+                            df["ReserveMargin"]
+                            <
+                            df["RequiredReserve"]
+                        ).sum(),
     
-            UnservedEnergy=(
-                "ShortageMW",
-                "sum"
+                    "UnservedEnergy":
+                        df["ShortageMW"].sum()
+                }
             )
         )
         .reset_index()
@@ -1265,22 +1261,30 @@ try:
     )
 
     #reserve adequacy
-    monthly_detail["ReserveAdequacyPct"] = (
-        100
-        -
-        (
-            monthly_detail["LowReserveHours"]
-            /
-            (
-                monthly_gap
-                .groupby(
-                    ["Month"]
-                )
-                .size()
-                .values
-            )
-            * 100
+    monthly_hours = (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
         )
+        .size()
+        .reset_index(name="TotalHours")
+    )
+    
+    monthly_detail = monthly_detail.merge(
+        monthly_hours,
+        on=["Month", "MonthSort"],
+        how="left"
+    )
+    
+    monthly_detail["ReserveAdequacyPct"] = (
+        (
+            monthly_detail["TotalHours"]
+            -
+            monthly_detail["LowReserveHours"]
+        )
+        /
+        monthly_detail["TotalHours"]
+        * 100
     )
 
     # reliability score
