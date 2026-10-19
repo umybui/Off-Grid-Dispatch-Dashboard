@@ -944,48 +944,46 @@ try:
             reliability["hours_low_reserve"]
         )
 
-    with st.expander(
-        "Gap DF Columns"
-    ):
-        st.write(
-            reliability["gap_df"].columns.tolist()
-        )
-    
-        st.dataframe(
-            reliability["gap_df"].head()
-        )
-    
     # =====================================================
-    # Month-by-Month Traffic Lights
+    # MONTH-BY-MONTH TRAFFIC LIGHTS
     # =====================================================
-
+    
     monthly_gap = (
         reliability["gap_df"]
         .copy()
     )
-
+    
     monthly_gap["Month"] = (
         monthly_gap["Datetime"]
-        .dt.strftime("%b")
+        .dt.strftime("%b %Y")
     )
-    #Create aggregate
+    
+    monthly_gap["MonthSort"] = (
+        monthly_gap["Datetime"]
+        .dt.to_period("M")
+    )
+    
     monthly_status = (
         monthly_gap
-        .groupby("Month")
+        .groupby(
+            ["Month", "MonthSort"]
+        )
         .agg(
             UnservedEnergy=(
-                "EnergyShortage",
+                "ShortageMW",
                 "sum"
             ),
-    
             ShortageHours=(
-                "SupplyGap",
+                "ShortageMW",
                 lambda x: (x > 0).sum()
             )
         )
         .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
     )
-    #Create indicator
+    
     traffic = []
     
     for _, row in monthly_status.iterrows():
@@ -1005,12 +1003,12 @@ try:
         else:
     
             traffic.append("🔴")
-    #Create display
+    
     st.markdown(
         " ".join(
             [
-                f"{m} {c}"
-                for m, c in zip(
+                f"{month} {icon}"
+                for month, icon in zip(
                     monthly_status["Month"],
                     traffic
                 )
