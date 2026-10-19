@@ -1088,7 +1088,36 @@ try:
         fig_unserved,
         use_container_width=True
     )
-   
+
+    # =====================================================
+    # MONTHLY RESERVE STATISTICS
+    # =====================================================
+    
+    monthly_reserve = (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
+        )
+        .apply(
+            lambda df: pd.Series(
+                {
+                    "TotalHours": len(df),
+    
+                    "AdequateHours":
+                    (
+                        df["ReserveMargin"]
+                        >=
+                        df["RequiredReserve"]
+                    ).sum()
+                }
+            )
+        )
+        .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
+    )
+    
     # =====================================================
     # RESERVE ADEQUACY
     # =====================================================
