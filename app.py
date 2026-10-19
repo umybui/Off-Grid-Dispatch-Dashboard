@@ -1771,7 +1771,7 @@ try:
     # =====================================================
     
     st.markdown(
-        f"##### Load Duration Curve ({recommended_segments} Segments)"
+        f"##### Load Duration Curve ({selected_segments} Segments)"
     )
     
     st.plotly_chart(
