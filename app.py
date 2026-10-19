@@ -1015,7 +1015,268 @@ try:
             ]
         )
     )
+    
+    # =====================================================
+    # MONTHLY UNSERVED ENERGY TREND
+    # =====================================================
+    
+    monthly_unserved = (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
+        )["ShortageMW"]
+        .sum()
+        .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
+    )
 
+    #color logic
+    bar_colors = []
+    
+    for value in monthly_unserved["ShortageMW"\]:
+    
+        if value < 100:
+    
+            bar_colors.append("#4CAF50")
+    
+        elif value < 500:
+    
+            bar_colors.append("#FB8C00")
+    
+        else:
+    
+            bar_colors.append("#C62828")
+
+    #cxhart
+    fig_unserved = go.Figure()
+    
+    fig_unserved.add_trace(
+        go.Bar(
+            x=monthly_unserved["Month"],
+            y=monthly_unserved["ShortageMW"],
+            marker_color=bar_colors,
+            text=monthly_unserved["ShortageMW"].round(1),
+            textposition="outside"
+        )
+    )
+    
+    fig_unserved.update_layout(
+        title="Monthly Unserved Energy Trend",
+        yaxis_title="Unserved Energy (MWh)",
+        xaxis_title="Month",
+        height=400
+    )
+    
+    st.plotly_chart(
+        fig_unserved,
+        use_container_width=True
+    )
+
+    #Monthly reserve statistics
+    monthly_reserve = (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
+        )
+        .agg(
+            TotalHours=(
+                "ReserveMargin",
+                "size"
+            ),
+            AdequateHours=(
+                "ReserveMargin",
+                lambda x: (
+                    x > 0
+                ).sum()
+            )
+        )
+        .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
+    )
+
+        #reserve adequacy
+    monthly_reserve["ReserveAdequacyPct"] = (
+        monthly_reserve["AdequateHours"]
+        /
+        monthly_reserve["TotalHours"]
+        * 100
+    )
+
+    #chart
+    fig_reserve = go.Figure()
+
+    #main line
+    fig_reserve.add_trace(
+        go.Scatter(
+            x=monthly_reserve["Month"],
+            y=monthly_reserve[
+                "ReserveAdequacyPct"
+            ],
+            mode="lines+markers+text",
+            text=
+                monthly_reserve[
+                    "ReserveAdequacyPct"
+                ]
+                .round(1)
+                .astype(str)
+                + "%",
+            textposition="top center",
+            name="Reserve Adequacy"
+        )
+    )
+
+    #thresholds
+    fig_reserve.add_hline(
+        y=95,
+        line_dash="dash",
+        line_color="green",
+        annotation_text="Excellent (95%)"
+    )
+    
+    fig_reserve.add_hline(
+        y=90,
+        line_dash="dot",
+        line_color="gold",
+        annotation_text="Good (90%)"
+    )
+    
+    fig_reserve.add_hline(
+        y=80,
+        line_dash="dot",
+        line_color="orange",
+        annotation_text="Fair (80%)"
+    )
+
+    #layouts
+    fig_reserve.update_layout(
+        title="Monthly Reserve Adequacy Trend",
+        yaxis_title="Reserve Adequacy (%)",
+        xaxis_title="Month",
+        yaxis_range=[0, 105],
+        height=400
+    )
+    
+    st.plotly_chart(
+        fig_reserve,
+        use_container_width=True
+    )
+
+    #Monthly Reliability Details Table
+    monthly_detail = (
+        monthly_gap
+        .groupby(
+            ["Month", "MonthSort"]
+        )
+        .agg(
+            PeakDemand=(
+                "TotalDemand",
+                "max"
+            ),
+    
+            AverageDemand=(
+                "TotalDemand",
+                "mean"
+            ),
+    
+            MaxShortage=(
+                "ShortageMW",
+                "max"
+            ),
+    
+            HoursWithShortage=(
+                "ShortageMW",
+                lambda x: (
+                    x > 0
+                ).sum()
+            ),
+    
+            LowReserveHours=(
+                "ReserveMargin",
+                lambda x: (
+                    x <= 0
+                ).sum()
+            ),
+    
+            UnservedEnergy=(
+                "ShortageMW",
+                "sum"
+            )
+        )
+        .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
+    )
+
+    #load factor
+    monthly_detail["LoadFactor"] = (
+        monthly_detail["AverageDemand"]
+        /
+        monthly_detail["PeakDemand"]
+        * 100
+    )
+
+    #reserve adequacy
+    monthly_detail["ReserveAdequacyPct"] = (
+        100
+        -
+        (
+            monthly_detail["LowReserveHours"]
+            /
+            (
+                monthly_gap
+                .groupby(
+                    ["Month"]
+                )
+                .size()
+                .values
+            )
+            * 100
+        )
+    )
+
+    # reliability score
+    monthly_detail["ReliabilityScore"] = (
+        100
+        -
+        (
+            monthly_detail["HoursWithShortage"]
+            * 0.25
+        )
+        -
+        (
+            monthly_detail["LowReserveHours"]
+            * 0.05
+        )
+    )
+
+    #clip
+    monthly_detail["ReliabilityScore"] = (
+        monthly_detail[
+            "ReliabilityScore"
+        ].clip(
+            lower=0,
+            upper=100
+        )
+    )
+
+    #display
+    with st.expander(
+        "Monthly Reliability Details",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            monthly_detail.round(2),
+            use_container_width=True,
+            hide_index=True
+        )
+
+    
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
         build_reliability_monitor(
