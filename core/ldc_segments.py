@@ -107,7 +107,8 @@ def optimal_ldc_segments(
 
 def build_ldc_segments(
     ldc,
-    max_segments_to_test=20
+    max_segments_to_test=20,
+    selected_segments=None
 ):
 
     max_points = 200
@@ -196,10 +197,16 @@ def build_ldc_segments(
 
             break
 
+    if selected_segments is None:
+    
+        selected_segments = (
+            recommended_segments
+        )
+    
     boundaries, total_sse = (
         optimal_ldc_segments(
             ldc_seg.values,
-            recommended_segments
+            selected_segments
         )
     )
 
@@ -208,6 +215,9 @@ def build_ldc_segments(
         "recommended_segments":
             recommended_segments,
 
+        "selected_segments":
+            selected_segments,
+        
         "boundaries":
             boundaries,
 
@@ -221,7 +231,7 @@ def build_ldc_segments(
             len(ldc_seg),
 
         "original_points":
-            len(ldc)
+            len(ldc)       
     }
 
 def build_segment_table(
