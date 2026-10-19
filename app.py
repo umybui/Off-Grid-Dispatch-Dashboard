@@ -449,44 +449,8 @@ try:
     
     generation_mix["Technology"] = (
         generation_mix["Plant"]
-        .map(
-            technology_map
-        )
+        .map(technology_map)
         .fillna("Other")
-    )
-    
-    group_col = (
-        "Plant"
-        if show_breakdown
-        else "Technology"
-    )
-    
-    tech_mix = (
-        generation_mix
-        .groupby(
-            group_col,
-            as_index=False
-        )["Value"]
-        .sum()
-    )
-    
-    tech_mix.rename(
-        columns={
-            group_col: "Display"
-        },
-        inplace=True
-    )
-    
-    tech_mix["Share"] = (
-        tech_mix["Value"]
-        /
-        tech_mix["Value"].sum()
-        * 100
-    )
-    
-    tech_mix = tech_mix.sort_values(
-        "Share",
-        ascending=False
     )
     
     tech_colors = {
@@ -499,7 +463,99 @@ try:
         "Biomass": "#7CB342",
         "Other": "#757575"
     }
-
+    
+    # =====================================================
+    # TECHNOLOGY ORDER
+    # =====================================================
+    
+    technology_order = (
+        generation_mix
+        .groupby(
+            "Technology"
+        )["Value"]
+        .sum()
+        .sort_values(
+            ascending=False
+        )
+        .index
+        .tolist()
+    )
+    
+    # =====================================================
+    # TOGGLE LOGIC
+    # =====================================================
+    
+    if show_breakdown:
+    
+        tech_mix = (
+            generation_mix
+            .groupby(
+                ["Technology", "Plant"],
+                as_index=False
+            )["Value"]
+            .sum()
+        )
+    
+        tech_mix["Share"] = (
+            tech_mix["Value"]
+            /
+            tech_mix["Value"].sum()
+            * 100
+        )
+    
+        tech_mix["Technology"] = pd.Categorical(
+            tech_mix["Technology"],
+            categories=technology_order,
+            ordered=True
+        )
+    
+        tech_mix = tech_mix.sort_values(
+            ["Technology", "Share"],
+            ascending=[True, False]
+        )
+    
+        tech_mix.rename(
+            columns={
+                "Plant": "Display"
+            },
+            inplace=True
+        )
+    
+    else:
+    
+        tech_mix = (
+            generation_mix
+            .groupby(
+                "Technology",
+                as_index=False
+            )["Value"]
+            .sum()
+        )
+    
+        tech_mix["Share"] = (
+            tech_mix["Value"]
+            /
+            tech_mix["Value"].sum()
+            * 100
+        )
+    
+        tech_mix["Technology"] = pd.Categorical(
+            tech_mix["Technology"],
+            categories=technology_order,
+            ordered=True
+        )
+    
+        tech_mix = tech_mix.sort_values(
+            "Technology"
+        )
+    
+        tech_mix.rename(
+            columns={
+                "Technology": "Display"
+            },
+            inplace=True
+        )
+    
     fig_tech = go.Figure()
     
     for _, row in tech_mix.iterrows():
