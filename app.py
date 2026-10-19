@@ -944,6 +944,17 @@ try:
             reliability["hours_low_reserve"]
         )
 
+    with st.expander(
+        "Gap DF Columns"
+    ):
+        st.write(
+            reliability["gap_df"].columns.tolist()
+        )
+    
+        st.dataframe(
+            reliability["gap_df"].head()
+        )
+    
     # =====================================================
     # Month-by-Month Traffic Lights
     # =====================================================
