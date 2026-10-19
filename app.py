@@ -1549,6 +1549,8 @@ try:
     recommended_segments = (
         ldc_segments["recommended_segments"]
     )
+
+    st.write(segment_summary)
     
     peak_segment = (
         segment_summary.iloc[0]
