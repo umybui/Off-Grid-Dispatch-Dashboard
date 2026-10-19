@@ -1773,28 +1773,6 @@ try:
     # LOAD DURATION CURVE CHART
     # =====================================================
     
-    st.markdown(
-        f"##### Load Duration Curve ({selected_segments} Segments)"
-    )
-    
-    st.plotly_chart(
-        ldc_fig,
-        use_container_width=True,
-        key="ldc_curve"
-    )
-    
-    st.markdown(
-        "##### Segment Summary"
-    )
-    
-    st.dataframe(
-        pd.DataFrame(
-            segment_summary
-        ),
-        use_container_width=True,
-        hide_index=True
-    )
-
     st.caption(
         """
         The Load Duration Curve ranks all demand observations
@@ -1811,8 +1789,25 @@ try:
         dispatch optimization, and generation portfolio studies.
         """
     )
-
     
+    st.plotly_chart(
+        ldc_fig,
+        use_container_width=True,
+        key="ldc_curve"
+    )
+
+    st.markdown(
+        "##### Segment Summary"
+    )
+    
+    st.dataframe(
+        pd.DataFrame(
+            segment_summary
+        ),
+        use_container_width=True,
+        hide_index=True
+    )
+   
     
 #$$$$$$$$$$$$$$$$$$$
     
