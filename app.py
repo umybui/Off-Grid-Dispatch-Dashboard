@@ -1390,6 +1390,61 @@ try:
             Reserve Margin ≥ Required Reserve
             """
         )
+
+    # =====================================================
+    # DEMAND DISTRIBUTION ANALYSIS
+    # =====================================================
+    
+    st.subheader(
+        "Demand Distribution Analysis"
+    )
+    
+    b1, b2 = st.columns(2)
+    
+    with b1:
+    
+        st.plotly_chart(
+            demand_distribution[
+                "daily_peak_fig"
+            ],
+            use_container_width=True
+        )
+    
+    with b2:
+    
+        st.plotly_chart(
+            demand_distribution[
+                "hourly_fig"
+            ],
+            use_container_width=True
+        )
+    
+    st.metric(
+        "Load Factor",
+        f"{demand_distribution['load_factor']:.1f}%"
+    )
+    
+    st.plotly_chart(
+        demand_distribution[
+            "heatmap_fig"
+        ],
+        use_container_width=True
+    )
+    
+    with st.expander(
+        "View Heatmap Source Data",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            demand_distribution[
+                "heatmap_table"
+            ].round(1),
+            use_container_width=True
+        )
+    
+
+
     
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
@@ -1707,58 +1762,7 @@ try:
         use_container_width=True
     )
 
-    # =====================================================
-    # DEMAND DISTRIBUTION ANALYSIS
-    # =====================================================
-    
-    st.subheader(
-        "Demand Distribution Analysis"
-    )
-    
-    b1, b2 = st.columns(2)
-    
-    with b1:
-    
-        st.plotly_chart(
-            demand_distribution[
-                "daily_peak_fig"
-            ],
-            use_container_width=True
-        )
-    
-    with b2:
-    
-        st.plotly_chart(
-            demand_distribution[
-                "hourly_fig"
-            ],
-            use_container_width=True
-        )
-    
-    st.metric(
-        "Load Factor",
-        f"{demand_distribution['load_factor']:.1f}%"
-    )
-    
-    st.plotly_chart(
-        demand_distribution[
-            "heatmap_fig"
-        ],
-        use_container_width=True
-    )
-    
-    with st.expander(
-        "View Heatmap Source Data",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            demand_distribution[
-                "heatmap_table"
-            ].round(1),
-            use_container_width=True
-        )
-    
+
     # =====================================================
     # LOAD DURATION CURVE
     # =====================================================
