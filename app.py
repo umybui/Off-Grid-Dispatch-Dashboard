@@ -1456,10 +1456,23 @@ try:
             ],
             use_container_width=True
         )
+
+    st.caption(
+        """
+        Demand variability is summarized using box-and-whisker analysis.
     
-    st.metric(
-        "Load Factor",
-        f"{demand_distribution['load_factor']:.1f}%"
+        Daily Peak Demand by Month illustrates the monthly distribution of daily system peaks. Median,
+        interquartile range, whiskers, and outliers provide insight into seasonal demand behavior,
+        peak-growth trends, and extreme loading events.
+    
+        Hourly Demand Distribution illustrates demand variability by hour of day across the selected
+        study period. This reveals characteristic load shapes, demand concentration during peak hours,
+        overnight minimum-load periods, and the consistency of hourly demand patterns.
+    
+        Outliers represent atypical demand observations that may warrant further investigation.
+        Together, the charts provide a concise view of both monthly peak-demand variability and
+        intraday load behavior.
+        """
     )
     
     st.plotly_chart(
