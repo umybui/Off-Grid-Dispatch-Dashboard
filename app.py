@@ -607,6 +607,137 @@ try:
         fig_tech,
         use_container_width=True
     )
+
+    # =====================================================
+    # MONTHLY GENERATION SHARE BY TECHNOLOGY
+    # =====================================================
+    
+    st.subheader(
+        "Monthly Generation Share by Technology"
+    )
+
+    monthly_tech = generation_mix.copy()
+    
+    monthly_tech["Month"] = (
+        monthly_tech["Datetime"]
+        .dt.to_period("M")
+        .astype(str)
+    )
+
+    monthly_tech = (
+        monthly_tech
+        .groupby(
+            ["Month", "Technology"],
+            as_index=False
+        )["Value"]
+        .sum()
+    )
+
+    # =====================================================
+    # COMPUTE MONTLY SHARE
+    # =====================================================
+    
+    monthly_total = (
+        monthly_tech
+        .groupby("Month")["Value"]
+        .transform("sum")
+    )
+    
+    monthly_tech["SharePct"] = (
+        monthly_tech["Value"]
+        /
+        monthly_total
+        * 100
+    )
+
+    # =====================================================
+    # Create Matrix
+    # =====================================================
+    
+    tech_matrix = (
+        monthly_tech
+        .pivot(
+            index="Technology",
+            columns="Month",
+            values="SharePct"
+        )
+        .fillna(0)
+    )
+
+    # =====================================================
+    # Consistent Technology Order
+    # =====================================================
+    
+    technology_order = [
+        tech
+        for tech in tech_colors.keys()
+        if tech in tech_matrix.index
+    ]
+    
+    tech_matrix = tech_matrix.reindex(
+        technology_order
+    )
+
+    # =====================================================
+    # Heatmap
+    # =====================================================
+    
+    fig_heatmap = go.Figure(
+        data=go.Heatmap(
+            z=tech_matrix.values,
+            x=tech_matrix.columns,
+            y=tech_matrix.index,
+            text=
+                tech_matrix.round(1)
+                .astype(str)
+                + "%",
+            texttemplate="%{text}",
+            colorscale="Blues",
+            zmin=0,
+            zmax=100,
+            colorbar=dict(
+                title="% Share"
+            )
+        )
+    )
+
+    # =====================================================
+    # Format Layout of Heatmap
+    # =====================================================
+    
+    fig_heatmap.update_layout(
+        height=250,
+        margin=dict(
+            l=20,
+            r=20,
+            t=20,
+            b=20
+        )
+    )
+
+    # =====================================================
+    # Display Heatmap
+    # =====================================================
+    
+    st.plotly_chart(
+        fig_heatmap,
+        use_container_width=True
+    )
+
+    # =====================================================
+    # Matrix Table
+    # =====================================================
+    
+    with st.expander(
+        "View Monthly Technology Share Matrix (%)",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            tech_matrix.round(1),
+            use_container_width=True
+        )
+
     
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
