@@ -321,7 +321,7 @@ try:
     with r1c1:
         st.metric(
             "Peak Demand",
-            f"{reliability['peak_demand']:,.2f} MWW"
+            f"{reliability['peak_demand']:,.2f} MW"
         )
     
     with r1c2:
@@ -399,7 +399,10 @@ try:
         plant_mapping["Technology"] = (
             plant_mapping["Plant"]
             .map(
-                config["TECHNOLOGY_MAPPING"]
+                config.get(
+                    "TECHNOLOGY_MAPPING",
+                    {}
+                )
             )
             .fillna("Other")
         )
