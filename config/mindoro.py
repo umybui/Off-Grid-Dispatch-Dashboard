@@ -75,4 +75,23 @@ CONFIG = {
 
     "DEPENDABLE_REFERENCE": DEPENDABLE_REFERENCE,
 
+    "TECHNOLOGY_MAPPING": {
+        "OMCPC SAMARICA": "Bunker",
+        "OMCPC HIGH-SPEED": "Diesel",
+        "OMCPC SOLAR": "Solar",
+        "OMCPC MAPSA": "Diesel",
+        "OMCPC SABLAYAN": "Diesel",
+        "PGCI": "Biomass",
+        "DMCI REGULATING": "Bunker",
+        "DMCI LOT I": "Diesel",
+        "LCMHPP-UPPER": "Hydro",
+        "LCMHPP-LOWER": "Hydro",
+        "INABASAN MHPP": "Hydro",
+        "CATUIRAN HEPP": "Hydro",
+        "PHESI-WEPF": "Wind",  
+        "OPI": "Bunker",
+        "POC": "Bunker",
+        "MHEC": "Bunker",
+    }
+
 }
