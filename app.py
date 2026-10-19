@@ -1569,7 +1569,7 @@ try:
     
         st.metric(
             "Current Segmentation SSE",
-            f"{ldc_segments['total_sse'\]:,.0f}"
+            f"{ldc_segments['total_sse']:,.0f}"
         )
     
         st.markdown(
@@ -1668,16 +1668,16 @@ try:
     **{recommended_segments} natural demand regimes**.
     
     • Highest demand segment (S1) occurs during approximately
-    **{highest_segment['% Time'\]:.1f}%**
+    **{highest_segment['% Time']:.1f}%**
     of the study period.
     
     • Lowest demand segment (S{recommended_segments})
     occurs during approximately
-    **{lowest_segment['% Time'\]:.1f}%**
+    **{lowest_segment['% Time']:.1f}%**
     of the study period.
     
     • Total segmentation error is
-    **{ldc_segments['total_sse'\]:,.0f} SSE**.
+    **{ldc_segments['total_sse']:,.0f} SSE**.
     
     • These segments can be used for dispatch planning,
     capacity adequacy assessments, reserve studies,
