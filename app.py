@@ -1035,7 +1035,7 @@ try:
     #color logic
     bar_colors = []
     
-    for value in monthly_unserved["ShortageMW"\]:
+    for value in monthly_unserved["ShortageMW"]:
     
         if value < 100:
     
