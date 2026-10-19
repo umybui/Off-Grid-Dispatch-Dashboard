@@ -1577,15 +1577,7 @@ try:
         "Use Recommended",
         value=True
     )
-    
-    recommended_segments = (
-        ldc_segments["recommended_segments"]
-    )
-    
-    st.success(
-        f"Recommended Segments: {recommended_segments}"
-    )
-    
+        
     # =====================================================
     # RECOMMENDED SEGMENTS
     # =====================================================
