@@ -1695,6 +1695,10 @@ try:
     # LOAD DURATION CURVE CHART
     # =====================================================
     
+    st.markdown(
+        f"##### Load Duration Curve ({recommended_segments} Segments)"
+    )
+    
     st.plotly_chart(
         ldc_fig,
         use_container_width=True,
