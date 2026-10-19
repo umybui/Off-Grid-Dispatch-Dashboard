@@ -32,7 +32,7 @@ CONFIG = {
         "tDelta P": "Diesel",
         "DMCI IRAWAN": "Diesel",
         "DMCI QUEZON": "Diesel",
-        "VPOWER": "Diesel"
+        "VPOWER": "Diesel",
         "DMCI Rio Tuba": "Diesel",
 
     }
