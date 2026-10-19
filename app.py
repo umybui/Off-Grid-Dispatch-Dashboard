@@ -1545,6 +1545,46 @@ try:
     st.caption(
         "Load Segment Summary"
     )
+
+    st.caption(
+        "Load Segment Summary"
+    )
+    
+    with st.expander(
+        "Segmentation Controls",
+        expanded=True
+    ):
+    
+        max_segments = st.number_input(
+            "Maximum Segments Evaluated",
+            min_value=3,
+            max_value=20,
+            value=20,
+            step=1
+        )
+    
+        st.caption(
+            """
+            The dashboard automatically evaluates multiple
+            segmentation levels and identifies the elbow point.
+    
+            Higher values increase analysis detail but may
+            slightly increase processing time.
+            """
+        )
+    
+    use_recommended = st.toggle(
+        "Use Recommended",
+        value=True
+    )
+    
+    recommended_segments = (
+        ldc_segments["recommended_segments"]
+    )
+    
+    st.success(
+        f"Recommended Segments: {recommended_segments}"
+    )
     
     # =====================================================
     # RECOMMENDED SEGMENTS
