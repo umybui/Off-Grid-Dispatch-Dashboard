@@ -1650,46 +1650,46 @@ try:
             key="ldc_elbow"
         )
     
-    # =====================================================
-    # OPERATIONAL INTERPRETATION
-    # =====================================================
-    
-    highest_segment = segment_table.iloc[0]
-    lowest_segment = segment_table.iloc[-1]
-    
-    st.markdown(
-        "### Operational Interpretation"
-    )
-    
-    st.markdown(
-        f"""
-    The selected **{recommended_segments}-segment**
-    model divides the Load Duration Curve into
-    **{recommended_segments} natural demand regimes**.
-    
-    • Highest demand segment (S1) occurs during approximately
-    **{highest_segment['% Time']:.1f}%**
-    of the study period.
-    
-    • Lowest demand segment (S{recommended_segments})
-    occurs during approximately
-    **{lowest_segment['% Time']:.1f}%**
-    of the study period.
-    
-    • Total segmentation error is
-    **{ldc_segments['total_sse']:,.0f} SSE**.
-    
-    • These segments can be used for dispatch planning,
-    capacity adequacy assessments, reserve studies,
-    and generation portfolio analysis.
-    """
-    )
-    
-    st.dataframe(
-        segment_table.round(2),
-        use_container_width=True,
-        hide_index=True
-    )
+        # =====================================================
+        # OPERATIONAL INTERPRETATION
+        # =====================================================
+        
+        highest_segment = segment_table.iloc[0]
+        lowest_segment = segment_table.iloc[-1]
+        
+        st.markdown(
+            "### Operational Interpretation"
+        )
+        
+        st.markdown(
+            f"""
+        The selected **{recommended_segments}-segment**
+        model divides the Load Duration Curve into
+        **{recommended_segments} natural demand regimes**.
+        
+        • Highest demand segment (S1) occurs during approximately
+        **{highest_segment['% Time']:.1f}%**
+        of the study period.
+        
+        • Lowest demand segment (S{recommended_segments})
+        occurs during approximately
+        **{lowest_segment['% Time']:.1f}%**
+        of the study period.
+        
+        • Total segmentation error is
+        **{ldc_segments['total_sse']:,.0f} SSE**.
+        
+        • These segments can be used for dispatch planning,
+        capacity adequacy assessments, reserve studies,
+        and generation portfolio analysis.
+        """
+        )
+        
+        st.dataframe(
+            segment_table.round(2),
+            use_container_width=True,
+            hide_index=True
+        )
     
     # =====================================================
     # LOAD DURATION CURVE CHART
