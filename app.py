@@ -322,20 +322,10 @@ try:
     ldc = build_ldc(
         total_demand
     )
-    
+
+    # temporary default build
     ldc_segments = build_ldc_segments(
-        ldc,
-        max_segments_to_test=max_segments
-    )
-    
-    recommended_segments = (
-        ldc_segments["recommended_segments"]
-    )
-    
-    selected_segments = (
-        recommended_segments
-        if use_recommended
-        else max_segments
+        ldc
     )
     
     segment_table = build_segment_table(
@@ -351,8 +341,7 @@ try:
             ldc_segments["compressed_points"]
         )
     )
-
-    
+       
 #$$$$$$$$$$$$$$$$$$$
     # =====================================================
     # PALAWAN MIGRATION
@@ -1603,7 +1592,42 @@ try:
         "Use Recommended",
         value=True
     )
-        
+
+    ldc_segments = build_ldc_segments(
+        ldc,
+        max_segments_to_test=max_segments
+    )
+    
+    recommended_segments = (
+        ldc_segments["recommended_segments"]
+    )
+    
+    selected_segments = (
+        recommended_segments
+        if use_recommended
+        else max_segments
+    )
+    
+    ldc_segments = build_ldc_segments(
+        ldc,
+        max_segments_to_test=max_segments,
+        selected_segments=selected_segments
+    )
+    
+    segment_table = build_segment_table(
+        ldc,
+        ldc_segments["boundaries"],
+        ldc_segments["compressed_points"]
+    )
+    
+    ldc_fig, segment_summary = (
+        build_ldc_chart(
+            ldc,
+            ldc_segments["boundaries"],
+            ldc_segments["compressed_points"]
+        )
+    )
+    
     # =====================================================
     # RECOMMENDED SEGMENTS
     # =====================================================
@@ -1651,7 +1675,7 @@ try:
     complexity.
     
     Current Selection:
-    **{recommended_segments} Segments**
+    **{selected_segments} Segments**
     """
         )
     
@@ -1659,7 +1683,7 @@ try:
             f"""
     The current selection matches the recommended value.
     
-    A {recommended_segments}-segment model provides a
+    A {selected_segments}-segment model provides a
     balanced representation of the Load Duration Curve
     while keeping the segmentation simple enough for
     planning and dispatch analysis.
