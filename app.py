@@ -324,7 +324,18 @@ try:
     )
     
     ldc_segments = build_ldc_segments(
-        ldc
+        ldc,
+        max_segments_to_test=max_segments
+    )
+    
+    recommended_segments = (
+        ldc_segments["recommended_segments"]
+    )
+    
+    selected_segments = (
+        recommended_segments
+        if use_recommended
+        else max_segments
     )
     
     segment_table = build_segment_table(
@@ -1516,9 +1527,27 @@ try:
         total_demand
     )
     
-    ldc_segments = build_ldc_segments(
-        ldc
+    # =====================================================
+    # LDC SEGMENTATION CONTROLS
+    # =====================================================
+    
+    max_segments = 20
+    
+    recommended_temp = (
+        build_ldc_segments(
+            ldc,
+            max_segments_to_test=max_segments
+        )
     )
+    
+    recommended_segments = (
+        recommended_temp[
+            "recommended_segments"
+        ]
+    )
+    
+    use_recommended = True
+
     
     segment_table = build_segment_table(
         ldc,
@@ -1545,10 +1574,6 @@ try:
     st.caption(
         "Load Segment Summary"
     )
-
-    st.caption(
-        "Load Segment Summary"
-    )
     
     with st.expander(
         "Segmentation Controls",
@@ -1565,11 +1590,12 @@ try:
     
         st.caption(
             """
-            The dashboard automatically evaluates multiple
-            segmentation levels and identifies the elbow point.
+            The dashboard automatically evaluates
+            multiple segmentation levels and identifies
+            the elbow point.
     
-            Higher values increase analysis detail but may
-            slightly increase processing time.
+            Higher values increase analysis detail but
+            may slightly increase processing time.
             """
         )
     
@@ -1587,8 +1613,16 @@ try:
     )
     
     st.success(
-        f"Recommended Segments: {recommended_segments}"
+        f"Recommended Segments: "
+        f"{recommended_segments}"
     )
+    
+    if not use_recommended:
+    
+        st.info(
+            f"Manual Selection: "
+            f"{selected_segments} Segments"
+        )
     
     # =====================================================
     # ADVANCED LDC SEGMENTATION ANALYSIS
