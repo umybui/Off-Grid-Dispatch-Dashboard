@@ -1213,44 +1213,63 @@ try:
     
     #Monthly Reliability Details Table
     monthly_detail = (
-        monthly_gap
-        .groupby(
-            ["Month", "MonthSort"]
-        )
-        .apply(
-            lambda df: pd.Series(
-                {
-                    "PeakDemand":
-                        df["TotalDemand"].max(),
-    
-                    "AverageDemand":
-                        df["TotalDemand"].mean(),
-    
-                    "MaxShortage":
-                        df["ShortageMW"].max(),
-    
-                    "HoursWithShortage":
-                        (
-                            df["ShortageMW"] > 0
-                        ).sum(),
-    
-                    "LowReserveHours":
+    monthly_gap
+    .groupby(
+        ["Month", "MonthSort"]
+    )
+    .apply(
+        lambda df: pd.Series(
+            {
+                "PeakDemand":
+                    df["TotalDemand"].max(),
+
+                "AverageDemand":
+                    df["TotalDemand"].mean(),
+
+                "MaxShortage":
+                    df["ShortageMW"].max(),
+
+                "HoursWithShortage":
+                    (
+                        df["ShortageMW"] > 0
+                    ).sum(),
+
+                "LowReserveHours":
+                    (
+                        df["ReserveMargin"]
+                        <
+                        df["RequiredReserve"]
+                    ).sum(),
+
+                "ReserveAdequacyPct":
+                    (
                         (
                             df["ReserveMargin"]
-                            <
+                            >=
                             df["RequiredReserve"]
-                        ).sum(),
-    
-                    "UnservedEnergy":
-                        df["ShortageMW"].sum()
-                }
-            )
-        )
-        .reset_index()
-        .sort_values(
-            "MonthSort"
+                        ).sum()
+                        /
+                        len(df)
+                        * 100
+                    ),
+
+                "RegulatingReserveMW":
+                    df["RegulatingReserve"].mean(),
+
+                "ContingencyReserveMW":
+                    df["ContingencyReserve"].mean(),
+
+                "RequiredReserveMW":
+                    df["RequiredReserve"].mean(),
+
+                "UnservedEnergy":
+                    df["ShortageMW"].sum()
+            }
         )
     )
+    .reset_index()
+    .sort_values("MonthSort")
+)
 
     #load factor
     monthly_detail["LoadFactor"] = (
@@ -1261,32 +1280,33 @@ try:
     )
 
     #reserve adequacy
-    monthly_hours = (
-        monthly_gap
-        .groupby(
-            ["Month", "MonthSort"]
-        )
-        .size()
-        .reset_index(name="TotalHours")
-    )
-    
-    monthly_detail = monthly_detail.merge(
-        monthly_hours,
-        on=["Month", "MonthSort"],
-        how="left"
-    )
-    
-    monthly_detail["ReserveAdequacyPct"] = (
-        (
-            monthly_detail["TotalHours"]
-            -
-            monthly_detail["LowReserveHours"]
-        )
-        /
-        monthly_detail["TotalHours"]
-        * 100
-    )
 
+    with st.expander(
+        "Monthly Reliability Details",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            monthly_detail[
+                [
+                    "Month",
+                    "PeakDemand",
+                    "AverageDemand",
+                    "MaxShortage",
+                    "HoursWithShortage",
+                    "LowReserveHours",
+                    "ReserveAdequacyPct",
+                    "RegulatingReserveMW",
+                    "ContingencyReserveMW",
+                    "RequiredReserveMW",
+                    "UnservedEnergy",
+                    "LoadFactor"
+                ]
+            ].round(2),
+            use_container_width=True,
+            hide_index=True
+        )
+    
     # reliability score
     monthly_detail["ReliabilityScore"] = (
         100
@@ -1311,20 +1331,7 @@ try:
             upper=100
         )
     )
-
-    #display
-    with st.expander(
-        "Monthly Reliability Details",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            monthly_detail.round(2),
-            use_container_width=True,
-            hide_index=True
-        )
-
-    
+   
 #$$$$$$$$$$$$$$$$$$$
     reliability_monitor = (
         build_reliability_monitor(
