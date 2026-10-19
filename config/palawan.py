@@ -33,6 +33,7 @@ CONFIG = {
         "DMCI IRAWAN": "Diesel",
         "DMCI QUEZON": "Diesel",
         "VPOWER": "Diesel"
+        "DMCI Rio Tuba": "Diesel",
 
     }
     
