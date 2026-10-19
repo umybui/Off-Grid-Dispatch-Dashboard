@@ -18,7 +18,7 @@ CONFIG = {
 
     "USES_IMPORT_SUPPORT": False,
 
-    "UNIT_SCALE": 1000
+    "UNIT_SCALE": 1000,
 
     "TECHNOLOGY_MAPPING": {
         "Balongbong MHP": "Hydro",
