@@ -1541,17 +1541,125 @@ try:
     st.subheader(
         "Load Duration Curve"
     )
-
-    st.markdown(
-        "### Operational Interpretation"
+    
+    st.caption(
+        "Load Segment Summary"
     )
+    
+    # =====================================================
+    # RECOMMENDED SEGMENTS
+    # =====================================================
     
     recommended_segments = (
         ldc_segments["recommended_segments"]
     )
     
+    st.success(
+        f"Recommended Segments: {recommended_segments}"
+    )
+    
+    # =====================================================
+    # ADVANCED LDC SEGMENTATION ANALYSIS
+    # =====================================================
+    
+    with st.expander(
+        "Advanced LDC Segmentation Analysis",
+        expanded=True
+    ):
+    
+        st.metric(
+            "Current Segmentation SSE",
+            f"{ldc_segments['total_sse'\]:,.0f}"
+        )
+    
+        st.markdown(
+            f"""
+    ### Recommended Segmentation: {recommended_segments} Segments
+    
+    The elbow analysis indicates that most of the
+    reduction in segmentation error is achieved by
+    approximately {recommended_segments} segments.
+    
+    Beyond this point, additional segments improve
+    accuracy more slowly while increasing model
+    complexity.
+    
+    Current Selection:
+    **{recommended_segments} Segments**
+    """
+        )
+    
+        st.success(
+            f"""
+    The current selection matches the recommended value.
+    
+    A {recommended_segments}-segment model provides a
+    balanced representation of the Load Duration Curve
+    while keeping the segmentation simple enough for
+    planning and dispatch analysis.
+    """
+        )
+    
+        # =====================================================
+        # ELBOW METHOD CHART
+        # =====================================================
+    
+        sse_df = ldc_segments["sse_df"]
+    
+        fig_elbow = go.Figure()
+    
+        fig_elbow.add_trace(
+            go.Scatter(
+                x=sse_df.iloc[:, 0],
+                y=sse_df.iloc[:, 1],
+                mode="lines+markers",
+                name="Total SSE"
+            )
+        )
+    
+        highlight_row = (
+            sse_df.iloc[
+                recommended_segments - 1
+            ]
+        )
+    
+        fig_elbow.add_trace(
+            go.Scatter(
+                x=[highlight_row.iloc[0]],
+                y=[highlight_row.iloc[1]],
+                mode="markers",
+                marker=dict(
+                    color="red",
+                    size=12,
+                    symbol="star"
+                ),
+                name="Recommended"
+            )
+        )
+    
+        fig_elbow.update_layout(
+            title="Elbow Method for Load Segmentation",
+            xaxis_title="Number of Segments",
+            yaxis_title="Segmentation SSE",
+            height=400
+        )
+    
+        st.plotly_chart(
+            fig_elbow,
+            use_container_width=True,
+            key="ldc_elbow"
+        )
+    
+    # =====================================================
+    # OPERATIONAL INTERPRETATION
+    # =====================================================
+    
     highest_segment = segment_table.iloc[0]
     lowest_segment = segment_table.iloc[-1]
+    
+    st.markdown(
+        "### Operational Interpretation"
+    )
     
     st.markdown(
         f"""
@@ -1560,15 +1668,16 @@ try:
     **{recommended_segments} natural demand regimes**.
     
     • Highest demand segment (S1) occurs during approximately
-    **{highest_segment['% Time']:.1f}%**
+    **{highest_segment['% Time'\]:.1f}%**
     of the study period.
     
-    • Lowest demand segment (S{recommended_segments}) occupies approximately
-    **{lowest_segment['% Time']:.1f}%**
+    • Lowest demand segment (S{recommended_segments})
+    occurs during approximately
+    **{lowest_segment['% Time'\]:.1f}%**
     of the study period.
     
     • Total segmentation error is
-    **{ldc_segments['total_sse']:,.0f} SSE**.
+    **{ldc_segments['total_sse'\]:,.0f} SSE**.
     
     • These segments can be used for dispatch planning,
     capacity adequacy assessments, reserve studies,
@@ -1582,24 +1691,14 @@ try:
         hide_index=True
     )
     
+    # =====================================================
+    # LOAD DURATION CURVE CHART
+    # =====================================================
+    
     st.plotly_chart(
         ldc_fig,
-        use_container_width=True
-    )
-    
-    st.caption(
-        """
-        The Load Duration Curve ranks all demand observations
-        from highest to lowest.
-    
-        Segmentation identifies natural demand regimes
-        such as Peaking, Mid-Merit, and Baseload operation.
-    
-        These segments support capacity planning,
-        reserve adequacy assessment,
-        dispatch optimization,
-        and generation portfolio analysis.
-        """
+        use_container_width=True,
+        key="ldc_curve"
     )
     
     st.markdown(
@@ -1607,10 +1706,13 @@ try:
     )
     
     st.dataframe(
-        pd.DataFrame(segment_summary),
+        pd.DataFrame(
+            segment_summary
+        ),
         use_container_width=True,
         hide_index=True
     )
+
 
     st.plotly_chart(
         ldc_fig,
