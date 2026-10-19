@@ -1713,12 +1713,6 @@ try:
         hide_index=True
     )
 
-
-    st.plotly_chart(
-        ldc_fig,
-        use_container_width=True
-    )
-
     st.caption(
         """
         The Load Duration Curve ranks all demand observations
@@ -1734,18 +1728,6 @@ try:
         capacity planning, reserve adequacy assessment,
         dispatch optimization, and generation portfolio studies.
         """
-    )
-
-    st.markdown(
-        "##### Segment Summary"
-    )
-    
-    segment_display = segment_summary.copy()
-    
-    st.dataframe(
-        segment_display.round(2),
-        use_container_width=True,
-        hide_index=True
     )
 
     
