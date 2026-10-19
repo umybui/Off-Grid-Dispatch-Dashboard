@@ -620,8 +620,7 @@ try:
     
     monthly_tech["Month"] = (
         monthly_tech["Datetime"]
-        .dt.to_period("M")
-        .astype(str)
+        .dt.strftime("%b %Y")
     )
 
     monthly_tech = (
