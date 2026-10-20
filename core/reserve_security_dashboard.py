@@ -28,7 +28,6 @@ def build_reserve_security_dashboard(
         in the Reliability Health Monitor.
         """
     )
-    )
     
     r1, r2, r3 = st.columns(3)
     
