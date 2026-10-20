@@ -13,9 +13,6 @@ from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
-from core.reserve_dashboard import (
-    build_reserve_dashboard
-)
 from core.reserve_trend import (
     build_reserve_trend
 )
@@ -370,21 +367,6 @@ try:
         capacity_reference
     )
     
-    # =====================================================
-    # RESERVE SECURITY SCORE
-    # =====================================================
- 
-    reserve_security_score = (
-        hours_meeting_requirement
-        / demand_served_hours
-        * 100
-    )
-
-    st.metric(
-        "Reserve Security Score",
-        f"{reserve_security_score:.1f}/100"
-    )
-   
 #$$$$$$$$$$$$$$$$$$$
     
     reliability_monitor = (
