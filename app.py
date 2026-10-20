@@ -74,7 +74,7 @@ from core.demand_distribution import (
 from core.executive_summary import (
     build_executive_summary
 )
-from core. generation_mix_dashboard import (
+from core.generation_mix_dashboard import (
     build_generation_mix_dashboard
 )
 
