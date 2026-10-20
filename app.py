@@ -77,6 +77,9 @@ from core.executive_summary import (
 from core.generation_mix_dashboard import (
     build_generation_mix_dashboard
 )
+from core.reliability_monitor import (
+    build_reliability_monitor
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -351,10 +354,10 @@ try:
         config
     )
 
-    # =====================================================
-    # Reliability Health Monitor
-    # =====================================================
-
+    build_reliability_monitor(
+        reliability,
+        kpis
+    )
 
     # =====================================================
     # DEMAND DISTRIBUTION ANALYSIS
