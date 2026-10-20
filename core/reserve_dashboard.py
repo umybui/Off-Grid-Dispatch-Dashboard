@@ -30,6 +30,19 @@ def build_reserve_dashboard(
         ).min()
     )
 
+    hours_meeting_requirement = (
+        gap_df["ReserveMargin"]
+        >=
+        gap_df["RequiredReserve"]
+    ).sum()
+
+    reserve_security_score = (
+        hours_meeting_requirement
+        /
+        max(served_hours, 1)
+        * 100
+    )
+    
     return {
 
         "total_hours":
@@ -46,4 +59,11 @@ def build_reserve_dashboard(
 
         "worst_reserve_deficiency":
             worst_reserve_deficiency
+
+       "hours_meeting_requirement":
+        hours_meeting_requirement,
+    
+        "reserve_security_score":
+        reserve_security_score
+    
     }
