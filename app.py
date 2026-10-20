@@ -80,6 +80,9 @@ from core.generation_mix_dashboard import (
 from core.reliability_monitor import (
     build_reliability_monitor
 )
+from core.demand_distribution_dashboard import (
+    demand_distribution
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -359,16 +362,10 @@ try:
         kpis
     )
 
-    # =====================================================
-    # DEMAND DISTRIBUTION ANALYSIS
-    # =====================================================
-    
-
-
-    # =====================================================
-    # DEMAND DISTRIBUTION
-    # =====================================================
-    
+    build_demand_distribution_dashboard(
+        demand_distribution
+    )
+   
     demand_distribution = (
         build_demand_distribution(
             total_demand
