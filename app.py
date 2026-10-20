@@ -71,6 +71,9 @@ from core.plant_role_matrix import (
 from core.demand_distribution import (
     build_demand_distribution
 )
+from core.executive_summary import (
+    build_executive_summary
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -334,7 +337,11 @@ try:
     # PALAWAN MIGRATION
     # KPI SUMMARY
     # =====================================================
-    
+
+    build_executive_summary(
+        reliability,
+        kpis
+    )
 
     show_breakdown = st.toggle(
         "Break down by power plant",
