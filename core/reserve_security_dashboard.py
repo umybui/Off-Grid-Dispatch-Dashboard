@@ -3,7 +3,8 @@ import streamlit as st
 
 def build_reserve_security_dashboard(
     reserve,
-    reserve_dashboard
+    reserve_dashboard,
+    reliability
 ):
 
     st.subheader(
