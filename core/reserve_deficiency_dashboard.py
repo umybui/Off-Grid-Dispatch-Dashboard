@@ -10,6 +10,22 @@ def build_reserve_deficiency_dashboard(
         "Operating Condition Breakdown"
     )
 
+    st.caption(
+        """
+        Operating conditions are categorized into:
+
+        • Adequate Reserve Hours
+
+        • Reserve Deficient Hours
+
+        • Unserved Demand Hours
+
+        This provides a high-level view of system
+        security and reliability throughout the
+        selected study period.
+        """
+    )
+
     st.plotly_chart(
         operating_condition["figure"],
         use_container_width=True
