@@ -42,6 +42,41 @@ def build_reserve_dashboard(
         max(served_hours, 1)
         * 100
     )
+
+    avg_regulating_reserve = (
+        gap_df["RegulatingReserve"]
+        .mean()
+    )
+    
+    avg_contingency_reserve = (
+        gap_df["ContingencyReserve"]
+        .mean()
+    )
+    
+    avg_required_reserve = (
+        gap_df["RequiredReserve"]
+        .mean()
+    )
+    
+    hours_below_requirement = (
+        gap_df["ReserveMargin"]
+        <
+        gap_df["RequiredReserve"]
+    ).sum()
+    
+    served_hours_pct = (
+        served_hours
+        /
+        max(total_hours, 1)
+        * 100
+    )
+    
+    reserve_compliance = (
+        hours_meeting_requirement
+        /
+        max(served_hours, 1)
+        * 100
+    )
     
     return {
 
@@ -65,5 +100,23 @@ def build_reserve_dashboard(
     
         "reserve_security_score":
         reserve_security_score
-    
+
+        "avg_regulating_reserve":
+            avg_regulating_reserve,
+        
+        "avg_contingency_reserve":
+            avg_contingency_reserve,
+        
+        "avg_required_reserve":
+            avg_required_reserve,
+        
+        "served_hours_pct":
+            served_hours_pct,
+        
+        "reserve_compliance":
+            reserve_compliance,
+        
+        "hours_below_requirement":
+            hours_below_requirement,
+        
     }
