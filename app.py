@@ -316,17 +316,7 @@ try:
         total_generation,
         reliability
     )
-
-    # =====================================================
-    # DEMAND DISTRIBUTION
-    # =====================================================
-    
-    demand_distribution = (
-        build_demand_distribution(
-            total_demand
-        )
-    )
-    
+   
     # =====================================================
     # LOAD DURATION CURVE
     # =====================================================
