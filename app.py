@@ -74,6 +74,9 @@ from core.demand_distribution import (
 from core.executive_summary import (
     build_executive_summary
 )
+from core. generation_mix_dashboard import (
+    build_generation_mix_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -343,7 +346,10 @@ try:
         kpis
     )
 
-
+    build_generation_mix_dashboard(
+        generation,
+        config
+    )
 
     # =====================================================
     # Reliability Health Monitor
