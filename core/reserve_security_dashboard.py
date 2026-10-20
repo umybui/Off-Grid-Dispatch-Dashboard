@@ -12,9 +12,22 @@ def build_reserve_security_dashboard(
     
     st.caption(
         """
-        This assessment focuses on hours where
-        customer demand was successfully served.
+        This assessment focuses on hours where customer demand
+        was successfully served.
+    
+        Reserve adequacy is evaluated against the operating
+        reserve requirement consisting of:
+    
+        • 2.8% Regulating / Load-Following Reserve
+    
+        • 10% Contingency Reserve based on Total
+          Synchronized Generation
+    
+        Hours with unserved demand are excluded from
+        this assessment and are reported separately
+        in the Reliability Health Monitor.
         """
+    )
     )
     
     r1, r2, r3 = st.columns(3)
