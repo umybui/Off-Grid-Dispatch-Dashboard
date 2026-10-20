@@ -363,7 +363,8 @@ try:
 
     build_reserve_security_dashboard(
         reserve,
-        reserve_dashboard
+        reserve_dashboard,
+        reliability
     )
     
     build_reserve_trend_dashboard(
