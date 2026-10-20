@@ -62,9 +62,6 @@ from core.capacity_planning import (
     build_capacity_planning
 )
 
-from core.reliability_monitor import (
-    build_reliability_monitor
-)
 from core.plant_role_matrix import (
     build_plant_role_matrix
 )
@@ -316,7 +313,17 @@ try:
         total_generation,
         reliability
     )
-   
+
+    # =====================================================
+    # DEMAND DISTRIBUTION
+    # =====================================================
+    
+    demand_distribution = (
+        build_demand_distribution(
+            total_demand
+        )
+    )
+    
     # =====================================================
     # LOAD DURATION CURVE
     # =====================================================
@@ -356,11 +363,6 @@ try:
         demand_distribution
     )
    
-    build_demand_distribution = (
-        build_demand_distribution(
-            total_demand
-        )
-    )
     
     # =====================================================
     # LOAD DURATION CURVE
