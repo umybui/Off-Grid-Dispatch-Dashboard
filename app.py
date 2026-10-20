@@ -349,7 +349,27 @@ try:
     build_ldc_dashboard(
     total_demand
     )
- 
+
+#????????????????
+    
+    build_reserve_dashboard(
+        reserve,
+        reliability
+    )
+    
+    build_reserve_trend(
+        reliability
+    )
+    
+    build_reserve_deficiency_table(
+        reliability
+    )
+    
+    build_capacity_planning(
+        reliability,
+        capacity_reference
+    )
+    
     # =====================================================
     # RESERVE SECURITY SCORE
     # =====================================================
