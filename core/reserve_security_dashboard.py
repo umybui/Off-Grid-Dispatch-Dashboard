@@ -9,47 +9,86 @@ def build_reserve_security_dashboard(
     st.subheader(
         "Reserve Security Assessment"
     )
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
+    
+    st.caption(
+        """
+        This assessment focuses on hours where
+        customer demand was successfully served.
+        """
+    )
+    
+    r1, r2, r3 = st.columns(3)
+    
+    with r1:
+        st.metric(
+            "Avg Regulating Reserve",
+            f"{reserve_dashboard['avg_regulating_reserve']:.2f} MW"
+        )
+    
+    with r2:
+        st.metric(
+            "Avg Contingency Reserve",
+            f"{reserve_dashboard['avg_contingency_reserve']:.2f} MW"
+        )
+    
+    with r3:
+        st.metric(
+            "Avg Total Required Reserve",
+            f"{reserve_dashboard['avg_required_reserve']:.2f} MW"
+        )
+    
+    st.divider()
+    
+    r1, r2, r3, r4 = st.columns(4)
+    
+    with r1:
         st.metric(
             "Hours Evaluated",
             reserve_dashboard["total_hours"]
         )
-
-    with c2:
-        st.metric(
-            "Demand Served Hours",
-            reserve_dashboard["served_hours"]
-        )
-
-    with c3:
+    
+    with r2:
         st.metric(
             "Unserved Hours",
             reserve_dashboard["unserved_hours"]
         )
-
-    with c4:
+    
+    with r3:
         st.metric(
-            "Worst Deficiency",
-            f"{reserve_dashboard['worst_reserve_deficiency']:,.2f}"
+            "Demand Served Hours",
+            reserve_dashboard["served_hours"]
         )
-
-    st.subheader(
-        "Reserve Validation"
-    )
-
-    c1, c2 = st.columns(2)
-
-    with c1:
+    
+    with r4:
         st.metric(
-            "Low Reserve Hours",
-            reserve["hours_low_reserve"]
+            "Served Hours %",
+            f"{reserve_dashboard['served_hours_pct']:.1f}%"
         )
-
-    with c2:
+    
+    st.divider()
+    
+    r1, r2, r3, r4 = st.columns(4)
+    
+    with r1:
         st.metric(
-            "Reserve Compliance %",
-            f"{reserve['reserve_compliance_pct']:.2f}%"
+            "Reserve Compliance",
+            f"{reserve_dashboard['reserve_compliance']:.1f}%"
+        )
+    
+    with r2:
+        st.metric(
+            "Hours Meeting Requirement",
+            reserve_dashboard["hours_meeting_requirement"]
+        )
+    
+    with r3:
+        st.metric(
+            "Hours Below Requirement",
+            reserve_dashboard["hours_below_requirement"]
+        )
+    
+    with r4:
+        st.metric(
+            "Worst Reserve Deficiency",
+            f"{reserve_dashboard['worst_reserve_deficiency']:.2f} MW"
         )
