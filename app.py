@@ -81,7 +81,7 @@ from core.reliability_monitor import (
     build_reliability_monitor
 )
 from core.demand_distribution_dashboard import (
-    demand_distribution
+    build_demand_distribution
 )
 
 # =====================================================
@@ -366,7 +366,7 @@ try:
         demand_distribution
     )
    
-    demand_distribution = (
+    build_demand_distribution = (
         build_demand_distribution(
             total_demand
         )
