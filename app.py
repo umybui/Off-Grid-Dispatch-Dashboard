@@ -13,6 +13,9 @@ from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
+from core.reserve_dashboard import (
+    build_reserve_dashboard
+)
 from core.reserve_trend import (
     build_reserve_trend
 )
