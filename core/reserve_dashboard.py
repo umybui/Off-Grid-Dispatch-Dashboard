@@ -58,7 +58,7 @@ def build_reserve_dashboard(
             reserve_deficient_hours,
 
         "worst_reserve_deficiency":
-            worst_reserve_deficiency
+            worst_reserve_deficiency,
 
        "hours_meeting_requirement":
         hours_meeting_requirement,
