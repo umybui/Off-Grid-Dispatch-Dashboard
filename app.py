@@ -75,7 +75,7 @@ from core.demand_distribution_dashboard import (
     build_demand_distribution_dashboard
 )
 from core.ldc_dashboard import (
-    build_ldc_dashboard
+    build_total_demand
 )
 
 # =====================================================
