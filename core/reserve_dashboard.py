@@ -99,7 +99,7 @@ def build_reserve_dashboard(
         hours_meeting_requirement,
     
         "reserve_security_score":
-        reserve_security_score
+        reserve_security_score,
 
         "avg_regulating_reserve":
             avg_regulating_reserve,
