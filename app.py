@@ -55,7 +55,6 @@ from core.unit_capability_chart import (
 from core.capacity_planning import (
     build_capacity_planning
 )
-
 from core.plant_role_matrix import (
     build_plant_role_matrix
 )
@@ -76,6 +75,18 @@ from core.demand_distribution_dashboard import (
 )
 from core.ldc_dashboard import (
     build_ldc_dashboard
+)
+from core.reserve_security_dashboard import (
+    build_reserve_security_dashboard
+)
+from core.reserve_trend_dashboard import (
+    build_reserve_trend_dashboard
+)
+from core.reserve_deficiency_dashboard import (
+    build_reserve_deficiency_dashboard
+)
+from core.capacity_planning_dashboard import (
+    build_capacity_planning_dashboard
 )
 
 # =====================================================
@@ -350,24 +361,22 @@ try:
     total_demand
     )
 
-#????????????????
-    
-    build_reserve_dashboard(
+    build_reserve_security_dashboard(
         reserve,
-        reliability
+        reserve_dashboard
     )
     
-    build_reserve_trend(
-        reliability
+    build_reserve_trend_dashboard(
+        reserve_trend
     )
     
-    build_reserve_deficiency_table(
-        reliability
+    build_reserve_deficiency_dashboard(
+        operating_condition,
+        reserve_deficiency_table
     )
     
-    build_capacity_planning(
-        reliability,
-        capacity_reference
+    build_capacity_planning_dashboard(
+        capacity_planning
     )
     
 #$$$$$$$$$$$$$$$$$$$
@@ -603,142 +612,7 @@ try:
     # ============================================================================
     # ============================================================================
     
-    # =================================================
-    # LDC SEGMENTATION VALIDATION
-    # =================================================
-    
-    st.subheader(
-        "LDC Segmentation Validation"
-    )
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.metric(
-            "Original Points",
-            ldc_segments["original_points"]
-        )
-    
-    with col2:
-        st.metric(
-            "Compressed Points",
-            ldc_segments["compressed_points"]
-        )
-    
-    with col3:
-        st.metric(
-            "Recommended Segments",
-            ldc_segments["recommended_segments"]
-        )
-    
-    with col4:
-        st.metric(
-            "Total SSE",
-            f"{ldc_segments['total_sse']:,.0f}"
-        )
-    
-    st.dataframe(
-        ldc_segments["sse_df"],
-        use_container_width=True
-    )
-    
-    # =================================================
-    # SEGMENT TABLE
-    # =================================================
-    
-    st.subheader(
-        "Segment Table Validation"
-    )
-    
-    st.dataframe(
-        segment_table,
-        use_container_width=True
-    )
-
-
-    # =====================================================
-    # LOAD DURATION CURVE
-    # =====================================================
-    
-    st.subheader(
-        "Load Duration Curve"
-    )
-    
-    st.plotly_chart(
-        ldc_fig,
-        use_container_width=True
-    )
-
-    st.markdown(
-        "##### Segment Summary"
-    )
-    
-    st.dataframe(
-        segment_summary,
-        use_container_width=True,
-        hide_index=True
-    )
-
-    with st.expander(
-        "Advanced LDC Segmentation Analysis",
-        expanded=False
-    ):
-    
-        st.metric(
-            "Current Segmentation SSE",
-            f"{ldc_segments['total_sse']:,.0f}"
-        )
-    
-        st.markdown(
-            f"""
-    ### Recommended Segmentation
-    
-    Recommended Segments:
-    **{ldc_segments['recommended_segments']}**
-    
-    Current Selection:
-    **{ldc_segments['recommended_segments']}**
-    
-    The elbow method indicates
-    that additional segmentation
-    beyond this point provides
-    diminishing improvement.
-    """
-        )
-    
-        st.dataframe(
-            segment_table,
-            use_container_width=True
-        )
-    
-    # =================================================
-    # LDC VALIDATION
-    # =================================================
-    
-    with st.expander(
-        "LDC Validation",
-        expanded=False
-    ):
-    
-        col1, col2 = st.columns(2)
-    
-        with col1:
-            st.metric(
-                "Peak Load",
-                f"{ldc['DemandMW'].max():,.2f}"
-            )
-    
-        with col2:
-            st.metric(
-                "Minimum Load",
-                f"{ldc['DemandMW'].min():,.2f}"
-            )
-    
-        st.dataframe(
-            ldc.head(20),
-            use_container_width=True
-        )
-
+   
     # =====================================================
     # PEAK HOUR PERFORMANCE ANALYSIS
     # =====================================================
