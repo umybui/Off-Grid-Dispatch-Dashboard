@@ -320,21 +320,7 @@ try:
             total_demand
         )
     )
-    
-    # =====================================================
-    # LOAD DURATION CURVE
-    # =====================================================
-    
-    ldc = build_ldc(
-        total_demand
-    )
-
-    # Initial recommendation run
-    
-    ldc_segments = build_ldc_segments(
-        ldc
-    )
-       
+           
 #$$$$$$$$$$$$$$$$$$$
     # =====================================================
     # PALAWAN MIGRATION
