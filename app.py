@@ -13,12 +13,6 @@ from core.demand_generation import build_demand_generation
 from core.reliability import build_reliability
 from core.kpis import build_kpis
 from core.reserve import build_reserve_assessment
-from core.ldc import build_ldc
-from core.ldc_segments import (
-    build_ldc_segments,
-    build_segment_table
-)
-from core.ldc_chart import build_ldc_chart
 from core.reserve_dashboard import (
     build_reserve_dashboard
 )
@@ -79,6 +73,9 @@ from core.reliability_monitor import (
 )
 from core.demand_distribution_dashboard import (
     build_demand_distribution_dashboard
+)
+from core.ldc_dashboard import (
+    build_ldc_dashboard
 )
 
 # =====================================================
@@ -363,7 +360,9 @@ try:
         demand_distribution
     )
    
-    
+    build_ldc_dashboard(
+    total_demand
+    )
  
     # =====================================================
     # RESERVE SECURITY SCORE
