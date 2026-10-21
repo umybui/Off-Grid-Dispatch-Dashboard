@@ -450,44 +450,6 @@ try:
     )
 
     st.divider()
-
-    st.write(
-        capacity_reference[
-            ["Plant", "DependableMW"]
-        ]
-    )
-    
-    st.write(
-        "Capacity Planning:",
-        capacity_planning["available_capacity"]
-    )
-    
-    st.write(
-        "Reference Sum:",
-        capacity_reference["DependableMW"].sum()
-    )
-
-    st.write(
-        asset_performance[
-            [
-                "Plant",
-                "DependableMW",
-                "MaxObservedMW"
-            ]
-        ]
-    )
-
-    st.write(
-        "Dependable Total",
-        asset_performance["DependableMW"].sum()
-    )
-    
-    st.write(
-        "Max Observed Total",
-        asset_performance["MaxObservedMW"].sum()
-    )
-    
-    st.write(df.columns.tolist())
     
     build_capacity_outlook_dashboard(
         capacity_planning,
