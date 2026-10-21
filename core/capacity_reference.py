@@ -56,10 +56,10 @@ def build_capacity_reference(
     agg_func = (
         config.get(
             "CAPACITY_AGGREGATION",
-            "max"
+            "sum"
         )
         if config
-        else "max"
+        else "sum"
     )
     
     available_capacity_tbl = (
