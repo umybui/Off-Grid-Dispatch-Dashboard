@@ -91,16 +91,17 @@ from core.capacity_planning_dashboard import (
 from core.shortage_events import (
     build_shortage_events
 )
-
 from core.shortage_event_dashboard import (
     build_shortage_event_dashboard
 )
 from core.plant_contribution import (
     build_plant_contribution
 )
-
 from core.plant_contribution_dashboard import (
     build_plant_contribution_dashboard
+)
+from core.plant_role_dashboard import (
+    build_plant_role_dashboard
 )
 
 # =====================================================
@@ -429,7 +430,13 @@ try:
     )
 
     st.divider()
- 
+
+    build_plant_role_dashboard(
+        plant_role_matrix
+    )
+
+    st.divider()
+
     build_capacity_planning_dashboard(
         capacity_planning
     )
@@ -805,51 +812,7 @@ try:
             use_container_width=True,
             hide_index=True
         )
-
-    # =====================================================
-    # PLANT ROLE MATRIX
-    # =====================================================
-    
-    st.subheader(
-        "Plant Role Matrix"
-    )
-    
-    with st.expander(
-        "Plant Role Classification",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            plant_role_matrix[
-                [
-                    "Plant",
-                    "EnergySharePct",
-                    "PeakSharePct",
-                    "Role"
-                ]
-            ].round(2),
-    
-            use_container_width=True,
-            hide_index=True
-        )
-
-    role_counts = (
-        plant_role_matrix["Role"]
-        .value_counts()
-        .reset_index()
-    )
-    
-    role_counts.columns = [
-        "Role",
-        "Count"
-    ]
-    
-    st.dataframe(
-        role_counts,
-        use_container_width=True,
-        hide_index=True
-    )
-                  
+           
     # =====================================================
     # RELIABILITY SUMMARY
     # =====================================================
