@@ -217,10 +217,9 @@ try:
         config
     )
 
-    st.write("Generation Columns")
-    st.write(generation.columns.tolist())
-    st.dataframe(generation.head())
-    
+    st.write(total_generation.columns.tolist())
+    st.write(total_demand.columns.tolist())
+
     # =====================================================
     # PEAK HOUR ANALYTICS
     # =====================================================
