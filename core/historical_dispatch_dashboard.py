@@ -39,7 +39,12 @@ def build_historical_dispatch_dashboard(
         .max()
     )
     
-    c1, c2, c3 = st.columns(3)
+    min_supply = (
+        total_generation["TotalGeneration"]
+        .min()
+    )
+    
+    c1, c2, c3, c4 = st.columns(4)
     
     with c1:
         st.metric(
@@ -58,7 +63,13 @@ def build_historical_dispatch_dashboard(
             "Maximum Shortage",
             f"{max_shortage:,.2f} MW"
         )
-
+        
+    with c4:
+        st.metric(
+            "Minimum Supply",
+            f"{min_supply:,.2f} MW"
+        )
+    
 
     merit_basis = st.selectbox(
         "Merit Order Basis",
@@ -141,6 +152,44 @@ def build_historical_dispatch_dashboard(
             Allows custom dispatch sequencing.
             """
         )
+        
+        with st.expander(
+            "View Merit Order Dispatch Scenario",
+            expanded=False
+        ):
+        
+            if (
+                merit_basis
+                == "Manual Override"
+                and
+                SORTABLE_AVAILABLE
+            ):
+        
+                plant_order = sort_items(
+                    items=plant_order,
+                    direction="vertical"
+                )
+        
+            merit_order_tbl = pd.DataFrame(
+                {
+                    "Priority":
+                    range(
+                        1,
+                        len(plant_order) + 1
+                    ),
+        
+                    "Plant":
+                    plant_order
+                }
+            )
+        
+            st.dataframe(
+                merit_order_tbl,
+                use_container_width=True,
+                hide_index=True
+            )
+        
+        fig = go.Figure()
             
             plant_order = sort_items(
                 items=plant_order,
@@ -248,14 +297,14 @@ def build_historical_dispatch_dashboard(
             ),
             mode="lines",
             fill="tonexty",
-            fillcolor="rgba(255,140,0,0.0.45)",
+            fillcolor="rgba(255,140,0,0.45)",
             line=dict(width=0),
             name="SHORTAGE"
         )
     )
 
     fig.update_layout(
-        title="Historical Supply-Demand Dispatch",
+        title="Historical Dispatch Stack",
         hovermode="x unified",
         height=900,
         yaxis_title="MW",
