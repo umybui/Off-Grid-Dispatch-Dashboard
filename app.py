@@ -366,16 +366,16 @@ try:
         reserve_dashboard,
         reliability
     )
-    
-    build_reserve_trend_dashboard(
-        reserve_trend
-    )
-    
+
     build_reserve_deficiency_dashboard(
         operating_condition,
         reserve_deficiency_table
     )
     
+    build_reserve_trend_dashboard(
+        reserve_trend
+    )   
+   
     build_capacity_planning_dashboard(
         capacity_planning
     )
