@@ -29,7 +29,7 @@ def build_capacity_reference(
     if "Attribute" not in df.columns:
         return pd.DataFrame()
 
-        capacity_data = (
+    capacity_data = (
             df[
                 df["Attribute"]
                 .astype(str)
@@ -47,6 +47,8 @@ def build_capacity_reference(
             ]
             .copy()
         )
+
+    
 
     if len(capacity_data) == 0:
         return pd.DataFrame()
