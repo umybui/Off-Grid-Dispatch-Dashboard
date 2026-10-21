@@ -5,6 +5,13 @@ def build_plant_contribution(
     generation
 ):
 
+    generation = generation.copy()
+    
+    generation["Plant"] = (
+        generation["Plant"]
+        .fillna("Unknown Plant")
+    )
+    
     contribution = (
         generation
         .groupby(
@@ -13,7 +20,7 @@ def build_plant_contribution(
         )
         .agg(
             EnergyMWh=(
-                "MW",
+                "Value",
                 "sum"
             )
         )
