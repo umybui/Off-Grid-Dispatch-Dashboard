@@ -108,181 +108,181 @@ def build_reserve_security_dashboard(
 
     st.divider()
 
-with st.expander(
-    "How Reserve Requirement Was Calculated",
-    expanded=False
-):
-    gap_df = reliability["gap_df"].copy()
-
-    gap_df["Month"] = (
-        gap_df["Datetime"]
-        .dt.strftime("%b %Y")
-    )
-
-    selected_month = st.selectbox(
-        "Month",
-        sorted(
-            gap_df["Month"].unique()
+    with st.expander(
+        "How Reserve Requirement Was Calculated",
+        expanded=False
+    ):
+        gap_df = reliability["gap_df"].copy()
+    
+        gap_df["Month"] = (
+            gap_df["Datetime"]
+            .dt.strftime("%b %Y")
         )
-    )
-
-    month_df = (
-        gap_df[
-            gap_df["Month"]
-            == selected_month
-        ]
-    )
-
-    selected_day = st.selectbox(
-        "Day",
-        sorted(
-            month_df["Datetime"]
-            .dt.date
-            .astype(str)
-            .unique()
+    
+        selected_month = st.selectbox(
+            "Month",
+            sorted(
+                gap_df["Month"].unique()
+            )
         )
-    )
-
-    day_df = (
-        month_df[
-            month_df["Datetime"]
-            .dt.date
-            .astype(str)
+    
+        month_df = (
+            gap_df[
+                gap_df["Month"]
+                == selected_month
+            ]
+        )
+    
+        selected_day = st.selectbox(
+            "Day",
+            sorted(
+                month_df["Datetime"]
+                .dt.date
+                .astype(str)
+                .unique()
+            )
+        )
+    
+        day_df = (
+            month_df[
+                month_df["Datetime"]
+                .dt.date
+                .astype(str)
+                ==
+                selected_day
+            ]
+        )
+    
+        selected_hour = st.selectbox(
+            "Hour",
+            day_df["Datetime"]
+            .dt.strftime("%H:%M")
+            .tolist()
+        )
+    
+        row = day_df[
+            day_df["Datetime"]
+            .dt.strftime("%H:%M")
             ==
-            selected_day
-        ]
-    )
-
-    selected_hour = st.selectbox(
-        "Hour",
-        day_df["Datetime"]
-        .dt.strftime("%H:%M")
-        .tolist()
-    )
-
-    row = day_df[
-        day_df["Datetime"]
-        .dt.strftime("%H:%M")
-        ==
-        selected_hour
-    ].iloc[0]
-
-    c1, c2, c3, c4, c5 = st.columns(5)
-
-    with c1:
-        st.metric(
-            "Demand",
-            f"{row['TotalDemand']:.2f} MW"
+            selected_hour
+        ].iloc[0]
+    
+        c1, c2, c3, c4, c5 = st.columns(5)
+    
+        with c1:
+            st.metric(
+                "Demand",
+                f"{row['TotalDemand']:.2f} MW"
+            )
+    
+        with c2:
+            st.metric(
+                "Generation",
+                f"{row['TotalGeneration']:.2f} MW"
+            )
+    
+        with c3:
+            st.metric(
+                "Reserve Margin",
+                f"{row['ReserveMargin']:.2f} MW"
+            )
+    
+        with c4:
+            st.metric(
+                "Required Reserve",
+                f"{row['RequiredReserve']:.2f} MW"
+            )
+    
+        with c5:
+            st.metric(
+                "Reserve Gap",
+                f"{row['ReserveMargin'] - row['RequiredReserve']:.2f} MW"
+            )
+    
+        st.markdown("---")
+    
+        st.markdown(
+            "### Reserve Requirement Computation"
         )
-
-    with c2:
-        st.metric(
-            "Generation",
-            f"{row['TotalGeneration']:.2f} MW"
+    
+        st.markdown(
+            f"""
+            #### Regulating Reserve
+    
+            = Total Demand × 2.8%
+    
+            = {row['TotalDemand']:.2f} × 2.8%
+    
+            = **{row['RegulatingReserve']:.2f} MW**
+            """
         )
-
-    with c3:
-        st.metric(
-            "Reserve Margin",
-            f"{row['ReserveMargin']:.2f} MW"
+    
+        st.markdown(
+            f"""
+            #### Contingency Reserve
+    
+            = Total Generation × 10%
+    
+            = {row['TotalGeneration']:.2f} × 10%
+    
+            = **{row['ContingencyReserve']:.2f} MW**
+            """
         )
-
-    with c4:
-        st.metric(
-            "Required Reserve",
+    
+        st.markdown(
+            f"""
+            #### Required Reserve
+    
+            = Regulating Reserve + Contingency Reserve
+    
+            = {row['RegulatingReserve']:.2f}
+            + {row['ContingencyReserve']:.2f}
+    
+            = **{row['RequiredReserve']:.2f} MW**
+            """
+        )
+    
+        st.markdown(
+            f"""
+            #### Actual Reserve Margin
+    
+            = Total Generation − Total Demand
+    
+            = {row['TotalGeneration']:.2f}
+            − {row['TotalDemand']:.2f}
+    
+            = **{row['ReserveMargin']:.2f} MW**
+            """
+        )
+    
+        reserve_gap = (
+            row["ReserveMargin"]
+            -
+            row["RequiredReserve"]
+        )
+    
+        st.markdown(
+            "#### Compliance Check"
+        )
+    
+        st.write(
+            "Reserve Margin ≥ Required Reserve"
+        )
+    
+        st.write(
+            f"{row['ReserveMargin']:.2f} MW "
+            f"≥ "
             f"{row['RequiredReserve']:.2f} MW"
         )
-
-    with c5:
-        st.metric(
-            "Reserve Gap",
-            f"{row['ReserveMargin'] - row['RequiredReserve']:.2f} MW"
-        )
-
-    st.markdown("---")
-
-    st.markdown(
-        "### Reserve Requirement Computation"
-    )
-
-    st.markdown(
-        f"""
-        #### Regulating Reserve
-
-        = Total Demand × 2.8%
-
-        = {row['TotalDemand']:.2f} × 2.8%
-
-        = **{row['RegulatingReserve']:.2f} MW**
-        """
-    )
-
-    st.markdown(
-        f"""
-        #### Contingency Reserve
-
-        = Total Generation × 10%
-
-        = {row['TotalGeneration']:.2f} × 10%
-
-        = **{row['ContingencyReserve']:.2f} MW**
-        """
-    )
-
-    st.markdown(
-        f"""
-        #### Required Reserve
-
-        = Regulating Reserve + Contingency Reserve
-
-        = {row['RegulatingReserve']:.2f}
-        + {row['ContingencyReserve']:.2f}
-
-        = **{row['RequiredReserve']:.2f} MW**
-        """
-    )
-
-    st.markdown(
-        f"""
-        #### Actual Reserve Margin
-
-        = Total Generation − Total Demand
-
-        = {row['TotalGeneration']:.2f}
-        − {row['TotalDemand']:.2f}
-
-        = **{row['ReserveMargin']:.2f} MW**
-        """
-    )
-
-    reserve_gap = (
-        row["ReserveMargin"]
-        -
-        row["RequiredReserve"]
-    )
-
-    st.markdown(
-        "#### Compliance Check"
-    )
-
-    st.write(
-        "Reserve Margin ≥ Required Reserve"
-    )
-
-    st.write(
-        f"{row['ReserveMargin']:.2f} MW "
-        f"≥ "
-        f"{row['RequiredReserve']:.2f} MW"
-    )
-
-    if reserve_gap >= 0:
-
-        st.success(
-            "✓ Reserve Requirement Met"
-        )
-
-    else:
-
-        st.error(
-            "✗ Reserve Deficient"
-        )
+    
+        if reserve_gap >= 0:
+    
+            st.success(
+                "✓ Reserve Requirement Met"
+            )
+    
+        else:
+    
+            st.error(
+                "✗ Reserve Deficient"
+            )
