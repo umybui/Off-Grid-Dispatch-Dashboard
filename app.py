@@ -109,9 +109,6 @@ from core.peak_hour_dashboard import (
 from core.capacity_outlook_dashboard import (
     build_capacity_outlook_dashboard
 )
-from core.historical_dispatch import (
-    build_historical_dispatch
-)
 from core.historical_dispatch_dashboard import (
     build_historical_dispatch_dashboard
 )
@@ -261,13 +258,6 @@ try:
             generation
         )
     )
-
-    #historical_dispatch = (
-    #    build_historical_dispatch(
-    #        generation,
-    #        total_demand
-    #    )
-    #)
 
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
