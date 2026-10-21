@@ -451,6 +451,12 @@ try:
     st.divider()
 
     st.write(
+        capacity_reference[
+            ["Plant", "DependableMW"]
+        ]
+    )
+    
+    st.write(
         "Capacity Planning:",
         capacity_planning["available_capacity"]
     )
