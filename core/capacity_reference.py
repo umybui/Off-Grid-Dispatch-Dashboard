@@ -51,13 +51,22 @@ def build_capacity_reference(
     if len(capacity_data) == 0:
         return pd.DataFrame()
 
+    agg_func = (
+        config.get(
+            "CAPACITY_AGGREGATION",
+            "max"
+        )
+        if config
+        else "max"
+    )
+    
     available_capacity_tbl = (
         capacity_data
         .pivot_table(
             index=["Plant"],
             columns="Attribute",
             values="Value",
-            aggfunc="max"
+            aggfunc=agg_func
         )
         .reset_index()
     )
