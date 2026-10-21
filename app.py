@@ -475,11 +475,11 @@ try:
 
     st.divider()
 
-    st.divider()
-    
-    #build_historical_dispatch_dashboard(
-    #    historical_dispatch
-    #)
+    build_historical_dispatch_dashboard(
+        generation,
+        total_demand,
+        total_generation
+    )
     
 #$$$$$$$$$$$$$$$$$$$
     
