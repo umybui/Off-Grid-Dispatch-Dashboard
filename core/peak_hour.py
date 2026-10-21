@@ -34,7 +34,7 @@ def build_peak_hour_analysis(
     peak_snapshot = (
         peak_generation
         .groupby(
-            "Plant",
+            ["Plant", "Unit"],
             as_index=False
         )
         .agg(
@@ -60,7 +60,7 @@ def build_peak_hour_analysis(
             "PeakEnergyMWh"
         ].sum()
     )
-
+    
     peak_snapshot[
         "PeakEnergySharePct"
     ] = (
@@ -68,8 +68,34 @@ def build_peak_hour_analysis(
             "PeakEnergyMWh"
         ]
         /
-        total_peak_energy
+        max(total_peak_energy, 1)
         * 100
+    )
+    
+    plant_totals = (
+        peak_snapshot
+        .groupby(
+            "Plant",
+            as_index=False
+        )[
+            "PeakEnergySharePct"
+        ]
+        .sum()
+        .rename(
+            columns={
+                "PeakEnergySharePct":
+                "PlantSharePct"
+            }
+        )
+    )
+    
+    peak_snapshot = (
+        peak_snapshot
+        .merge(
+            plant_totals,
+            on="Plant",
+            how="left"
+        )
     )
 
     peak_snapshot = (
