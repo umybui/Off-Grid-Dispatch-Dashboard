@@ -29,24 +29,24 @@ def build_capacity_reference(
     if "Attribute" not in df.columns:
         return pd.DataFrame()
 
-    capacity_data = (
-        df[
-            df["Attribute"]
-            .astype(str)
-            .str.upper()
-            .isin(
-                [
-                    "INSTALLED CAPACITY (MW)",
-                    "DEPENDABLE CAPACITY",
-            
-                    "INSTALLED CAPACITY (KW)",
-                    "GUARANTEED DEPENDABLE CAPACITY (KW)",
-                    "AVAILABLE CAPACITY (KW)"
-                ]
-            )
-        ]
-        .copy()
-    )
+        capacity_data = (
+            df[
+                df["Attribute"]
+                .astype(str)
+                .str.upper()
+                .isin(
+                    [
+                        "INSTALLED CAPACITY (MW)",
+                        "DEPENDABLE CAPACITY",
+                
+                        "INSTALLED CAPACITY (KW)",
+                        "GUARANTEED DEPENDABLE CAPACITY (KW)",
+                        "AVAILABLE CAPACITY (KW)"
+                    ]
+                )
+            ]
+            .copy()
+        )
 
     if len(capacity_data) == 0:
         return pd.DataFrame()
