@@ -2,7 +2,8 @@ import streamlit as st
 
 def build_executive_summary(
     reliability,
-    kpis
+    kpis,
+    capacity_planning
 ):
     peak_row = reliability["gap_df"].loc[
         reliability["gap_df"]["TotalDemand"].idxmax()
