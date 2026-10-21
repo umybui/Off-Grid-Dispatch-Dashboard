@@ -88,6 +88,13 @@ from core.reserve_deficiency_dashboard import (
 from core.capacity_planning_dashboard import (
     build_capacity_planning_dashboard
 )
+from core.shortage_events import (
+    build_shortage_events
+)
+
+from core.shortage_event_dashboard import (
+    build_shortage_event_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -271,6 +278,12 @@ try:
         total_generation,
         transfer_flow
     )
+
+    shortage_events = (
+        build_shortage_events(
+            reliability
+        )
+    )
     
     reserve = build_reserve_assessment(
         reliability
@@ -375,7 +388,11 @@ try:
     build_reserve_trend_dashboard(
         reserve_trend
     )   
-   
+
+    build_shortage_event_dashboard(
+        shortage_events
+    )
+    
     build_capacity_planning_dashboard(
         capacity_planning
     )
