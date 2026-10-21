@@ -9,16 +9,12 @@ def build_historical_dispatch(
     plant_generation = (
         generation
         .groupby("Plant", as_index=False)
-        ["MW"]
+        ["Value"]
         .mean()
         .rename(
             columns={
-                "MW": "AverageMW"
+                "Value": "AverageMW"
             }
-        )
-        .sort_values(
-            "AverageMW",
-            ascending=False
         )
     )
 
