@@ -486,6 +486,8 @@ try:
         asset_performance["MaxObservedMW"].sum()
     )
     
+    st.dataframe(capacity_reference)
+
     
     build_capacity_outlook_dashboard(
         capacity_planning,
