@@ -220,6 +220,10 @@ try:
         config
     )
 
+    st.write("Generation Columns")
+    st.write(generation.columns.tolist())
+    st.dataframe(generation.head())
+    
     # =====================================================
     # PEAK HOUR ANALYTICS
     # =====================================================
@@ -258,15 +262,12 @@ try:
         )
     )
 
-    historical_dispatch = (
-        build_historical_dispatch(
-            generation,
-            total_demand
-        )
-    )
-
-    st.write(generation.columns.tolist())
-    st.dataframe(generation.head())
+    #historical_dispatch = (
+    #    build_historical_dispatch(
+    #        generation,
+    #        total_demand
+    #    )
+    #)
 
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
@@ -476,9 +477,9 @@ try:
 
     st.divider()
     
-    build_historical_dispatch_dashboard(
-        historical_dispatch
-    )
+    #build_historical_dispatch_dashboard(
+    #    historical_dispatch
+    #)
     
 #$$$$$$$$$$$$$$$$$$$
     
