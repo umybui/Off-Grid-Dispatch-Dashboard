@@ -219,7 +219,7 @@ def build_historical_dispatch_dashboard(
             name="TOTAL DEMAND",
             line=dict(
                 color="black",
-                width=2
+                width=3
             )
         )
     )
