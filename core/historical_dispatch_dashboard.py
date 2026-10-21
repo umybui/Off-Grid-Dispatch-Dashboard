@@ -124,78 +124,39 @@ def build_historical_dispatch_dashboard(
             .tolist()
         )
 
-
+    st.caption(
+        """
+        Largest Generator First:
+        Dispatches high-capacity plants first.
+    
+        Smallest Generator First:
+        Dispatches smaller units first.
+    
+        Alphabetical:
+        Orders plants alphabetically.
+    
+        Manual Override:
+        Allows custom dispatch sequencing.
+        """
+    )
+    
     with st.expander(
         "View Merit Order Dispatch Scenario",
         expanded=False
     ):
-
+    
         if (
             merit_basis
             == "Manual Override"
             and
             SORTABLE_AVAILABLE
         ):
-
-        st.caption(
-            """
-            Largest Generator First:
-            Dispatches high-capacity plants first.
-        
-            Smallest Generator First:
-            Dispatches smaller units first.
-        
-            Alphabetical:
-            Orders plants alphabetically.
-        
-            Manual Override:
-            Allows custom dispatch sequencing.
-            """
-        )
-        
-        with st.expander(
-            "View Merit Order Dispatch Scenario",
-            expanded=False
-        ):
-        
-            if (
-                merit_basis
-                == "Manual Override"
-                and
-                SORTABLE_AVAILABLE
-            ):
-        
-                plant_order = sort_items(
-                    items=plant_order,
-                    direction="vertical"
-                )
-        
-            merit_order_tbl = pd.DataFrame(
-                {
-                    "Priority":
-                    range(
-                        1,
-                        len(plant_order) + 1
-                    ),
-        
-                    "Plant":
-                    plant_order
-                }
-            )
-        
-            st.dataframe(
-                merit_order_tbl,
-                use_container_width=True,
-                hide_index=True
-            )
-        
-        fig = go.Figure()
-            
+    
             plant_order = sort_items(
                 items=plant_order,
                 direction="vertical"
             )
-
+    
         merit_order_tbl = pd.DataFrame(
             {
                 "Priority":
@@ -203,16 +164,18 @@ def build_historical_dispatch_dashboard(
                     1,
                     len(plant_order) + 1
                 ),
+    
                 "Plant":
                 plant_order
             }
         )
-
+    
         st.dataframe(
             merit_order_tbl,
             use_container_width=True,
             hide_index=True
         )
+    
 
     fig = go.Figure()
 
