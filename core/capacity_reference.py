@@ -48,30 +48,70 @@ def build_capacity_reference(
             .copy()
         )
 
+    if (
+        config is not None
+        and
+        config.get("CAPACITY_AGGREGATION") == "sum"
+    ):
     
+        dependable_df = (
+            capacity_data[
+                capacity_data["Attribute"]
+                .astype(str)
+                .str.upper()
+                .isin(
+                    [
+                        "DEPENDABLE CAPACITY",
+                        "GUARANTEED DEPENDABLE CAPACITY (KW)"
+                    ]
+                )
+            ]
+            .groupby(
+                ["Plant", "Unit"],
+                as_index=False
+            )["Value"]
+            .max()
+        )
+    
+        available_capacity_tbl = (
+            dependable_df
+            .groupby(
+                "Plant",
+                as_index=False
+            )["Value"]
+            .sum()
+            .rename(
+                columns={
+                    "Value": "DependableMW"
+                }
+            )
+        )
+    
+        available_capacity_tbl["InstalledMW"] = (
+            available_capacity_tbl["DependableMW"]
+        )
+    
+        available_capacity_tbl["AvailableMW"] = (
+            available_capacity_tbl["DependableMW"]
+        )
+    
+    else:
+    
+        available_capacity_tbl = (
+            capacity_data
+            .pivot_table(
+                index=["Plant"],
+                columns="Attribute",
+                values="Value",
+                aggfunc="max"
+            )
+            .reset_index()
+        )
 
     if len(capacity_data) == 0:
         return pd.DataFrame()
 
-    agg_func = (
-        config.get(
-            "CAPACITY_AGGREGATION",
-            "max"
-        )
-        if config
-        else "max"
-    )
     
-    available_capacity_tbl = (
-        capacity_data
-        .pivot_table(
-            index=["Plant"],
-            columns="Attribute",
-            values="Value",
-            aggfunc=agg_func
-        )
-        .reset_index()
-    )
 
     available_capacity_tbl.columns = [
         str(col).strip()
