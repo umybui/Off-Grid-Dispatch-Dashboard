@@ -449,6 +449,17 @@ try:
     )
 
     st.divider()
+
+    st.write(
+        "Capacity Planning:",
+        capacity_planning["available_capacity"]
+    )
+    
+    st.write(
+        "Reference Sum:",
+        capacity_reference["DependableMW"].sum()
+    )
+
     
     build_capacity_outlook_dashboard(
         capacity_planning,
