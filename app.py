@@ -106,6 +106,9 @@ from core.plant_role_dashboard import (
 from core.peak_hour_dashboard import (
     build_peak_hour_dashboard
 )
+from core.capacity_outlook_dashboard import (
+    build_capacity_outlook_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -447,8 +450,9 @@ try:
 
     st.divider()
     
-    build_capacity_planning_dashboard(
-        capacity_planning
+    build_capacity_outlook_dashboard(
+        capacity_planning,
+        capacity_reference
     )
     
 #$$$$$$$$$$$$$$$$$$$
