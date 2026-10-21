@@ -7,8 +7,9 @@ def build_generation_mix_dashboard(
     config
 ):
     show_breakdown = st.toggle(
-        "Break down by power plant",
-        value=False
+    "Break down by power plant",
+    value=False,
+    key="generation_mix_breakdown"
     )
 
     with st.sidebar.expander(
