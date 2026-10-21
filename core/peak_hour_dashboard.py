@@ -10,6 +10,21 @@ def build_peak_hour_dashboard(
         "Peak Hour Performance Analysis"
     )
 
+    st.caption(
+        f"""
+        Peak-demand hours are defined as all hours where system
+        demand reached at least 90% of the system peak demand.
+    
+        For the selected study period, the peak-demand threshold
+        is {peak_hour['peak_threshold']:.2f} MW, resulting in
+        {len(peak_hour['peak_hours'])} peak-demand hours.
+    
+        The analysis below evaluates how generating plants
+        contributed during these critical periods and identifies
+        the assets most important for supporting system peak demand.
+        """
+    )
+    
     snapshot = (
         peak_hour["peak_snapshot"]
     )
@@ -51,6 +66,16 @@ def build_peak_hour_dashboard(
         "##### Generation Mix at Peak Demand"
     )
 
+    st.caption(
+        """
+        The chart shows each plant's share of total energy
+        generated during peak-demand hours only.
+    
+        Larger percentages indicate plants that were most
+        relied upon when system demand was near its maximum.
+        """
+    )
+    
     st.plotly_chart(
         peak_hour_share_fig,
         use_container_width=True
