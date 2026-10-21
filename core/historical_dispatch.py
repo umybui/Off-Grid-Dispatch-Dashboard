@@ -1,9 +1,10 @@
 import pandas as pd
 
 
-def build_historical_dispatch(
+def build_historical_dispatch_dashboard(
     generation,
-    total_demand
+    total_demand,
+    total_generation
 ):
 
     plant_generation = (
