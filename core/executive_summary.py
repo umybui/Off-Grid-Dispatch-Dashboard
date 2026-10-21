@@ -37,7 +37,7 @@ def build_executive_summary(
     with r1c2:
         st.metric(
             "Dependable Capacity",
-            "{capacity_planning['available_capacity']:,.2f} MW"
+            f"{capacity_planning['available_capacity']:,.2f} MW"
         )
     
     with r1c3:
@@ -74,16 +74,15 @@ def build_executive_summary(
     
     with r2c2:
         st.metric(
-            "Low Reserve Hours",
-            f"{reliability['hours_low_reserve']:,}"
+            "Reserve Margin",
+            f"{reserve_margin:,.2f} MW",
         )
 
     with r2c3:
-        st.metric(
-            "Reserve Margin",
-            f"{reserve_margin:,.2f} MW",
-            f"{reserve_margin_pct:.1f}%"
-        )
+            st.metric(
+                "Low Reserve Hours",
+                f"{reliability['hours_low_reserve']:,}"
+            )
     
     with r2c4:
         st.metric(
