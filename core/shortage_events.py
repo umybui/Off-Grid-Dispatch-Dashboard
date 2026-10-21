@@ -87,15 +87,21 @@ def build_shortage_events(
         )
     )
 
+    shortage_df["Month"] = (
+        shortage_df["Datetime"]
+        .dt.strftime("%b %Y")
+    )
+    
+    shortage_df["MonthSort"] = (
+        shortage_df["Datetime"]
+        .dt.to_period("M")
+        .astype(str)
+    )
+    
     monthly_summary = (
         shortage_df
-        .assign(
-            Month=lambda df:
-            df["Datetime"]
-            .dt.strftime("%b %Y")
-        )
         .groupby(
-            "Month"
+            ["Month", "MonthSort"]
         )
         .agg(
             UnservedEnergyMWh=(
@@ -112,16 +118,20 @@ def build_shortage_events(
             )
         )
         .reset_index()
+        .sort_values(
+            "MonthSort"
+        )
     )
 
     fig = px.scatter(
         monthly_summary,
         x="Month",
         y="UnservedEnergyMWh",
-        size="ShortageHours",
+        size="UnservedEnergyMWh",
         color="MaxShortageMW",
         text="Month",
         color_continuous_scale="Reds",
+        size_max=90,
         title="Monthly Reliability Impact Overview"
     )
 
@@ -129,8 +139,13 @@ def build_shortage_events(
         textposition="top center"
     )
 
+    fig.update_xaxes(
+        categoryorder="array",
+        categoryarray=monthly_summary["Month"]
+    )
+    
     fig.update_layout(
-        height=500,
+        height=650,
         yaxis_title="Unserved Energy (MWh)",
         xaxis_title="Month"
     )
