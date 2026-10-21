@@ -11,33 +11,39 @@ def build_executive_summary(
     
     peak_datetime = peak_row["Datetime"]
     
-    r1c1, r1c2, r1c3, r1c4, r1c5 = st.columns(5)
+    r1c1, r1c2, r1c3, r1c4, r1c5, r1c6 = st.columns(6)
     
     with r1c1:
         st.metric(
             "Peak Demand",
             f"{reliability['peak_demand']:,.2f} MW"
         )
-    
+
     with r1c2:
+    st.metric(
+            "Dependable Capacity",
+            f"{capacity_planning['available_capacity']:,.2f} MW"
+        )
+    
+    with r1c3:
         st.metric(
             "Demand Energy",
             f"{kpis['demand_energy_mwh']:,.2f} MWh"
         )
     
-    with r1c3:
+    with r1c4:
         st.metric(
             "Generated Energy",
             f"{kpis['generated_energy_mwh']:,.2f} MWh"
         )
     
-    with r1c4:
+    with r1c5:
         st.metric(
             "Unserved Energy",
             f"{reliability['unserved_energy']:,.2f} MWh"
         )
     
-    with r1c5:
+    with r1c6:
         st.metric(
             "Energy Served",
             f"{kpis['energy_served_pct']:.2f}%"
