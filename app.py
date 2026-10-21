@@ -264,7 +264,10 @@ try:
             total_demand
         )
     )
-    
+
+    st.write(generation.columns.tolist())
+    st.dataframe(generation.head())
+
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
     # =====================================================
