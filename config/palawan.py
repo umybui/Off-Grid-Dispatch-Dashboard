@@ -22,7 +22,7 @@ CONFIG = {
 
     "UNIT_SCALE": 1,
 
-    "CAPACITY_AGGREGATION": "sum"
+    "CAPACITY_AGGREGATION": "sum",
 
     "TECHNOLOGY_MAPPING": {
 
