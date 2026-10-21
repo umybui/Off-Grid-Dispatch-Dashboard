@@ -159,6 +159,8 @@ st.title(
     f"{config['SYSTEM_NAME']} Dispatch Dashboard"
 )
 
+st.write(generation.columns.tolist())
+
 # =====================================================
 # REFRESH
 # =====================================================
