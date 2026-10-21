@@ -486,18 +486,7 @@ try:
         asset_performance["MaxObservedMW"].sum()
     )
     
-    st.dataframe(capacity_reference)
-
-    st.dataframe(
-        capacity_data[
-            [
-                "Plant",
-                "Attribute",
-                "Value"
-            ]
-        ]
-        .head(50)
-    )
+    st.write(df.columns.tolist())
     
     build_capacity_outlook_dashboard(
         capacity_planning,
