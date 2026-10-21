@@ -75,6 +75,8 @@ CONFIG = {
 
     "DEPENDABLE_REFERENCE": DEPENDABLE_REFERENCE,
 
+    "CAPACITY_AGGREGATION": "max"
+    
     "TECHNOLOGY_MAPPING": {
         "OMCPC SAMARICA": "Bunker",
         "OMCPC HIGH-SPEED": "Diesel",
