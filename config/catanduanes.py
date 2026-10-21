@@ -20,7 +20,7 @@ CONFIG = {
 
     "UNIT_SCALE": 1000,
 
-    "CAPACITY_AGGREGATION": "sum"
+    "CAPACITY_AGGREGATION": "sum",
     
     "TECHNOLOGY_MAPPING": {
         "Balongbong MHP": "Hydro",
