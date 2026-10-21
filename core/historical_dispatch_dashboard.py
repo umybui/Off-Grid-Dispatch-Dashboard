@@ -132,13 +132,12 @@ def build_historical_dispatch_dashboard(
           )
       )
 
-    total_supply = (
+  total_supply = (
       generation
       .groupby(
           "Datetime",
           as_index=False
-      )
-      ["MW"]
+      )["MW"]
       .sum()
   )
 
