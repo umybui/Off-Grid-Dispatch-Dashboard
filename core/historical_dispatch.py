@@ -8,13 +8,19 @@ def build_historical_dispatch(
 
     plant_generation = (
         generation
-        .groupby("Plant", as_index=False)
-        ["Value"]
+        .groupby(
+            "Plant",
+            as_index=False
+        )["Value"]
         .mean()
         .rename(
             columns={
                 "Value": "AverageMW"
             }
+        )
+        .sort_values(
+            "AverageMW",
+            ascending=False
         )
     )
 
@@ -35,7 +41,13 @@ def build_historical_dispatch(
     )
 
     return {
-        "generation": generation,
-        "total_demand": total_demand,
-        "dispatch_order": dispatch_order
+
+        "generation":
+            generation,
+
+        "total_demand":
+            total_demand,
+
+        "dispatch_order":
+            dispatch_order
     }
