@@ -95,6 +95,13 @@ from core.shortage_events import (
 from core.shortage_event_dashboard import (
     build_shortage_event_dashboard
 )
+from core.plant_contribution import (
+    build_plant_contribution
+)
+
+from core.plant_contribution_dashboard import (
+    build_plant_contribution_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -391,6 +398,15 @@ try:
 
     build_shortage_event_dashboard(
         shortage_events
+    )
+    
+    build_generation_mix_dashboard(
+    generation,
+    config
+    )
+    
+    build_plant_contribution_dashboard(
+        plant_contribution
     )
     
     build_capacity_planning_dashboard(
