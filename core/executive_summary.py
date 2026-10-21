@@ -10,6 +10,21 @@ def build_executive_summary(
     ]
     
     peak_datetime = peak_row["Datetime"]
+
+    reserve_margin = (
+        capacity_planning["available_capacity"]
+        -
+        reliability["peak_demand"]
+    )
+    
+    reserve_margin_pct = (
+        reserve_margin
+        /
+        reliability["peak_demand"]
+        * 100
+        if reliability["peak_demand"] > 0
+        else 0
+    )
     
     r1c1, r1c2, r1c3, r1c4, r1c5, r1c6 = st.columns(6)
     
@@ -20,9 +35,9 @@ def build_executive_summary(
         )
 
     with r1c2:
-    st.metric(
+        st.metric(
             "Dependable Capacity",
-            f"{capacity_planning['available_capacity']:,.2f} MW"
+            "{capacity_planning['available_capacity']:,.2f} MW"
         )
     
     with r1c3:
@@ -49,7 +64,7 @@ def build_executive_summary(
             f"{kpis['energy_served_pct']:.2f}%"
         )
     
-    r2c1, r2c2, r2c3, r2c4 = st.columns(4)
+    r2c1, r2c2, r2c3, r2c4, r2c5 = st.columns(5)
     
     with r2c1:
         st.metric(
@@ -62,14 +77,21 @@ def build_executive_summary(
             "Low Reserve Hours",
             f"{reliability['hours_low_reserve']:,}"
         )
-    
+
     with r2c3:
+        st.metric(
+            "Reserve Margin",
+            f"{reserve_margin:,.2f} MW",
+            f"{reserve_margin_pct:.1f}%"
+        )
+    
+    with r2c4:
         st.metric(
             "Load Factor",
             f"{kpis['load_factor']:.1f}%"
         )
     
-    with r2c4:
+    with r2c5:
         st.metric(
             "Peak Demand Time",
             peak_datetime.strftime(
