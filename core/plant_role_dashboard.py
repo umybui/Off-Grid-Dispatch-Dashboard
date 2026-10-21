@@ -18,7 +18,7 @@ def build_plant_role_dashboard(
 
         • Further right = larger contribution during peak-demand periods
 
-        • Larger bubbles = larger average generation output
+        • Larger bubbles = larger annual energy production
 
         ##### Quadrants
 
@@ -41,17 +41,53 @@ def build_plant_role_dashboard(
     x_mid = df["PeakSharePct"].median()
     y_mid = df["EnergySharePct"].median()
 
+    role_colors = {
+        "Core Asset": "#43A047",
+        "Baseload Asset": "#1E88E5",
+        "Peaking Asset": "#FB8C00",
+        "Support Asset": "#D81B60"
+    }
+    
     fig = px.scatter(
         df,
         x="PeakSharePct",
         y="EnergySharePct",
         size="EnergyMWh",
-        color="Plant",
+        size_max=90,
+        color="Role",
         text="Plant",
-        hover_data=[
-            "Role"
-        ],
-        size_max=60
+        color_discrete_map=role_colors,
+        hover_data={
+            "EnergyMWh": ":,.2f",
+            "EnergySharePct": ":.2f",
+            "PeakSharePct": ":.2f",
+            "Role": True
+        }
+    )
+
+    seen_roles = set()
+    
+    for trace in fig.data:
+    
+        if trace.name in seen_roles:
+            trace.showlegend = False
+        else:
+            seen_roles.add(trace.name)
+            trace.showlegend = True
+
+    fig.update_traces(
+        textposition="top center",
+        textfont=dict(
+            size=12,
+            color="black"
+        ),
+        marker=dict(
+            line=dict(
+                width=1,
+                color="white"
+            ),
+            opacity=0.80
+        )
     )
 
     fig.add_vline(
@@ -67,39 +103,61 @@ def build_plant_role_dashboard(
     )
 
     fig.add_annotation(
-        x=x_mid * 1.5,
-        y=y_mid * 1.5,
+        x=df["PeakSharePct"].max() * 0.75,
+        y=df["EnergySharePct"].max() * 0.92,
         text="CORE ASSETS",
-        showarrow=False
+        showarrow=False,
+        font=dict(size=12)
     )
 
     fig.add_annotation(
-        x=x_mid * 0.5,
-        y=y_mid * 1.5,
+        x=df["PeakSharePct"].max() * 0.15,
+        y=df["EnergySharePct"].max() * 0.92,
         text="BASELOAD",
-        showarrow=False
+        showarrow=False,
+        font=dict(size=12)
     )
 
     fig.add_annotation(
-        x=x_mid * 1.5,
-        y=y_mid * 0.5,
+        x=df["PeakSharePct"].max() * 0.75,
+        y=df["EnergySharePct"].max() * 0.05,
         text="PEAKING",
-        showarrow=False
+        showarrow=False,
+        font=dict(size=12)
     )
 
     fig.add_annotation(
-        x=x_mid * 0.5,
-        y=y_mid * 0.5,
+        x=df["PeakSharePct"].max() * 0.15,
+        y=df["EnergySharePct"].max() * 0.05,
         text="SUPPORT",
-        showarrow=False
+        showarrow=False,
+        font=dict(size=12)
     )
 
     fig.update_layout(
-        height=600,
+        height=700,
         xaxis_title="Peak Demand Contribution (%)",
-        yaxis_title="Annual Energy Contribution (%)"
+        yaxis_title="Annual Energy Contribution (%)",
+        legend_title_text="Role",
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.02
+        ),
+        margin=dict(
+            l=20,
+            r=20,
+            t=20,
+            b=20
+        )
     )
 
+    st.markdown(
+        "##### Plant Role Matrix"
+    )
+    
     st.plotly_chart(
         fig,
         use_container_width=True
@@ -119,7 +177,12 @@ def build_plant_role_dashboard(
                     "PeakSharePct",
                     "Role"
                 ]
-            ].round(2),
+            ]
+            .sort_values(
+                "EnergySharePct",
+                ascending=False
+            )
+            .round(2),
             use_container_width=True,
             hide_index=True
         )
