@@ -45,12 +45,13 @@ def build_plant_role_dashboard(
         df,
         x="PeakSharePct",
         y="EnergySharePct",
-        size="AvgMW",
+        size="EnergyMWh",
         color="Plant",
         text="Plant",
         hover_data=[
             "Role"
-        ]
+        ],
+        size_max=60
     )
 
     fig.add_vline(
@@ -114,7 +115,6 @@ def build_plant_role_dashboard(
                 [
                     "Plant",
                     "EnergyMWh",
-                    "AvgMW",
                     "EnergySharePct",
                     "PeakSharePct",
                     "Role"
