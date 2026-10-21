@@ -369,47 +369,67 @@ try:
         kpis
     )
 
+    st.divider()
+    
     build_generation_mix_dashboard(
         generation,
         config
     )
 
+    st.divider()
+ 
     build_reliability_monitor(
         reliability,
         kpis
     )
 
+    st.divider()
+ 
     build_demand_distribution_dashboard(
         demand_distribution
     )
    
+    st.divider()
+ 
     build_ldc_dashboard(
     total_demand
     )
 
+    st.divider()
+ 
     build_reserve_security_dashboard(
         reserve,
         reserve_dashboard,
         reliability
     )
 
+    st.divider()
+ 
     build_reserve_deficiency_dashboard(
         operating_condition,
         reserve_deficiency_table
     )
-    
+
+    st.divider()
+ 
     build_reserve_trend_dashboard(
         reserve_trend
     )   
 
+    st.divider()
+ 
     build_shortage_event_dashboard(
         shortage_events
     )
-    
+
+    st.divider()
+  
     build_plant_contribution_dashboard(
         plant_contribution
     )
-    
+
+    st.divider()
+ 
     build_capacity_planning_dashboard(
         capacity_planning
     )
