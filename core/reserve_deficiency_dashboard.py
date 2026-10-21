@@ -32,26 +32,6 @@ def build_reserve_deficiency_dashboard(
     )
 
     with st.expander(
-        "Operating Condition Data",
-        expanded=False
-    ):
-
-        st.write(
-            f"Adequate Reserve Hours: "
-            f"{operating_condition['adequate_hours']:,}"
-        )
-
-        st.write(
-            f"Reserve Deficient Hours: "
-            f"{operating_condition['reserve_deficient_hours']:,}"
-        )
-
-        st.write(
-            f"Unserved Demand Hours: "
-            f"{operating_condition['shortage_hours']:,}"
-        )
-
-    with st.expander(
         "Reserve Deficient Hours",
         expanded=False
     ):
