@@ -400,11 +400,6 @@ try:
         shortage_events
     )
     
-    build_generation_mix_dashboard(
-    generation,
-    config
-    )
-    
     build_plant_contribution_dashboard(
         plant_contribution
     )
