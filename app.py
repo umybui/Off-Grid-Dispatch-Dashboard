@@ -466,6 +466,26 @@ try:
         capacity_reference["DependableMW"].sum()
     )
 
+    st.write(
+        asset_performance[
+            [
+                "Plant",
+                "DependableMW",
+                "MaxObservedMW"
+            ]
+        ]
+    )
+
+    st.write(
+        "Dependable Total",
+        asset_performance["DependableMW"].sum()
+    )
+    
+    st.write(
+        "Max Observed Total",
+        asset_performance["MaxObservedMW"].sum()
+    )
+    
     
     build_capacity_outlook_dashboard(
         capacity_planning,
