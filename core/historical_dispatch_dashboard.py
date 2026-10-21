@@ -126,7 +126,7 @@ def build_historical_dispatch_dashboard(
       fig.add_trace(
           go.Scatter(
               x=plant_df["Datetime"],
-              y=plant_df["MW"],
+              y=plant_df["Value"],
               stackgroup="one",
               name=plant
           )
@@ -137,14 +137,14 @@ def build_historical_dispatch_dashboard(
       .groupby(
           "Datetime",
           as_index=False
-      )["MW"]
+      )["Value"]
       .sum()
   )
 
   fig.add_trace(
       go.Scatter(
           x=total_supply["Datetime"],
-          y=total_supply["MW"],
+          y=total_supply["Value"],
           line=dict(
               color="red",
               width=2
