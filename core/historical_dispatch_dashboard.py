@@ -109,7 +109,7 @@ def build_historical_dispatch_dashboard(
             hide_index=True
         )
 
-      fig = go.Figure()
+    fig = go.Figure()
 
     for plant in plant_order:
 
