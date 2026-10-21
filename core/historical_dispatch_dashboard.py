@@ -19,6 +19,46 @@ def build_historical_dispatch_dashboard(
         "Historical Supply-Demand Dispatch"
     )
 
+    peak_demand = (
+        total_demand["Value"]
+        .max()
+    )
+    
+    peak_supply = (
+        total_generation["TotalGeneration"]
+        .max()
+    )
+    
+    max_shortage = (
+        (
+            total_demand["Value"]
+            -
+            total_generation["TotalGeneration"]
+        )
+        .clip(lower=0)
+        .max()
+    )
+    
+    c1, c2, c3 = st.columns(3)
+    
+    with c1:
+        st.metric(
+            "Peak Demand",
+            f"{peak_demand:,.2f} MW"
+        )
+    
+    with c2:
+        st.metric(
+            "Peak Supply",
+            f"{peak_supply:,.2f} MW"
+        )
+    
+    with c3:
+        st.metric(
+            "Maximum Shortage",
+            f"{max_shortage:,.2f} MW"
+        )
+
 
     merit_basis = st.selectbox(
         "Merit Order Basis",
@@ -75,7 +115,7 @@ def build_historical_dispatch_dashboard(
 
 
     with st.expander(
-        "Merit Order Dispatch Scenario",
+        "View Merit Order Dispatch Scenario",
         expanded=False
     ):
 
@@ -86,6 +126,22 @@ def build_historical_dispatch_dashboard(
             SORTABLE_AVAILABLE
         ):
 
+        st.caption(
+            """
+            Largest Generator First:
+            Dispatches high-capacity plants first.
+        
+            Smallest Generator First:
+            Dispatches smaller units first.
+        
+            Alphabetical:
+            Orders plants alphabetically.
+        
+            Manual Override:
+            Allows custom dispatch sequencing.
+            """
+        )
+            
             plant_order = sort_items(
                 items=plant_order,
                 direction="vertical"
@@ -138,7 +194,7 @@ def build_historical_dispatch_dashboard(
             name="TOTAL SUPPLY",
             line=dict(
                 color="red",
-                width=2
+                width=4
             )
         )
     )
@@ -151,7 +207,7 @@ def build_historical_dispatch_dashboard(
             name="TOTAL DEMAND",
             line=dict(
                 color="black",
-                width=4
+                width=2
             )
         )
     )
@@ -192,7 +248,7 @@ def build_historical_dispatch_dashboard(
             ),
             mode="lines",
             fill="tonexty",
-            fillcolor="rgba(255,140,0,0.8)",
+            fillcolor="rgba(255,140,0,0.0.45)",
             line=dict(width=0),
             name="SHORTAGE"
         )
@@ -204,7 +260,14 @@ def build_historical_dispatch_dashboard(
         height=900,
         yaxis_title="MW",
         xaxis_title="Datetime",
-        legend_title="Plant"
+        legend_title="Plant",
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.02
+        )
     )
 
     fig.update_xaxes(
@@ -213,20 +276,27 @@ def build_historical_dispatch_dashboard(
 
     st.caption(
         """
-        The dispatch stack shows the contribution of each
-        generating plant over time.
-
-        Black Line = Total Demand
-
-        Red Line = Total Supply
-
-        Orange Area = Supply Deficit / Shortage
-
-        The merit-order selector allows simulation of
-        alternative dispatch priorities.
+        This chart compares historical generation dispatch
+        against total system demand.
+    
+        • Black Line = Total Demand
+    
+        • Red Line = Total Supply
+    
+        • Orange Area = Supply Deficit / Shortage
+    
+        The merit-order selector allows alternative
+        dispatch sequencing for planning analysis.
+    
+        Dispatch order affects the stacking sequence
+        only and does not modify historical generation.
         """
     )
 
+    st.caption(
+        "Tip: Double-click any legend entry to isolate a plant."
+    )
+    
     st.plotly_chart(
         fig,
         use_container_width=True
