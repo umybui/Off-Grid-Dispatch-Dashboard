@@ -452,7 +452,8 @@ try:
     build_executive_summary(
         reliability,
         kpis,
-        capacity_planning
+        capacity_planning,
+        transfer_flow
     )
 
     st.divider()
