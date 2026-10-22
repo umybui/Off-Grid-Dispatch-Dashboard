@@ -46,7 +46,6 @@ def build_unit_capability_dashboard(
             unit_capability[
                 [
                     "Plant",
-                    "Unit",
                     "DependableMW",
                     "AvgMW",
                     "MaxObservedMW",
