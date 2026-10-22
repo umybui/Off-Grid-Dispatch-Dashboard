@@ -59,7 +59,7 @@ def build_unit_capability_dashboard(
                 ]
             ]
             .sort_values(
-                ["Plant", "Unit"]
+                ["Plant"]
             )
             .round(2)
         )
