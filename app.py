@@ -257,6 +257,23 @@ try:
         config
     )
 
+    st.write("TRANSFER FLOW")
+    st.dataframe(transfer_flow.head(20))
+    
+    st.write(
+        "Max Transfer MW:",
+        transfer_flow["ImportSupport"].max()
+        if not transfer_flow.empty
+        else 0
+    )
+    
+    st.write(
+        "Transfer Energy MWh:",
+        transfer_flow["ImportSupport"].sum()
+        if not transfer_flow.empty
+        else 0
+    )
+    
     generation_unit = (
         build_generation_unit(
             filtered,
