@@ -4,7 +4,7 @@ def build_executive_summary(
     reliability,
     kpis,
     capacity_planning,
-    transfer_flow=none
+    transfer_flow=None
 ):
     peak_row = reliability["gap_df"].loc[
         reliability["gap_df"]["TotalDemand"].idxmax()
