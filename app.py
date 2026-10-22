@@ -283,10 +283,19 @@ try:
         )
     )
     
+    peak_support_capacity = (
+        unit_capacity_reference
+        if (
+            not unit_capacity_reference.empty
+            and "Plant" in unit_capacity_reference.columns
+        )
+        else capacity_reference
+    )
+    
     peak_support = (
         build_peak_support_analysis(
             peak_hour,
-            unit_capacity_reference
+            peak_support_capacity
         )
     )
     
@@ -327,11 +336,20 @@ try:
             peak_hour["peak_snapshot"]
         )
     )
+
+    unit_capability_capacity = (
+        unit_capacity_reference
+        if (
+            not unit_capacity_reference.empty
+            and "Plant" in unit_capacity_reference.columns
+        )
+        else capacity_reference
+    )
     
     unit_capability = (
         build_unit_capability(
             generation_unit,
-            unit_capacity_reference
+            unit_capability_capacity
         )
     )
 
