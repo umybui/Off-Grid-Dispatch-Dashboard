@@ -23,12 +23,12 @@ def build_historical_dispatch_dashboard(
         total_demand["Value"]
         .max()
     )
-    
+
     peak_supply = (
         total_generation["TotalGeneration"]
         .max()
     )
-    
+
     max_shortage = (
         (
             total_demand["Value"]
@@ -38,38 +38,37 @@ def build_historical_dispatch_dashboard(
         .clip(lower=0)
         .max()
     )
-    
+
     min_supply = (
         total_generation["TotalGeneration"]
         .min()
     )
-    
+
     c1, c2, c3, c4 = st.columns(4)
-    
+
     with c1:
         st.metric(
             "Peak Demand",
             f"{peak_demand:,.2f} MW"
         )
-    
+
     with c2:
         st.metric(
             "Peak Supply",
             f"{peak_supply:,.2f} MW"
         )
-    
+
     with c3:
         st.metric(
             "Maximum Shortage",
             f"{max_shortage:,.2f} MW"
         )
-        
+
     with c4:
         st.metric(
             "Minimum Supply",
             f"{min_supply:,.2f} MW"
         )
-    
 
     merit_basis = st.selectbox(
         "Merit Order Basis",
@@ -128,35 +127,35 @@ def build_historical_dispatch_dashboard(
         """
         Largest Generator First:
         Dispatches high-capacity plants first.
-    
+
         Smallest Generator First:
         Dispatches smaller units first.
-    
+
         Alphabetical:
         Orders plants alphabetically.
-    
+
         Manual Override:
         Allows custom dispatch sequencing.
         """
     )
-    
+
     with st.expander(
         "View Merit Order Dispatch Scenario",
         expanded=False
     ):
-    
+
         if (
             merit_basis
             == "Manual Override"
             and
             SORTABLE_AVAILABLE
         ):
-    
+
             plant_order = sort_items(
                 items=plant_order,
                 direction="vertical"
             )
-    
+
         merit_order_tbl = pd.DataFrame(
             {
                 "Priority":
@@ -164,20 +163,22 @@ def build_historical_dispatch_dashboard(
                     1,
                     len(plant_order) + 1
                 ),
-    
                 "Plant":
                 plant_order
             }
         )
-    
+
         st.dataframe(
             merit_order_tbl,
             use_container_width=True,
             hide_index=True
         )
-    
 
     fig = go.Figure()
+
+    # -----------------------------
+    # STACKED GENERATION
+    # -----------------------------
 
     for plant in plant_order:
 
@@ -196,20 +197,9 @@ def build_historical_dispatch_dashboard(
             )
         )
 
-    fig.add_trace(
-        go.Scatter(
-            x=total_generation["Datetime"],
-            y=total_generation[
-                "TotalGeneration"
-            ],
-            mode="lines",
-            name="TOTAL SUPPLY",
-            line=dict(
-                color="red",
-                width=4
-            )
-        )
-    )
+    # -----------------------------
+    # TOTAL DEMAND
+    # -----------------------------
 
     fig.add_trace(
         go.Scatter(
@@ -224,6 +214,10 @@ def build_historical_dispatch_dashboard(
         )
     )
 
+    # -----------------------------
+    # SHORTAGE AREA
+    # -----------------------------
+
     gap_df = (
         total_demand
         .merge(
@@ -233,36 +227,61 @@ def build_historical_dispatch_dashboard(
         )
     )
 
-    gap_df["ShortageArea"] = (
-        gap_df["Value"]
-        -
+    gap_df.rename(
+        columns={
+            "Value":
+            "TotalDemand"
+        },
+        inplace=True
+    )
+
+    # Future Mindoro import-support can be added here
+    gap_df["TotalSupply"] = (
         gap_df["TotalGeneration"]
+    )
+
+    gap_df["ShortageArea"] = (
+        gap_df["TotalDemand"]
+        -
+        gap_df["TotalSupply"]
     ).clip(lower=0)
 
-    shortage_df = (
-        gap_df[
-            gap_df["ShortageArea"] > 0
-        ]
-        .copy()
-    )
-    
+    # Invisible lower boundary
     fig.add_trace(
         go.Scatter(
-            x=shortage_df["Datetime"],
-            y=shortage_df["Value"],
-            mode="markers",
-            name="SHORTAGE",
-            marker=dict(
-                color="red",
-                size=6,
-                symbol="circle"
+            x=gap_df["Datetime"],
+            y=gap_df["TotalSupply"],
+            mode="lines",
+            line=dict(width=0),
+            showlegend=False,
+            hoverinfo="skip"
+        )
+    )
+
+    # Orange shortage fill
+    fig.add_trace(
+        go.Scatter(
+            x=gap_df["Datetime"],
+            y=(
+                gap_df["TotalSupply"]
+                +
+                gap_df["ShortageArea"]
             ),
-            customdata=shortage_df["ShortageArea"],
+            mode="lines",
+            fill="tonexty",
+            fillcolor="rgba(255,140,0,0.35)",
+            line=dict(width=0),
+            name="SHORTAGE",
+            customdata=gap_df["ShortageArea"],
             hovertemplate=
                 "SHORTAGE: %{customdata:.2f} MW"
                 "<extra></extra>"
         )
     )
+
+    # -----------------------------
+    # LAYOUT
+    # -----------------------------
 
     fig.update_layout(
         title="Historical Dispatch Stack",
@@ -288,16 +307,16 @@ def build_historical_dispatch_dashboard(
         """
         This chart compares historical generation dispatch
         against total system demand.
-    
+
         • Black Line = Total Demand
-    
-        • Red Line = Total Supply
-    
-        • Red Markers = Supply Deficit / Shortage Events
-    
+
+        • Stacked Plant Areas = Total Supply
+
+        • Orange Area = Supply Deficit / Shortage
+
         The merit-order selector allows alternative
         dispatch sequencing for planning analysis.
-    
+
         Dispatch order affects the stacking sequence
         only and does not modify historical generation.
         """
@@ -306,7 +325,7 @@ def build_historical_dispatch_dashboard(
     st.caption(
         "Tip: Double-click any legend entry to isolate a plant."
     )
-    
+
     st.plotly_chart(
         fig,
         use_container_width=True
