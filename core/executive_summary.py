@@ -3,7 +3,8 @@ import streamlit as st
 def build_executive_summary(
     reliability,
     kpis,
-    capacity_planning
+    capacity_planning,
+    transfer_flow=none
 ):
     peak_row = reliability["gap_df"].loc[
         reliability["gap_df"]["TotalDemand"].idxmax()
@@ -64,7 +65,7 @@ def build_executive_summary(
             f"{kpis['energy_served_pct']:.2f}%"
         )
     
-    r2c1, r2c2, r2c3, r2c4, r2c5 = st.columns(5)
+    r2c1, r2c2, r2c3, r2c4, r2c5, r2c6 = st.columns(6)
     
     with r2c1:
         st.metric(
@@ -97,3 +98,54 @@ def build_executive_summary(
                 "%Y-%m-%d %H:%M"
             )
         )
+
+    max_transfer_mw = 0
+    transfer_energy_mwh = 0
+    
+    if (
+        transfer_flow is not None
+        and not transfer_flow.empty
+    ):
+    
+        transfer_col = None
+    
+        for col in [
+            "TransferMW",
+            "ImportSupport",
+            "Value"
+        ]:
+    
+            if col in transfer_flow.columns:
+                transfer_col = col
+                break
+    
+        if transfer_col:
+    
+            max_transfer_mw = (
+                transfer_flow[transfer_col]
+                .abs()
+                .max()
+            )
+    
+            transfer_energy_mwh = (
+                transfer_flow[transfer_col]
+                .abs()
+                .sum()
+            )
+    
+    with r2c6:
+    
+        if transfer_energy_mwh > 0:
+    
+            st.metric(
+                "Interconnection Support",
+                f"{transfer_energy_mwh:,.0f} MWh",
+                delta=f"Peak {max_transfer_mw:.2f} MW"
+            )
+    
+        else:
+    
+            st.metric(
+                "Interconnection Support",
+                "N/A"
+            )
