@@ -321,7 +321,7 @@ try:
     
     unit_capability = (
         build_unit_capability(
-            generation,
+            generation_unit,
             capacity_reference
         )
     )
