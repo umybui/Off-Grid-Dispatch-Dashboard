@@ -34,7 +34,7 @@ def build_peak_hour_analysis(
     peak_snapshot = (
         peak_generation
         .groupby(
-            ["Plant", "Unit"],
+            "Plant",
             as_index=False
         )
         .agg(
