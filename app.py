@@ -130,9 +130,9 @@ from core.dependable_audit_dashboard import (
 from core.asset_performance_dashboard import (
     build_asset_performance_dashboard
 )
-
-
-
+from core.unit_capability_dashboard import (
+    build_unit_capability_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -521,197 +521,12 @@ try:
         asset_performance,
         asset_performance_chart
     )   
-   
+
+    st.divider()
+    
+    build_unit_capability_dashboard(
+        unit_capability,
+        unit_capability_chart
+    )
+    
 #$$$$$$$$$$$$$$$$$$$
-    
-
-    # ============================================================================
-    # ============================================================================
-    # MIGRATION BOUNDARY
-    #
-    # ABOVE THIS LINE:
-    #     Production dashboard content migrated from the approved
-    #     working Palawan/Mindoro/Catanduanes dashboards.
-    #
-    # BELOW THIS LINE:
-    #     Temporary validation, diagnostics, framework testing,
-    #     migration-era QA outputs, comparison tables, and
-    #     development checkpoints.
-    #
-    # DELETE EVERYTHING BELOW THIS SECTION ONCE MIGRATION IS COMPLETE.
-    # ============================================================================
-    # ============================================================================
-    
-    # =====================================================
-    # UNIT CAPABILITY REALIZATION
-    # =====================================================
-    
-    st.subheader(
-        "Unit Capability Realization"
-    )
-    
-    with st.expander(
-        "Unit Capability Table",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            unit_capability[
-                [
-                    "Plant",
-                    "DependableMW",
-                    "AvgMW",
-                    "MaxObservedMW",
-                    "OperatingHours",
-                    "HoursAbove80Pct",
-                    "UtilizationFactorPct",
-                    "CapabilityRealizationPct",
-                    "SustainedCapabilityPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
-            ].round(2),
-    
-            use_container_width=True,
-            hide_index=True
-        )
-
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "OK",
-            (
-                unit_capability[
-                    "RiskFlag"
-                ]
-                == "OK"
-            ).sum()
-        )
-    
-    with col2:
-        st.metric(
-            "Monitor",
-            (
-                unit_capability[
-                    "RiskFlag"
-                ]
-                == "Monitor"
-            ).sum()
-        )
-    
-    with col3:
-        st.metric(
-            "Underperforming",
-            (
-                unit_capability[
-                    "RiskFlag"
-                ]
-                == "Underperforming"
-            ).sum()
-        )
-    
-    st.markdown(
-        "##### Unit Sustained Capability Assessment"
-    )
-    
-    st.plotly_chart(
-        unit_capability_chart,
-        use_container_width=True
-    )
-
-    # =====================================================
-    # RELIABILITY SUMMARY
-    # =====================================================
-
-    st.subheader("Reliability Summary")
-    
-    col1, col2, col3, col4, col5 = st.columns(5)
-    
-    with col1:
-        st.metric(
-            "Peak Demand",
-            f"{reliability['peak_demand']:,.2f}"
-        )
-    
-    with col2:
-        st.metric(
-            "Hours With Shortage",
-            reliability["hours_with_shortage"]
-        )
-    
-    with col3:
-        st.metric(
-            "Low Reserve Hours",
-            reliability["hours_low_reserve"]
-        )
-    
-    with col4:
-        st.metric(
-            "Unserved Energy",
-            f"{reliability['unserved_energy']:,.2f}"
-        )
-    
-    with col5:
-        st.metric(
-            "Peak Demand Time",
-            str(reliability["peak_datetime"])
-        )
-
-    # =================================================
-    # TECHNICAL VALIDATION TABLES
-    # =================================================
-
-    with st.expander(
-        "Technical Validation Tables",
-        expanded=False
-    ):
-
-        st.markdown("### Total Demand")
-
-        st.dataframe(
-            total_demand.head(),
-            use_container_width=True
-        )
-
-        st.markdown("### Generation")
-
-        st.dataframe(
-            generation.head(),
-            use_container_width=True
-        )
-
-        st.markdown("### Total Generation")
-
-        st.dataframe(
-            total_generation.head(),
-            use_container_width=True
-        )
-
-        st.markdown("### Import Support")
-
-        st.dataframe(
-            transfer_flow.head(),
-            use_container_width=True
-        )
-
-        st.markdown("### Gap Data")
-
-        st.dataframe(
-            reliability["gap_df"].head(),
-            use_container_width=True
-        )
-
-# =====================================================
-# ERROR HANDLING
-# =====================================================
-
-except Exception as e:
-
-    st.exception(e)
-
-    st.stop()
-
-# ============================================================================
-# END OF TEMPORARY VALIDATION SECTION
-# ============================================================================
