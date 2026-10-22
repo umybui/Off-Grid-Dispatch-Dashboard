@@ -85,11 +85,11 @@ def build_demand_generation(filtered, config):
         ]
         .copy()
     )
-    
+
     # ------------------------------------------
     # PLANT-LEVEL GENERATION
     # ------------------------------------------
-    
+
     generation = (
         generation_raw
         .groupby(
@@ -98,32 +98,51 @@ def build_demand_generation(filtered, config):
         )["Value"]
         .sum()
     )
-    
+
     # ------------------------------------------
     # UNIT-LEVEL GENERATION
     # ------------------------------------------
-    
-    generation_unit = (
-        generation_raw[
-            [
-                "Datetime",
-                plant_column,
-                "Unit",
-                "Value"
+
+    if "Unit" in generation_raw.columns:
+
+        generation_unit = (
+            generation_raw[
+                [
+                    "Datetime",
+                    plant_column,
+                    "Unit",
+                    "Value"
+                ]
             ]
-        ]
-        .copy()
-    )
-    
+            .copy()
+        )
+
+    else:
+
+        generation_unit = (
+            generation_raw[
+                [
+                    "Datetime",
+                    plant_column,
+                    "Value"
+                ]
+            ]
+            .copy()
+        )
+
+    # ------------------------------------------
+    # REMOVE DEMAND PLANT IF NEEDED
+    # ------------------------------------------
+
     if demand_plant:
-    
+
         generation = generation[
             generation[plant_column]
             .astype(str)
             .str.upper()
             != demand_plant.upper()
         ]
-    
+
         generation_unit = generation_unit[
             generation_unit[plant_column]
             .astype(str)
@@ -131,7 +150,9 @@ def build_demand_generation(filtered, config):
             != demand_plant.upper()
         ]
 
-
+    # ------------------------------------------
+    # EXCLUDED GENERATION PLANTS
+    # ------------------------------------------
 
     exclude_keywords = config.get(
         "GENERATION_EXCLUDE_KEYWORDS",
@@ -139,9 +160,23 @@ def build_demand_generation(filtered, config):
     )
 
     if exclude_keywords:
-    
-        pattern = "|".join(exclude_keywords)
-    
+
+        pattern = "|".join(
+            exclude_keywords
+        )
+
+        generation = generation[
+            ~generation[
+                plant_column
+            ]
+            .astype(str)
+            .str.contains(
+                pattern,
+                case=False,
+                na=False
+            )
+        ]
+
         generation_unit = generation_unit[
             ~generation_unit[
                 plant_column
@@ -154,20 +189,6 @@ def build_demand_generation(filtered, config):
             )
         ]
 
-    if exclude_keywords:
-
-        pattern = "|".join(exclude_keywords)
-    
-        generation = generation[
-            ~generation[plant_column]
-            .astype(str)
-            .str.contains(
-                pattern,
-                case=False,
-                na=False
-            )
-    ]
-
     # ==========================================
     # IMPORT SUPPORT
     # ==========================================
@@ -179,7 +200,10 @@ def build_demand_generation(filtered, config):
         }
     )
 
-    if config.get("USES_IMPORT_SUPPORT", False):
+    if config.get(
+        "USES_IMPORT_SUPPORT",
+        False
+    ):
 
         import_keyword = config.get(
             "IMPORT_KEYWORD",
@@ -198,7 +222,9 @@ def build_demand_generation(filtered, config):
 
         if not transfer_rows.empty:
 
-            transfer_rows["ImportSupport"] = (
+            transfer_rows[
+                "ImportSupport"
+            ] = (
                 transfer_rows["Value"]
                 .clip(lower=0)
             )
@@ -211,7 +237,7 @@ def build_demand_generation(filtered, config):
                 )["ImportSupport"]
                 .sum()
             )
-    
+
     # ==========================================
     # TOTAL GENERATION
     # ==========================================
@@ -227,25 +253,28 @@ def build_demand_generation(filtered, config):
 
     total_generation.rename(
         columns={
-            "Value": "TotalGeneration"
+            "Value":
+            "TotalGeneration"
         },
         inplace=True
     )
 
     generation.rename(
         columns={
-            plant_column: "Plant"
+            plant_column:
+            "Plant"
         },
         inplace=True
     )
-    
+
     generation_unit.rename(
         columns={
-            plant_column: "Plant"
+            plant_column:
+            "Plant"
         },
         inplace=True
     )
-    
+
     return (
         total_demand,
         generation,
