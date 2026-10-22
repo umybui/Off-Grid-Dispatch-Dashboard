@@ -226,27 +226,25 @@ def build_historical_dispatch_dashboard(
             how="inner"
         )
     )
-
+    
     gap_df.rename(
         columns={
-            "Value":
-            "TotalDemand"
+            "Value": "TotalDemand"
         },
         inplace=True
     )
-
-    # Future Mindoro import-support can be added here
+    
     gap_df["TotalSupply"] = (
         gap_df["TotalGeneration"]
     )
-
+    
     gap_df["ShortageArea"] = (
         gap_df["TotalDemand"]
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
-
-    # Invisible lower boundary
+    
+    # invisible lower boundary
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
@@ -257,8 +255,8 @@ def build_historical_dispatch_dashboard(
             hoverinfo="skip"
         )
     )
-
-    # Orange shortage fill
+    
+    # shortage fill
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
@@ -272,13 +270,20 @@ def build_historical_dispatch_dashboard(
             fillcolor="rgba(255,140,0,0.35)",
             line=dict(width=0),
             name="SHORTAGE",
-            customdata=gap_df["ShortageArea"],
+            customdata=list(
+                zip(
+                    gap_df["TotalDemand"],
+                    gap_df["TotalSupply"],
+                    gap_df["ShortageArea"]
+                )
+            ),
             hovertemplate=
-                "SHORTAGE: %{customdata:.2f} MW"
+                "TOTAL DEMAND: %{customdata[0]:.2f} MW<br>"
+                "TOTAL SUPPLY: %{customdata[1]:.2f} MW<br>"
+                "SHORTAGE: %{customdata[2]:.2f} MW"
                 "<extra></extra>"
         )
     )
-
     # -----------------------------
     # LAYOUT
     # -----------------------------
