@@ -140,7 +140,7 @@ def build_executive_summary(
             st.metric(
                 "Interconnection Support",
                 f"{transfer_energy_mwh:,.0f} MWh",
-                delta=f"Peak {max_transfer_mw:.2f} MW"
+                f"Peak {max_transfer_mw:.2f} MW"
             )
     
         else:
