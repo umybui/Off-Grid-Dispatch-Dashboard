@@ -282,6 +282,14 @@ try:
             generation
         )
     )
+
+    daily_peak_mix = (
+        build_daily_peak_mix(
+            total_demand,
+            generation,
+            capacity_reference
+        )
+    )
     
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
