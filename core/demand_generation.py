@@ -75,7 +75,7 @@ def build_demand_generation(filtered, config):
     # GENERATION
     # ==========================================
 
-    generation_raw = (
+    generation = (
         filtered[
             filtered["Attribute"]
             .astype(str)
@@ -83,80 +83,12 @@ def build_demand_generation(filtered, config):
             ==
             generation_attribute.upper()
         ]
-        .copy()
-    )
-
-    print(
-        generation_raw[
-            [
-                "Plant",
-                "Unit",
-                "Value",
-                "NumericValue"
-            ]
-        ].head(20)
-    )
-    
-    # ------------------------------------------
-    # PLANT-LEVEL GENERATION
-    # ------------------------------------------
-
-    generation = (
-        generation_raw
         .groupby(
             ["Datetime", plant_column],
             as_index=False
         )["Value"]
         .sum()
     )
-
-    # ------------------------------------------
-    # UNIT-LEVEL GENERATION
-    # ------------------------------------------
-
-    if "Unit" in generation_raw.columns:
-    
-        generation_unit = (
-            generation_raw[
-                [
-                    "Datetime",
-                    plant_column,
-                    "Unit"
-                ]
-            ]
-            .copy()
-        )
-
-        if config["SYSTEM_NAME"] == "Palawan":
-        
-            generation_unit["Value"] = pd.to_numeric(
-                generation_raw["NumericValue"],
-                errors="coerce"
-            )
-        
-        else:
-        
-            generation_unit["Value"] = pd.to_numeric(
-                generation_raw["Value"],
-                errors="coerce"
-            )
-    
-    else:
-    
-        generation_unit = (
-            generation_raw[
-                [
-                    "Datetime",
-                    plant_column,
-                    "Value"
-                ]
-            ]
-            .copy()
-        )
-
-    # ------------------------------------------
-    # REMOVE DEMAND PLANT IF NEEDED
-    # ------------------------------------------
 
     if demand_plant:
 
@@ -167,17 +99,6 @@ def build_demand_generation(filtered, config):
             != demand_plant.upper()
         ]
 
-        generation_unit = generation_unit[
-            generation_unit[plant_column]
-            .astype(str)
-            .str.upper()
-            != demand_plant.upper()
-        ]
-
-    # ------------------------------------------
-    # EXCLUDED GENERATION PLANTS
-    # ------------------------------------------
-
     exclude_keywords = config.get(
         "GENERATION_EXCLUDE_KEYWORDS",
         []
@@ -185,26 +106,10 @@ def build_demand_generation(filtered, config):
 
     if exclude_keywords:
 
-        pattern = "|".join(
-            exclude_keywords
-        )
+        pattern = "|".join(exclude_keywords)
 
         generation = generation[
-            ~generation[
-                plant_column
-            ]
-            .astype(str)
-            .str.contains(
-                pattern,
-                case=False,
-                na=False
-            )
-        ]
-
-        generation_unit = generation_unit[
-            ~generation_unit[
-                plant_column
-            ]
+            ~generation[plant_column]
             .astype(str)
             .str.contains(
                 pattern,
@@ -291,18 +196,9 @@ def build_demand_generation(filtered, config):
         inplace=True
     )
 
-    generation_unit.rename(
-        columns={
-            plant_column:
-            "Plant"
-        },
-        inplace=True
-    )
-
     return (
         total_demand,
         generation,
-        generation_unit,
         total_generation,
         transfer_flow
     )
