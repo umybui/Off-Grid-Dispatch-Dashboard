@@ -218,24 +218,15 @@ def build_historical_dispatch_dashboard(
     # SUPPLY CURVE FROM STACK
     # -------------------------------------
 
-    supply_curve = (
-        generation
-        .groupby(
-            "Datetime",
-            as_index=False
-        )
-        .agg(
-            TotalSupply=("Value", "sum")
-        )
-        .sort_values(
-            "Datetime"
-        )
-    )
-
     gap_df = (
         total_demand
         .merge(
-            supply_curve,
+            total_generation.rename(
+                columns={
+                    "TotalGeneration":
+                    "TotalSupply"
+                }
+            ),
             on="Datetime",
             how="inner"
         )
@@ -295,9 +286,18 @@ def build_historical_dispatch_dashboard(
                 width=0
             ),
             name="SHORTAGE",
-            customdata=gap_df["ShortageArea"],
+            customdata=list(
+                zip(
+                    gap_df["TotalDemand"],
+                    gap_df["TotalSupply"],
+                    gap_df["ShortageArea"]
+                )
+            ),
+            
             hovertemplate=
-                "SHORTAGE: %{customdata:.2f} MW"
+                "Demand: %{customdata[0]:.2f} MW<br>"
+                "Supply: %{customdata[1]:.2f} MW<br>"
+                "Shortage: %{customdata[2]:.2f} MW"
                 "<extra></extra>"
         )
     )
