@@ -252,6 +252,19 @@ try:
     st.dataframe(
         generation_unit.head(20)
     )
+
+    st.dataframe(
+        generation_raw[
+            [
+                "Datetime",
+                "Plant",
+                "Unit",
+                "Value",
+                "NumericValue"
+            ]
+        ]
+        .head(20)
+    )
     
     # =====================================================
     # PEAK HOUR ANALYTICS
