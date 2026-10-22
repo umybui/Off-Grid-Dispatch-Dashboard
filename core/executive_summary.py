@@ -139,8 +139,11 @@ def build_executive_summary(
     
             st.metric(
                 "Interconnection Support",
-                f"{transfer_energy_mwh:,.0f} MWh",
-                f"{Peak [max_transfer_mw:.2f]} MW"
+                f"{transfer_energy_mwh:,.0f} MWh"
+            )
+    
+            st.caption(
+                f"Peak Transfer: {max_transfer_mw:.2f} MW"
             )
     
         else:
