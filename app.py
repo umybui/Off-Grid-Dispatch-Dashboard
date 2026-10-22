@@ -253,7 +253,7 @@ try:
     peak_hour = (
         build_peak_hour_analysis(
             total_demand,
-            generation
+            generation_unit
         )
     )
       
