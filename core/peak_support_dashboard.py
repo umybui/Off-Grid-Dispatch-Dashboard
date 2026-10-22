@@ -30,18 +30,25 @@ def build_peak_support_dashboard(
         "Peak Support Table",
         expanded=False
     ):
-
+    
+        display_cols = [
+            col
+            for col in [
+                "Plant",
+                "Unit",
+                "AvgPeakMW",
+                "MaxPeakMW",
+                "DependableMW",
+                "PeakSupportPct",
+                "RiskFlag",
+                "Remarks"
+            ]
+            if col in peak_support.columns
+        ]
+    
         st.dataframe(
             peak_support[
-                [
-                    "Plant",
-                    "AvgPeakMW",
-                    "MaxPeakMW",
-                    "DependableMW",
-                    "PeakSupportPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
+                display_cols
             ].round(2),
             use_container_width=True,
             hide_index=True
