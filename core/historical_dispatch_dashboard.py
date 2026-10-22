@@ -209,7 +209,7 @@ def build_historical_dispatch_dashboard(
             name="TOTAL DEMAND",
             line=dict(
                 color="black",
-                width=3
+                width=4
             )
         )
     )
@@ -270,8 +270,8 @@ def build_historical_dispatch_dashboard(
             name="TOTAL SUPPLY",
             mode="lines",
             line=dict(
-                color="red",
-                width=2
+                color="rgba(0,0,0,0)",
+                width=0
             )
         )
     )
