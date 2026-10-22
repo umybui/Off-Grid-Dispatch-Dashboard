@@ -23,18 +23,34 @@ def build_peak_support_chart(
             "lightgray"
     }
 
+    chart_df = peak_support.copy()
+
+    if "Unit" in chart_df.columns:
+
+        chart_df["PlantUnit"] = (
+            chart_df["Plant"]
+            + " | "
+            + chart_df["Unit"].astype(str)
+        )
+
+        y_col = "PlantUnit"
+
+    else:
+
+        y_col = "Plant"
+
     fig = go.Figure()
 
     for flag in (
-        peak_support[
+        chart_df[
             "RiskFlag"
         ]
         .dropna()
         .unique()
     ):
 
-        temp = peak_support[
-            peak_support[
+        temp = chart_df[
+            chart_df[
                 "RiskFlag"
             ] == flag
         ]
@@ -42,7 +58,7 @@ def build_peak_support_chart(
         fig.add_trace(
 
             go.Bar(
-                y=temp["Plant"],
+                y=temp[y_col],
 
                 x=temp[
                     "PeakSupportPct"
@@ -83,11 +99,11 @@ def build_peak_support_chart(
             "Peak Support (%)",
 
         yaxis_title=
-            "Plant",
+            y_col,
 
         height=max(
             600,
-            len(peak_support) * 35
+            len(chart_df) * 25
         ),
 
         barmode="group"
