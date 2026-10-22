@@ -13,22 +13,40 @@ def build_unit_capability_chart(
         "No Data": "lightgray"
     }
 
+    chart_df = (
+        unit_capability.copy()
+    )
+
+    if "Unit" in chart_df.columns:
+
+        chart_df["PlantUnit"] = (
+            chart_df["Plant"]
+            + " | "
+            + chart_df["Unit"].astype(str)
+        )
+
+        y_col = "PlantUnit"
+
+    else:
+
+        y_col = "Plant"
+
     fig = go.Figure()
 
     for flag in (
-        unit_capability["RiskFlag"]
+        chart_df["RiskFlag"]
         .dropna()
         .unique()
     ):
 
-        temp = unit_capability[
-            unit_capability["RiskFlag"]
+        temp = chart_df[
+            chart_df["RiskFlag"]
             == flag
         ]
 
         fig.add_trace(
             go.Bar(
-                y=temp["Plant"],
+                y=temp[y_col],
                 x=temp[
                     "SustainedCapabilityPct"
                 ],
@@ -61,11 +79,11 @@ def build_unit_capability_chart(
             "% of Operating Hours Above 80% Dependable Capacity",
 
         yaxis_title=
-            "Plant",
+            y_col,
 
         height=max(
             700,
-            len(unit_capability) * 30
+            len(chart_df) * 25
         ),
 
         barmode="group"
