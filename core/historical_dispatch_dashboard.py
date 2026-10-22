@@ -267,32 +267,6 @@ def build_historical_dispatch_dashboard(
         +
         gap_df["ImportSupport"]
     )
-
-    if (
-        transfer_flow is not None
-        and not transfer_flow.empty
-    ):
-    
-        fig.add_trace(
-            go.Scatter(
-                x=gap_df["Datetime"],
-                y=(
-                    gap_df["TotalGeneration"]
-                    +
-                    gap_df["ImportSupport"]
-                ),
-                mode="lines",
-                line=dict(
-                    color="purple",
-                    width=2,
-                    dash="dot"
-                ),
-                name="SUPPLY + IMPORT",
-                hovertemplate=
-                    "Supply + Import: %{y:.2f} MW"
-                    "<extra></extra>"
-            )
-        )
     
     gap_df["ShortageArea"] = (
         gap_df["TotalDemand"]
