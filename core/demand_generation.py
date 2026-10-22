@@ -106,7 +106,9 @@ def build_demand_generation(filtered, config):
 
     if exclude_keywords:
 
-        pattern = "|".join(exclude_keywords)
+        pattern = "|".join(
+            exclude_keywords
+        )
 
         generation = generation[
             ~generation[plant_column]
