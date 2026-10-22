@@ -77,7 +77,7 @@ def build_ldc_dashboard(
     
     with st.expander(
         "Segmentation Controls",
-        expanded=True
+        expanded=False
     ):
     
         max_segments = st.number_input(
@@ -163,7 +163,7 @@ def build_ldc_dashboard(
     
     with st.expander(
         "Advanced LDC Segmentation Analysis",
-        expanded=True
+        expanded=False
     ):
     
         st.metric(
