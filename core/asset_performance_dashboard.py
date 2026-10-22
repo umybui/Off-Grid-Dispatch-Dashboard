@@ -10,82 +10,26 @@ def build_asset_performance_dashboard(
         "Plant Asset Performance Assessment"
     )
 
-    st.caption(
+    st.markdown(
         """
-        Story:
-
-        Evaluates whether each generating plant was capable
-        of realizing its available capability at any point
-        during the study period, independent of system peak
-        demand conditions.
-
-        Capability Realization (%) =
-        Maximum Observed Output ÷ Dependable Capacity
-
-        Utilization Factor (%) =
-        Average Output ÷ Dependable Capacity
-
-        Plants achieving high capability realization
-        are capable of reaching their dependable rating.
+        **Story:** Evaluates whether each generating plant
+        was capable of realizing its available capability at
+        any point during the study period, independent of
+        system peak demand.
+    
+        **Capability Realization (%)**
+        = Maximum Observed Output ÷ Dependable Capacity
+    
+        **Utilization Factor (%)**
+        = Average Output ÷ Dependable Capacity
+    
+        **Interpretation:**
+        High Capability Realization indicates the plant was
+        capable of reaching its dependable rating.
+        High Utilization Factor indicates the plant was
+        heavily utilized during the study period.
         """
     )
-
-    with st.expander(
-        "View Historical Plant Asset Performance Table",
-        expanded=False
-    ):
-
-        st.dataframe(
-            asset_performance[
-                [
-                    "Plant",
-                    "DependableMW",
-                    "AvgMW",
-                    "MaxObservedMW",
-                    "UtilizationFactorPct",
-                    "CapabilityRealizationPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
-            ].round(2),
-            use_container_width=True,
-            hide_index=True
-        )
-
-    ok_count = (
-        asset_performance["RiskFlag"]
-        == "OK"
-    ).sum()
-
-    monitor_count = (
-        asset_performance["RiskFlag"]
-        == "Monitor"
-    ).sum()
-
-    underperforming_count = (
-        asset_performance["RiskFlag"]
-        == "Underperforming"
-    ).sum()
-
-    c1, c2, c3 = st.columns(3)
-
-    with c1:
-        st.metric(
-            "OK",
-            ok_count
-        )
-
-    with c2:
-        st.metric(
-            "Monitor",
-            monitor_count
-        )
-
-    with c3:
-        st.metric(
-            "Underperforming",
-            underperforming_count
-        )
 
     st.markdown(
         "### Plant Capability Scenario"
@@ -163,6 +107,28 @@ def build_asset_performance_dashboard(
         use_container_width=True
     )
 
+    with st.expander(
+        "View Historical Plant Asset Performance Table",
+        expanded=False
+    ):
+    
+        st.dataframe(
+            asset_performance[
+                [
+                    "Plant",
+                    "DependableMW",
+                    "AvgMW",
+                    "MaxObservedMW",
+                    "UtilizationFactorPct",
+                    "CapabilityRealizationPct",
+                    "RiskFlag",
+                    "Remarks"
+                ]
+            ].round(2),
+            use_container_width=True,
+            hide_index=True
+        )
+    
     with st.expander(
         "View Scenario Plant Asset Performance Table",
         expanded=False
