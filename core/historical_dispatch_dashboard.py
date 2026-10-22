@@ -215,9 +215,9 @@ def build_historical_dispatch_dashboard(
     )
 
     # -------------------------------------
-    # SUPPLY CURVE FROM STACK
+    # SHORTAGE CALCULATION
     # -------------------------------------
-
+    
     gap_df = (
         total_demand
         .merge(
@@ -231,46 +231,52 @@ def build_historical_dispatch_dashboard(
             how="inner"
         )
     )
-
+    
     gap_df.rename(
         columns={
-            "Value":
-            "TotalDemand"
+            "Value": "TotalDemand"
         },
         inplace=True
     )
-
+    
     gap_df = gap_df.sort_values(
         "Datetime"
     )
-
+    
+    # Future Mindoro import support
+    if "ImportSupport" not in gap_df.columns:
+    
+        gap_df["ImportSupport"] = 0
+    
+    gap_df["TotalSupply"] = (
+        gap_df["TotalSupply"]
+        +
+        gap_df["ImportSupport"]
+    )
+    
     gap_df["ShortageArea"] = (
         gap_df["TotalDemand"]
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
-
+    
     # -------------------------------------
-    # INVISIBLE LOWER BOUNDARY
+    # ORANGE SHORTAGE SHADE
     # -------------------------------------
-
+    
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
             y=gap_df["TotalSupply"],
             mode="lines",
-            line=dict(
-                width=0
-            ),
+            line=dict(width=0),
             showlegend=False,
-            hoverinfo="skip"
+            hoverinfo="skip",
+            hovertemplate=None,
+            name=""
         )
     )
-
-    # -------------------------------------
-    # ORANGE SHORTAGE GAP
-    # -------------------------------------
-
+    
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
@@ -281,10 +287,8 @@ def build_historical_dispatch_dashboard(
             ),
             mode="lines",
             fill="tonexty",
-            fillcolor="rgba(255,140,0,0.35)",
-            line=dict(
-                width=0
-            ),
+            fillcolor="rgba(255,140,0,0.80)",
+            line=dict(width=0),
             name="SHORTAGE",
             customdata=list(
                 zip(
@@ -293,7 +297,6 @@ def build_historical_dispatch_dashboard(
                     gap_df["ShortageArea"]
                 )
             ),
-            
             hovertemplate=
                 "<b>Supply Deficit</b><br>"
                 "Demand: %{customdata[0]:.2f} MW<br>"
@@ -302,14 +305,14 @@ def build_historical_dispatch_dashboard(
                 "<extra></extra>"
         )
     )
-
+    
     # -------------------------------------
     # LAYOUT
     # -------------------------------------
 
     fig.update_layout(
         title="Historical Dispatch Stack",
-        hovermode="closest",
+        hovermode="x unified",
         height=900,
         yaxis_title="MW",
         xaxis_title="Datetime",
