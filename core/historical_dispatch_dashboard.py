@@ -293,7 +293,7 @@ def build_historical_dispatch_dashboard(
     
         • Red Line = Total Supply
     
-        • Orange Area = Supply Deficit / Shortage
+        • Red Markers = Supply Deficit / Shortage Events
     
         The merit-order selector allows alternative
         dispatch sequencing for planning analysis.
