@@ -288,6 +288,7 @@ try:
         if (
             not unit_capacity_reference.empty
             and "Plant" in unit_capacity_reference.columns
+            and "Unit" in unit_capacity_reference.columns
         )
         else capacity_reference
     )
@@ -342,6 +343,7 @@ try:
         if (
             not unit_capacity_reference.empty
             and "Plant" in unit_capacity_reference.columns
+            and "Unit" in unit_capacity_reference.columns
         )
         else capacity_reference
     )
