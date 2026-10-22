@@ -484,6 +484,16 @@ try:
 
     st.divider()
 
+st.write(
+    peak_hour["peak_snapshot"]
+    .columns
+)
+
+st.dataframe(
+    peak_hour["peak_snapshot"]
+    .head(20)
+)
+
     build_peak_hour_dashboard(
         peak_hour,
         peak_hour_share_fig
