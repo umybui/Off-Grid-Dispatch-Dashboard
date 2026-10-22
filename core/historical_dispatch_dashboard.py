@@ -223,8 +223,7 @@ def build_historical_dispatch_dashboard(
         .merge(
             total_generation.rename(
                 columns={
-                    "TotalGeneration":
-                    "TotalSupply"
+                    "TotalGeneration": "TotalSupply"
                 }
             ),
             on="Datetime",
@@ -290,29 +289,19 @@ def build_historical_dispatch_dashboard(
             fillcolor="rgba(255,140,0,0.80)",
             line=dict(width=0),
             name="SHORTAGE",
-            customdata=list(
-                zip(
-                    gap_df["TotalDemand"],
-                    gap_df["TotalSupply"],
-                    gap_df["ShortageArea"]
-                )
-            ),
+            customdata=gap_df["ShortageArea"],
             hovertemplate=
-                "<b>Supply Deficit</b><br>"
-                "Demand: %{customdata[0]:.2f} MW<br>"
-                "Supply: %{customdata[1]:.2f} MW<br>"
-                "Shortage: %{customdata[2]:.2f} MW"
+                "SHORTAGE: %{customdata:.2f} MW"
                 "<extra></extra>"
         )
     )
-    
     # -------------------------------------
     # LAYOUT
     # -------------------------------------
 
     fig.update_layout(
         title="Historical Dispatch Stack",
-        hovermode="closest",
+        hovermode="x unified",
         height=900,
         yaxis_title="MW",
         xaxis_title="Datetime",
