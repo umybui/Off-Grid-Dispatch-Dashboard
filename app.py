@@ -238,6 +238,7 @@ try:
     (
         total_demand,
         generation,
+        generation_unit,
         total_generation,
         transfer_flow
     ) = build_demand_generation(
