@@ -312,17 +312,18 @@ def build_historical_dispatch_dashboard(
         """
         This chart compares historical generation dispatch
         against total system demand.
-
+    
         • Black Line = Total Demand
-
+    
         • Stacked Plant Areas = Total Supply
-
+    
         • Orange Area = Supply Deficit / Shortage
-
-        The merit-order selector allows alternative
-        dispatch sequencing for planning analysis.
-
-        Dispatch order affects the stacking sequence
+    
+        Hover over a shortage event to view
+        Total Demand, Total Supply, and
+        Shortage magnitude.
+    
+        Dispatch order affects stacking sequence
         only and does not modify historical generation.
         """
     )
