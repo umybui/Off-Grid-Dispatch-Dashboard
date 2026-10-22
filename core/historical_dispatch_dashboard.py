@@ -295,10 +295,11 @@ def build_historical_dispatch_dashboard(
             ),
             
             hovertemplate=
+                "<b>Supply Deficit</b><br>"
                 "Demand: %{customdata[0]:.2f} MW<br>"
                 "Supply: %{customdata[1]:.2f} MW<br>"
                 "Shortage: %{customdata[2]:.2f} MW"
-                "<extra></extra>"
+                "<extra></extra>""
         )
     )
 
