@@ -110,13 +110,18 @@ def build_demand_generation(filtered, config):
                 [
                     "Datetime",
                     plant_column,
-                    "Unit",
-                    "Value"
+                    "Unit"
                 ]
             ]
             .copy()
         )
-
+        
+        generation_unit["Value"] = (
+            generation_raw["NumericValue"]
+            if "NumericValue" in generation_raw.columns
+            else generation_raw["Value"]
+        )
+        
     else:
 
         generation_unit = (
