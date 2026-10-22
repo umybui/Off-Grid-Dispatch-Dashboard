@@ -309,7 +309,7 @@ def build_historical_dispatch_dashboard(
 
     fig.update_layout(
         title="Historical Dispatch Stack",
-        hovermode="x unified",
+        hovermode="closest",
         height=900,
         yaxis_title="MW",
         xaxis_title="Datetime",
