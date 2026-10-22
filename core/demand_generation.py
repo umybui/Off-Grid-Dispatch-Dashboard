@@ -75,7 +75,7 @@ def build_demand_generation(filtered, config):
     # GENERATION
     # ==========================================
 
-    generation = (
+    generation_raw = (
         filtered[
             filtered["Attribute"]
             .astype(str)
@@ -83,26 +83,76 @@ def build_demand_generation(filtered, config):
             ==
             generation_attribute.upper()
         ]
+        .copy()
+    )
+    
+    # ------------------------------------------
+    # PLANT-LEVEL GENERATION
+    # ------------------------------------------
+    
+    generation = (
+        generation_raw
         .groupby(
             ["Datetime", plant_column],
             as_index=False
         )["Value"]
         .sum()
     )
-
+    
+    # ------------------------------------------
+    # UNIT-LEVEL GENERATION
+    # ------------------------------------------
+    
+    generation_unit = (
+        generation_raw[
+            [
+                "Datetime",
+                plant_column,
+                "Unit",
+                "Value"
+            ]
+        ]
+        .copy()
+    )
+    
     if demand_plant:
-
+    
         generation = generation[
             generation[plant_column]
             .astype(str)
             .str.upper()
             != demand_plant.upper()
         ]
+    
+        generation_unit = generation_unit[
+            generation_unit[plant_column]
+            .astype(str)
+            .str.upper()
+            != demand_plant.upper()
+        ]
+
+
 
     exclude_keywords = config.get(
         "GENERATION_EXCLUDE_KEYWORDS",
         []
     )
+
+    if exclude_keywords:
+    
+        pattern = "|".join(exclude_keywords)
+    
+        generation_unit = generation_unit[
+            ~generation_unit[
+                plant_column
+            ]
+            .astype(str)
+            .str.contains(
+                pattern,
+                case=False,
+                na=False
+            )
+        ]
 
     if exclude_keywords:
 
@@ -182,9 +232,24 @@ def build_demand_generation(filtered, config):
         inplace=True
     )
 
+    generation.rename(
+        columns={
+            plant_column: "Plant"
+        },
+        inplace=True
+    )
+    
+    generation_unit.rename(
+        columns={
+            plant_column: "Plant"
+        },
+        inplace=True
+    )
+    
     return (
         total_demand,
         generation,
+        generation_unit,
         total_generation,
         transfer_flow
     )
