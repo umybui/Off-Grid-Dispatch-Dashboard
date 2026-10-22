@@ -121,7 +121,12 @@ from core.daily_peak_mix import (
 from core.daily_peak_mix_dashboard import (
     build_daily_peak_mix_dashboard
 )
-
+from core.dependable_audit import (
+    build_dependable_audit
+)
+from core.dependable_audit_dashboard import (
+    build_dependable_audit_dashboard
+)
 # =====================================================
 # PAGE CONFIG
 # =====================================================
@@ -200,7 +205,14 @@ try:
             config
         )
     )
-         
+ 
+    dependable_audit = (
+        build_dependable_audit(
+            df,
+            config
+        )
+    )
+    
     # =================================================
     # DASHBOARD FILTERS
     # =================================================
@@ -489,6 +501,13 @@ try:
     build_daily_peak_mix_dashboard(
         daily_peak_mix
     )
+
+    st.divider()
+
+    build_dependable_audit_dashboard(
+        dependable_audit
+    )
+
     
 #$$$$$$$$$$$$$$$$$$$
     
