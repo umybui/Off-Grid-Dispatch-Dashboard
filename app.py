@@ -115,6 +115,12 @@ from core.historical_dispatch_dashboard import (
 from core.peak_support_dashboard import (
     build_peak_support_dashboard
 )
+from core.daily_peak_mix import (
+    build_daily_peak_mix
+)
+from core.daily_peak_mix_dashboard import (
+    build_daily_peak_mix_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -258,6 +264,14 @@ try:
         )
     )
 
+    daily_peak_mix = (
+        build_daily_peak_mix(
+            total_demand,
+            generation,
+            capacity_reference
+        )
+    )
+    
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
     # =====================================================
@@ -475,6 +489,12 @@ try:
     build_peak_support_dashboard(
         peak_support,
         peak_support_chart
+    )
+
+    st.divider()
+
+    build_daily_peak_mix_dashboard(
+        daily_peak_mix
     )
     
 #$$$$$$$$$$$$$$$$$$$
