@@ -244,9 +244,16 @@ def build_historical_dispatch_dashboard(
     )
     
     # Future Mindoro import support
-    if "ImportSupport" not in gap_df.columns:
+    gap_df = gap_df.merge(
+        transfer_flow,
+        on="Datetime",
+        how="left"
+    )
     
-        gap_df["ImportSupport"] = 0
+    gap_df["ImportSupport"] = (
+        gap_df["ImportSupport"]
+        .fillna(0)
+    )
     
     gap_df["TotalSupply"] = (
         gap_df["TotalSupply"]
