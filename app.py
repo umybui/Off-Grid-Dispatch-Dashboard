@@ -485,13 +485,6 @@ try:
     )
 
     st.divider()
-    
-    build_peak_support_dashboard(
-        peak_support,
-        peak_support_chart
-    )
-
-    st.divider()
 
     build_daily_peak_mix_dashboard(
         daily_peak_mix
