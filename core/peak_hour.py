@@ -60,7 +60,7 @@ def build_peak_hour_analysis(
             "PeakEnergyMWh"
         ].sum()
     )
-    
+
     peak_snapshot[
         "PeakEnergySharePct"
     ] = (
@@ -78,6 +78,9 @@ def build_peak_hour_analysis(
             "PeakEnergySharePct",
             ascending=False
         )
+        .reset_index(
+            drop=True
+        )
     )
 
     return {
@@ -90,4 +93,5 @@ def build_peak_hour_analysis(
 
         "peak_snapshot":
             peak_snapshot
+
     }
