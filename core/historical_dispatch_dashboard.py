@@ -244,16 +244,23 @@ def build_historical_dispatch_dashboard(
     )
     
     # Future Mindoro import support
-    gap_df = gap_df.merge(
-        transfer_flow,
-        on="Datetime",
-        how="left"
-    )
     
-    gap_df["ImportSupport"] = (
-        gap_df["ImportSupport"]
-        .fillna(0)
-    )
+    if transfer_flow is not None and not transfer_flow.empty:
+    
+        gap_df = gap_df.merge(
+            transfer_flow,
+            on="Datetime",
+            how="left"
+        )
+    
+        gap_df["ImportSupport"] = (
+            gap_df["ImportSupport"]
+            .fillna(0)
+        )
+    
+    else:
+    
+        gap_df["ImportSupport"] = 0
     
     gap_df["TotalSupply"] = (
         gap_df["TotalSupply"]
@@ -266,7 +273,7 @@ def build_historical_dispatch_dashboard(
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
-
+    
     # -------------------------------------
     # TOTAL SUPPLY
     # -------------------------------------
@@ -278,8 +285,8 @@ def build_historical_dispatch_dashboard(
             name="TOTAL SUPPLY",
             mode="lines",
             line=dict(
-                color="rgba(0,0,0,0)",
-                width=0
+                color="red)",
+                width=1
             )
         )
     )
