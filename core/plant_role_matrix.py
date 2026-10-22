@@ -54,13 +54,17 @@ def build_plant_role_matrix(
     )
 
     peak_df = (
-        peak_snapshot[
-            [
-                "Plant",
-                "PeakEnergySharePct"
-            ]
-        ]
-        .copy()
+        peak_snapshot
+        .groupby(
+            "Plant",
+            as_index=False
+        )
+        .agg(
+            PeakEnergySharePct=(
+                "PeakEnergySharePct",
+                "sum"
+            )
+        )
     )
 
     peak_df.rename(
