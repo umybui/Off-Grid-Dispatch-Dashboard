@@ -12,7 +12,8 @@ except:
 def build_historical_dispatch_dashboard(
     generation,
     total_demand,
-    total_generation
+    total_generation,
+    transfer_flow
 ):
 
     st.subheader(
