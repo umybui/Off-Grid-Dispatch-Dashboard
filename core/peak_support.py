@@ -58,10 +58,21 @@ def build_peak_support_table(
     dependable_capacity
 ):
 
+    merge_keys = ["Plant"]
+    
+    if (
+        "Unit" in peak_snapshot.columns
+        and "Unit" in dependable_capacity.columns
+    ):
+        merge_keys = [
+            "Plant",
+            "Unit"
+        ]
+    
     performance = (
         peak_snapshot.merge(
             dependable_capacity,
-            on="Plant",
+            on=merge_keys,
             how="left"
         )
     )
