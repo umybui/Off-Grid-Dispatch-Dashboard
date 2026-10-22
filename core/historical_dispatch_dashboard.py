@@ -176,9 +176,9 @@ def build_historical_dispatch_dashboard(
 
     fig = go.Figure()
 
-    # -----------------------------
+    # -------------------------------------
     # STACKED GENERATION
-    # -----------------------------
+    # -------------------------------------
 
     for plant in plant_order:
 
@@ -197,9 +197,9 @@ def build_historical_dispatch_dashboard(
             )
         )
 
-    # -----------------------------
+    # -------------------------------------
     # TOTAL DEMAND
-    # -----------------------------
+    # -------------------------------------
 
     fig.add_trace(
         go.Scatter(
@@ -214,49 +214,72 @@ def build_historical_dispatch_dashboard(
         )
     )
 
-    # -----------------------------
-    # SHORTAGE AREA
-    # -----------------------------
+    # -------------------------------------
+    # SUPPLY CURVE FROM STACK
+    # -------------------------------------
+
+    supply_curve = (
+        generation
+        .groupby(
+            "Datetime",
+            as_index=False
+        )
+        .agg(
+            TotalSupply=("Value", "sum")
+        )
+        .sort_values(
+            "Datetime"
+        )
+    )
 
     gap_df = (
         total_demand
         .merge(
-            total_generation,
+            supply_curve,
             on="Datetime",
             how="inner"
         )
     )
-    
+
     gap_df.rename(
         columns={
-            "Value": "TotalDemand"
+            "Value":
+            "TotalDemand"
         },
         inplace=True
     )
-    
-    gap_df["TotalSupply"] = (
-        gap_df["TotalGeneration"]
+
+    gap_df = gap_df.sort_values(
+        "Datetime"
     )
-    
+
     gap_df["ShortageArea"] = (
         gap_df["TotalDemand"]
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
-    
-    # invisible lower boundary
+
+    # -------------------------------------
+    # INVISIBLE LOWER BOUNDARY
+    # -------------------------------------
+
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
             y=gap_df["TotalSupply"],
             mode="lines",
-            line=dict(width=0),
+            line=dict(
+                width=0
+            ),
             showlegend=False,
             hoverinfo="skip"
         )
     )
-    
-    # shortage fill
+
+    # -------------------------------------
+    # ORANGE SHORTAGE GAP
+    # -------------------------------------
+
     fig.add_trace(
         go.Scatter(
             x=gap_df["Datetime"],
@@ -268,25 +291,20 @@ def build_historical_dispatch_dashboard(
             mode="lines",
             fill="tonexty",
             fillcolor="rgba(255,140,0,0.35)",
-            line=dict(width=0),
-            name="SHORTAGE",
-            customdata=list(
-                zip(
-                    gap_df["TotalDemand"],
-                    gap_df["TotalSupply"],
-                    gap_df["ShortageArea"]
-                )
+            line=dict(
+                width=0
             ),
+            name="SHORTAGE",
+            customdata=gap_df["ShortageArea"],
             hovertemplate=
-                "TOTAL DEMAND: %{customdata[0]:.2f} MW<br>"
-                "TOTAL SUPPLY: %{customdata[1]:.2f} MW<br>"
-                "SHORTAGE: %{customdata[2]:.2f} MW"
+                "SHORTAGE: %{customdata:.2f} MW"
                 "<extra></extra>"
         )
     )
-    # -----------------------------
+
+    # -------------------------------------
     # LAYOUT
-    # -----------------------------
+    # -------------------------------------
 
     fig.update_layout(
         title="Historical Dispatch Stack",
@@ -312,17 +330,16 @@ def build_historical_dispatch_dashboard(
         """
         This chart compares historical generation dispatch
         against total system demand.
-    
+
         • Black Line = Total Demand
-    
+
         • Stacked Plant Areas = Total Supply
-    
+
         • Orange Area = Supply Deficit / Shortage
-    
-        Hover over a shortage event to view
-        Total Demand, Total Supply, and
-        Shortage magnitude.
-    
+
+        Hover over the orange region to view
+        shortage magnitude.
+
         Dispatch order affects stacking sequence
         only and does not modify historical generation.
         """
