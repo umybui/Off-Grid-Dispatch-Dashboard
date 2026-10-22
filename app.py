@@ -276,6 +276,12 @@ try:
             peak_support
         )
     )
+
+    plant_contribution = (
+        build_plant_contribution(
+            generation
+        )
+    )
     
     # =====================================================
     # ASSET AND CAPABILITY ANALYTICS
