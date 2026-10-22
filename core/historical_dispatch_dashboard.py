@@ -239,30 +239,28 @@ def build_historical_dispatch_dashboard(
         gap_df["TotalGeneration"]
     ).clip(lower=0)
 
-    fig.add_trace(
-        go.Scatter(
-            x=gap_df["Datetime"],
-            y=gap_df["TotalGeneration"],
-            mode="lines",
-            line=dict(width=0),
-            showlegend=False,
-            hoverinfo="skip"
-        )
+    shortage_df = (
+        gap_df[
+            gap_df["ShortageArea"] > 0
+        ]
+        .copy()
     )
-
+    
     fig.add_trace(
         go.Scatter(
-            x=gap_df["Datetime"],
-            y=(
-                gap_df["TotalGeneration"]
-                +
-                gap_df["ShortageArea"]
+            x=shortage_df["Datetime"],
+            y=shortage_df["Value"],
+            mode="markers",
+            name="SHORTAGE",
+            marker=dict(
+                color="red",
+                size=6,
+                symbol="circle"
             ),
-            mode="lines",
-            fill="tonexty",
-            fillcolor="rgba(255,140,0,0.45)",
-            line=dict(width=0),
-            name="SHORTAGE"
+            customdata=shortage_df["ShortageArea"],
+            hovertemplate=
+                "SHORTAGE: %{customdata:.2f} MW"
+                "<extra></extra>"
         )
     )
 
