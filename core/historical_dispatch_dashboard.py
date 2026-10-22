@@ -273,6 +273,46 @@ def build_historical_dispatch_dashboard(
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
+
+    # -------------------------------------
+    # IMPORT SUPPORT BAND
+    # -------------------------------------
+    
+    if (
+        transfer_flow is not None
+        and not transfer_flow.empty
+    ):
+    
+        fig.add_trace(
+            go.Scatter(
+                x=gap_df["Datetime"],
+                y=(
+                    gap_df["TotalSupply"]
+                    -
+                    gap_df["ImportSupport"]
+                ),
+                mode="lines",
+                line=dict(width=0),
+                showlegend=False,
+                hoverinfo="skip"
+            )
+        )
+    
+        fig.add_trace(
+            go.Scatter(
+                x=gap_df["Datetime"],
+                y=gap_df["TotalSupply"],
+                mode="lines",
+                fill="tonexty",
+                fillcolor="rgba(255,0,255,0.40)",
+                line=dict(width=0),
+                name="IMPORT SUPPORT",
+                customdata=gap_df["ImportSupport"],
+                hovertemplate=
+                    "IMPORT SUPPORT: %{customdata:.2f} MW"
+                    "<extra></extra>"
+            )
+        )
     
     # -------------------------------------
     # TOTAL SUPPLY
