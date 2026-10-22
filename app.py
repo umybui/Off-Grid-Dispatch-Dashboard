@@ -136,6 +136,9 @@ from core.unit_capability_dashboard import (
 from core.generation_unit import (
     build_generation_unit
 )
+from core.unit_capacity_reference import (
+    build_unit_capacity_reference
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -215,7 +218,13 @@ try:
             config
         )
     )
- 
+
+    unit_capacity_reference = (
+        build_unit_capacity_reference(
+            df
+        )
+    )
+    
     dependable_audit = (
         build_dependable_audit(
             df,
@@ -277,7 +286,7 @@ try:
     peak_support = (
         build_peak_support_analysis(
             peak_hour,
-            capacity_reference
+            unit_capacity_reference
         )
     )
     
@@ -322,7 +331,7 @@ try:
     unit_capability = (
         build_unit_capability(
             generation_unit,
-            capacity_reference
+            unit_capacity_reference
         )
     )
 
