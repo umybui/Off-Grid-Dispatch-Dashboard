@@ -127,6 +127,13 @@ from core.dependable_audit import (
 from core.dependable_audit_dashboard import (
     build_dependable_audit_dashboard
 )
+from core.asset_performance_dashboard import (
+    build_asset_performance_dashboard
+)
+
+
+
+
 # =====================================================
 # PAGE CONFIG
 # =====================================================
@@ -507,8 +514,14 @@ try:
     build_dependable_audit_dashboard(
         dependable_audit
     )
-
     
+    st.divider()
+    
+    build_asset_performance_dashboard(
+        asset_performance,
+        asset_performance_chart
+    )   
+   
 #$$$$$$$$$$$$$$$$$$$
     
 
@@ -529,76 +542,6 @@ try:
     # ============================================================================
     # ============================================================================
     
-
-    # =====================================================
-    # PLANT ASSET PERFORMANCE ASSESSMENT
-    # =====================================================
-    
-    st.subheader(
-        "Plant Asset Performance Assessment"
-    )
-    
-    with st.expander(
-        "Asset Performance Table",
-        expanded=False
-    ):
-    
-        st.dataframe(
-            asset_performance[
-                [
-                    "Plant",
-                    "DependableMW",
-                    "AvgMW",
-                    "MaxObservedMW",
-                    "UtilizationFactorPct",
-                    "CapabilityRealizationPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
-            ].round(2),
-    
-            use_container_width=True,
-            hide_index=True
-        )
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.metric(
-            "OK",
-            (
-                asset_performance["RiskFlag"]
-                == "OK"
-            ).sum()
-        )
-    
-    with col2:
-        st.metric(
-            "Monitor",
-            (
-                asset_performance["RiskFlag"]
-                == "Monitor"
-            ).sum()
-        )
-    
-    with col3:
-        st.metric(
-            "Underperforming",
-            (
-                asset_performance["RiskFlag"]
-                == "Underperforming"
-            ).sum()
-        )
-    
-    st.markdown(
-        "##### Capability Realization by Plant"
-    )
-    
-    st.plotly_chart(
-        asset_performance_chart,
-        use_container_width=True
-    )
-
     # =====================================================
     # UNIT CAPABILITY REALIZATION
     # =====================================================
