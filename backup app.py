@@ -238,7 +238,6 @@ try:
     (
         total_demand,
         generation,
-        generation_unit,
         total_generation,
         transfer_flow
     ) = build_demand_generation(
@@ -256,7 +255,7 @@ try:
             generation
         )
     )
-      
+    
     peak_hour_share_fig = (
         build_peak_hour_share_chart(
             peak_hour[
@@ -264,19 +263,19 @@ try:
             ]
         )
     )
-
+    
     peak_support = (
         build_peak_support_analysis(
             peak_hour,
             capacity_reference
         )
     )
-
+    
     peak_support_chart = (
-            build_peak_support_chart(
-                peak_support
-            )
+        build_peak_support_chart(
+            peak_support
         )
+    )
 
     plant_contribution = (
         build_plant_contribution(
