@@ -133,6 +133,9 @@ from core.asset_performance_dashboard import (
 from core.unit_capability_dashboard import (
     build_unit_capability_dashboard
 )
+from core.generation_unit import (
+    build_generation_unit
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -245,6 +248,13 @@ try:
         config
     )
 
+    generation_unit = (
+        build_generation_unit(
+            filtered,
+            config
+        )
+    )
+    
     # =====================================================
     # PEAK HOUR ANALYTICS
     # =====================================================
