@@ -285,7 +285,7 @@ def build_historical_dispatch_dashboard(
             name="TOTAL SUPPLY",
             mode="lines",
             line=dict(
-                color="red)",
+                color=("red"),
                 width=1
             )
         )
