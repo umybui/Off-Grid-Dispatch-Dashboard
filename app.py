@@ -250,9 +250,16 @@ try:
     st.write(generation_unit.columns.tolist())
     
     st.dataframe(
-        generation_unit.head(20)
+        generation_unit[
+            [
+                "Datetime",
+                "Plant",
+                "Unit",
+                "Value"
+            ]
+        ]
+        .head(20)
     )
-    
     # =====================================================
     # PEAK HOUR ANALYTICS
     # =====================================================
