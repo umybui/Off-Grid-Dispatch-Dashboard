@@ -32,14 +32,14 @@ def build_peak_hour_analysis(
     )
 
     group_fields = ["Plant"]
-    
+
     if "Unit" in peak_generation.columns:
-    
+
         group_fields = [
             "Plant",
             "Unit"
         ]
-    
+
     peak_snapshot = (
         peak_generation
         .groupby(
@@ -82,7 +82,7 @@ def build_peak_hour_analysis(
     )
 
     if "Unit" in peak_snapshot.columns:
-    
+
         plant_totals = (
             peak_snapshot
             .groupby(
@@ -99,7 +99,7 @@ def build_peak_hour_analysis(
                 }
             )
         )
-    
+
         peak_snapshot = (
             peak_snapshot
             .merge(
@@ -108,17 +108,32 @@ def build_peak_hour_analysis(
                 how="left"
             )
         )
-    
-    peak_snapshot = (
-        peak_snapshot
-        .sort_values(
-            "PeakEnergySharePct",
-            ascending=False
+
+        peak_snapshot = (
+            peak_snapshot
+            .sort_values(
+                [
+                    "Plant",
+                    "Unit"
+                ]
+            )
+            .reset_index(
+                drop=True
+            )
         )
-        .reset_index(
-            drop=True
+
+    else:
+
+        peak_snapshot = (
+            peak_snapshot
+            .sort_values(
+                "PeakEnergySharePct",
+                ascending=False
+            )
+            .reset_index(
+                drop=True
+            )
         )
-    )
 
     return {
 
@@ -130,5 +145,4 @@ def build_peak_hour_analysis(
 
         "peak_snapshot":
             peak_snapshot
-
     }
