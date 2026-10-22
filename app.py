@@ -252,9 +252,10 @@ try:
     peak_hour = (
         build_peak_hour_analysis(
             total_demand,
+            generation
         )
     )
-      
+    
     peak_hour_share_fig = (
         build_peak_hour_share_chart(
             peak_hour[
@@ -262,31 +263,17 @@ try:
             ]
         )
     )
-
+    
     peak_support = (
         build_peak_support_analysis(
             peak_hour,
             capacity_reference
         )
     )
-
+    
     peak_support_chart = (
-            build_peak_support_chart(
-                peak_support
-            )
-        )
-
-    plant_contribution = (
-        build_plant_contribution(
-            generation
-        )
-    )
-
-    daily_peak_mix = (
-        build_daily_peak_mix(
-            total_demand,
-            generation,
-            capacity_reference
+        build_peak_support_chart(
+            peak_support
         )
     )
     
@@ -481,16 +468,6 @@ try:
     )
 
     st.divider()
-
-    st.write(
-        peak_hour["peak_snapshot"]
-        .columns
-    )
-    
-    st.dataframe(
-        peak_hour["peak_snapshot"]
-        .head(20)
-    )
 
     build_peak_hour_dashboard(
         peak_hour,
