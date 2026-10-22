@@ -104,7 +104,7 @@ def build_demand_generation(filtered, config):
     # ------------------------------------------
 
     if "Unit" in generation_raw.columns:
-
+    
         generation_unit = (
             generation_raw[
                 [
@@ -115,15 +115,21 @@ def build_demand_generation(filtered, config):
             ]
             .copy()
         )
-        
-        generation_unit["Value"] = (
-            generation_raw["NumericValue"]
-            if "NumericValue" in generation_raw.columns
-            else generation_raw["Value"]
-        )
-        
+    
+        if config["SYSTEM_NAME"] == "Palawan":
+    
+            generation_unit["Value"] = (
+                generation_raw["NumericValue"]
+            )
+    
+        else:
+    
+            generation_unit["Value"] = (
+                generation_raw["Value"]
+            )
+    
     else:
-
+    
         generation_unit = (
             generation_raw[
                 [
