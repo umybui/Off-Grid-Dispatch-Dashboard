@@ -198,6 +198,23 @@ def build_historical_dispatch_dashboard(
         )
 
     # -------------------------------------
+    # TOTAL SUPPLY
+    # -------------------------------------
+    
+    fig.add_trace(
+        go.Scatter(
+            x=gap_df["Datetime"],
+            y=gap_df["TotalSupply"],
+            name="TOTAL SUPPLY",
+            mode="lines",
+            line=dict(
+                color="red",
+                width=2
+            )
+        )
+    )
+    
+    # -------------------------------------
     # TOTAL DEMAND
     # -------------------------------------
 
@@ -323,16 +340,15 @@ def build_historical_dispatch_dashboard(
         """
         This chart compares historical generation dispatch
         against total system demand.
-
+    
         • Black Line = Total Demand
-
-        • Stacked Plant Areas = Total Supply
-
+    
+        • Red Line = Total Supply
+    
+        • Stacked Plant Areas = Generation by Plant
+    
         • Orange Area = Supply Deficit / Shortage
-
-        Hover over the orange region to view
-        shortage magnitude.
-
+    
         Dispatch order affects stacking sequence
         only and does not modify historical generation.
         """
