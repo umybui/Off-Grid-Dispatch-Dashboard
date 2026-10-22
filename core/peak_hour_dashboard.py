@@ -58,7 +58,22 @@ def build_peak_hour_dashboard(
     ):
 
         st.dataframe(
-            snapshot.round(2),
+            display_cols = [
+                col
+                for col in [
+                    "Plant",
+                    "Unit",
+                    "AvgPeakMW",
+                    "MaxPeakMW",
+                    "PeakEnergyMWh",
+                    "PeakEnergySharePct",
+                    "PlantSharePct"
+                ]
+                if col in snapshot.columns
+            ]
+                snapshot[
+                display_cols
+            ]
             use_container_width=True,
             hide_index=True
         )
