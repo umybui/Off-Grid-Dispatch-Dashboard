@@ -41,29 +41,44 @@ def build_unit_capability_dashboard(
         "View Unit Capability Realization Table",
         expanded=False
     ):
-
+    
+        display_cols = [
+            col
+            for col in [
+                "Plant",
+                "Unit",
+                "DependableMW",
+                "AvgMW",
+                "MaxObservedMW",
+                "OperatingHours",
+                "HoursAbove80Pct",
+                "UtilizationFactorPct",
+                "CapabilityRealizationPct",
+                "SustainedCapabilityPct",
+                "RiskFlag",
+                "Remarks"
+            ]
+            if col in unit_capability.columns
+        ]
+    
+        sort_cols = ["Plant"]
+    
+        if "Unit" in unit_capability.columns:
+            sort_cols = [
+                "Plant",
+                "Unit"
+            ]
+    
         display_df = (
             unit_capability[
-                [
-                    "Plant",
-                    "DependableMW",
-                    "AvgMW",
-                    "MaxObservedMW",
-                    "OperatingHours",
-                    "HoursAbove80Pct",
-                    "UtilizationFactorPct",
-                    "CapabilityRealizationPct",
-                    "SustainedCapabilityPct",
-                    "RiskFlag",
-                    "Remarks"
-                ]
+                display_cols
             ]
             .sort_values(
-                ["Plant"]
+                sort_cols
             )
             .round(2)
         )
-
+    
         st.dataframe(
             display_df,
             use_container_width=True,
