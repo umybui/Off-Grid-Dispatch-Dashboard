@@ -80,6 +80,19 @@ def build_generation_unit(
         inplace=True
     )
 
+    demand_plant = config.get(
+        "DEMAND_PLANT"
+    )
+    
+    if demand_plant:
+    
+        generation_unit = generation_unit[
+            generation_unit["Plant"]
+            .astype(str)
+            .str.upper()
+            != demand_plant.upper()
+        ]
+    
     exclude_keywords = config.get(
         "GENERATION_EXCLUDE_KEYWORDS",
         []
