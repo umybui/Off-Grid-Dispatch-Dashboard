@@ -53,10 +53,29 @@ def build_unit_capability(
     capacity_reference
 ):
 
+    group_fields = ["Plant"]
+
+    merge_fields = ["Plant"]
+
+    if (
+        "Unit" in generation.columns
+        and
+        "Unit" in capacity_reference.columns
+    ):
+        group_fields = [
+            "Plant",
+            "Unit"
+        ]
+
+        merge_fields = [
+            "Plant",
+            "Unit"
+        ]
+
     unit_perf = (
         generation
         .groupby(
-            "Plant",
+            group_fields,
             as_index=False
         )
         .agg(
@@ -73,7 +92,7 @@ def build_unit_capability(
     unit_perf = (
         unit_perf.merge(
             capacity_reference,
-            on="Plant",
+            on=merge_fields,
             how="left"
         )
     )
@@ -81,10 +100,10 @@ def build_unit_capability(
     unit_perf["HoursAbove80Pct"] = (
         generation.merge(
             capacity_reference,
-            on="Plant",
+            on=merge_fields,
             how="left"
         )
-        .groupby("Plant")
+        .groupby(group_fields)
         .apply(
             lambda x:
             (
