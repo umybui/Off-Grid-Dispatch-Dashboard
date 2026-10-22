@@ -292,6 +292,30 @@ def build_historical_dispatch_dashboard(
     )
 
     # -------------------------------------
+    # IMPORT SUPPORT (HOVER ONLY)
+    # -------------------------------------
+    
+    if (
+        transfer_flow is not None
+        and not transfer_flow.empty
+    ):
+    
+        fig.add_trace(
+            go.Scatter(
+                x=gap_df["Datetime"],
+                y=gap_df["ImportSupport"],
+                name="IMPORT SUPPORT",
+                mode="lines",
+                line=dict(
+                    color="rgba(128,0,128,0)",
+                    width=0
+                ),
+                hovertemplate=
+                    "IMPORT SUPPORT: %{y:.2f} MW"
+                    "<extra></extra>"
+            )
+        )
+    # -------------------------------------
     # ORANGE SHORTAGE SHADE
     # -------------------------------------
     
