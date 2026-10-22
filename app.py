@@ -246,6 +246,13 @@ try:
         config
     )
 
+    st.write("GENERATION UNIT COLUMNS")
+    st.write(generation_unit.columns.tolist())
+    
+    st.dataframe(
+        generation_unit.head(20)
+    )
+    
     # =====================================================
     # PEAK HOUR ANALYTICS
     # =====================================================
