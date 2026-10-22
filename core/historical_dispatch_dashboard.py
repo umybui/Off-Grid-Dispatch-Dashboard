@@ -241,24 +241,6 @@ def build_historical_dispatch_dashboard(
     gap_df = gap_df.sort_values(
         "Datetime"
     )
-
-        # -------------------------------------
-        # TOTAL SUPPLY
-        # -------------------------------------
-        
-        fig.add_trace(
-            go.Scatter(
-                x=gap_df["Datetime"],
-                y=gap_df["TotalSupply"],
-                name="TOTAL SUPPLY",
-                mode="lines",
-                line=dict(
-                    color="red",
-                    width=2
-                )
-            )
-        )
-
     
     # Future Mindoro import support
     if "ImportSupport" not in gap_df.columns:
@@ -276,7 +258,24 @@ def build_historical_dispatch_dashboard(
         -
         gap_df["TotalSupply"]
     ).clip(lower=0)
-    
+
+    # -------------------------------------
+    # TOTAL SUPPLY
+    # -------------------------------------
+       
+    fig.add_trace(
+        go.Scatter(
+            x=gap_df["Datetime"],
+            y=gap_df["TotalSupply"],
+            name="TOTAL SUPPLY",
+            mode="lines",
+            line=dict(
+                color="red",
+                width=2
+            )
+        )
+    )
+
     # -------------------------------------
     # ORANGE SHORTAGE SHADE
     # -------------------------------------
