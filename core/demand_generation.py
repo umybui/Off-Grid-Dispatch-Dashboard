@@ -86,6 +86,17 @@ def build_demand_generation(filtered, config):
         .copy()
     )
 
+    print(
+        generation_raw[
+            [
+                "Plant",
+                "Unit",
+                "Value",
+                "NumericValue"
+            ]
+        ].head(20)
+    )
+    
     # ------------------------------------------
     # PLANT-LEVEL GENERATION
     # ------------------------------------------
@@ -115,17 +126,19 @@ def build_demand_generation(filtered, config):
             ]
             .copy()
         )
-    
+
         if config["SYSTEM_NAME"] == "Palawan":
-    
-            generation_unit["Value"] = (
-                generation_raw["NumericValue"]
+        
+            generation_unit["Value"] = pd.to_numeric(
+                generation_raw["NumericValue"],
+                errors="coerce"
             )
-    
+        
         else:
-    
-            generation_unit["Value"] = (
-                generation_raw["Value"]
+        
+            generation_unit["Value"] = pd.to_numeric(
+                generation_raw["Value"],
+                errors="coerce"
             )
     
     else:
