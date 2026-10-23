@@ -23,6 +23,20 @@ def get_filters(df):
         df["Month"].dropna().unique()
     )
 
+    years = sorted(
+        df["Datetime"]
+        .dt.year
+        .unique()
+    )
+    
+    selected_years = st.sidebar.multiselect(
+        "Year",
+        years,
+        default=years
+    )
+    
+    filters["Year"] = selected_years
+    
     selected_months = st.sidebar.multiselect(
         "Month",
         options=available_months,
