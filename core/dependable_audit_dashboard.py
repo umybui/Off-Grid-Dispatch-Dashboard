@@ -14,27 +14,17 @@ def build_dependable_audit_dashboard(
         expanded=False
     ):
 
-        st.caption(
-            """
-            This table shows the plant-level
-            dependable capacity used in the
-            asset assessment.
-
-            Select a plant to view the
-            contributing unit-level breakdown.
-            """
-        )
-
         plant_totals = (
             dependable_audit[
                 "plant_totals"
             ]
         )
 
-        unit_breakdown = (
-            dependable_audit[
-                "unit_breakdown"
-            ]
+        has_unit_data = (
+            dependable_audit.get(
+                "has_unit_data",
+                False
+            )
         )
 
         st.markdown(
@@ -47,37 +37,61 @@ def build_dependable_audit_dashboard(
             hide_index=True
         )
 
-        selected_plant = st.selectbox(
-            "Show Unit-Level Breakdown",
-            plant_totals["Plant"]
-            .tolist()
-        )
+        # ----------------------------------
+        # PALAWAN / CATANDUANES
+        # ----------------------------------
 
-        unit_table = (
-            unit_breakdown[
-                unit_breakdown["Plant"]
-                ==
-                selected_plant
-            ]
-        )
+        if has_unit_data:
 
-        st.markdown(
-            f"##### {selected_plant} Unit Breakdown"
-        )
+            unit_breakdown = (
+                dependable_audit[
+                    "unit_breakdown"
+                ]
+            )
 
-        st.dataframe(
-            unit_table.round(2),
-            use_container_width=True,
-            hide_index=True
-        )
+            selected_plant = st.selectbox(
+                "Show Unit-Level Breakdown",
+                plant_totals["Plant"]
+                .tolist()
+            )
 
-        total_dependable = (
-            unit_table[
-                "DependableMW"
-            ].sum()
-        )
+            unit_table = (
+                unit_breakdown[
+                    unit_breakdown["Plant"]
+                    ==
+                    selected_plant
+                ]
+            )
 
-        st.metric(
-            "Plant Total Dependable Capacity",
-            f"{total_dependable:,.2f} MW"
-        )
+            st.markdown(
+                f"##### {selected_plant} Unit Breakdown"
+            )
+
+            st.dataframe(
+                unit_table.round(2),
+                use_container_width=True,
+                hide_index=True
+            )
+
+            total_dependable = (
+                unit_table[
+                    "DependableMW"
+                ]
+                .sum()
+            )
+
+            st.metric(
+                "Plant Total Dependable Capacity",
+                f"{total_dependable:,.2f} MW"
+            )
+
+        # ----------------------------------
+        # MINDORO
+        # ----------------------------------
+
+        else:
+
+            st.info(
+                "Unit-level dependable capacity data "
+                "is not available for this system."
+            )
