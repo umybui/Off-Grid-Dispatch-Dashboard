@@ -6,17 +6,6 @@ def build_dependable_audit(
     config
 ):
 
-    if (
-        "Unit"
-        not in df.columns
-    ):
-        return {
-            "plant_totals":
-                pd.DataFrame(),
-            "unit_breakdown":
-                pd.DataFrame()
-        }
-
     capacity_df = (
         df[
             df["Attribute"]
@@ -35,16 +24,65 @@ def build_dependable_audit(
     if capacity_df.empty:
 
         return {
-            "plant_totals":
-                pd.DataFrame(),
-            "unit_breakdown":
-                pd.DataFrame()
+            "has_unit_data": False,
+            "plant_totals": pd.DataFrame(),
+            "unit_breakdown": pd.DataFrame()
         }
 
-    unit_breakdown = (
+    # --------------------------------------------------
+    # UNIT-LEVEL DATA AVAILABLE
+    # --------------------------------------------------
+
+    if (
+        "Unit" in capacity_df.columns
+        and
+        capacity_df["Unit"].notna().any()
+    ):
+
+        unit_breakdown = (
+            capacity_df
+            .groupby(
+                ["Plant", "Unit"],
+                as_index=False
+            )["Value"]
+            .max()
+            .rename(
+                columns={
+                    "Value":
+                    "DependableMW"
+                }
+            )
+        )
+
+        plant_totals = (
+            unit_breakdown
+            .groupby(
+                "Plant",
+                as_index=False
+            )["DependableMW"]
+            .sum()
+        )
+
+        return {
+
+            "has_unit_data":
+                True,
+
+            "plant_totals":
+                plant_totals,
+
+            "unit_breakdown":
+                unit_breakdown
+        }
+
+    # --------------------------------------------------
+    # PLANT-LEVEL ONLY (MINDORO)
+    # --------------------------------------------------
+
+    plant_totals = (
         capacity_df
         .groupby(
-            ["Plant", "Unit"],
+            "Plant",
             as_index=False
         )["Value"]
         .max()
@@ -56,21 +94,14 @@ def build_dependable_audit(
         )
     )
 
-    plant_totals = (
-        unit_breakdown
-        .groupby(
-            "Plant",
-            as_index=False
-        )["DependableMW"]
-        .sum()
-    )
-
     return {
+
+        "has_unit_data":
+            False,
 
         "plant_totals":
             plant_totals,
 
         "unit_breakdown":
-            unit_breakdown
-
+            pd.DataFrame()
     }
