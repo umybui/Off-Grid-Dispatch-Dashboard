@@ -227,54 +227,62 @@ def build_plant_deep_dive_dashboard(
         use_container_width=True
     )
 
-monthly_perf = (
-    plant_gen
-    .assign(
-        Month=
-        plant_gen["Datetime"]
-        .dt.strftime("%b %Y")
+    monthly_perf = (
+        plant_gen
+        .assign(
+            MonthDate=
+            plant_gen["Datetime"]
+            .dt.to_period("M")
+            .dt.to_timestamp(),
+    
+            Month=
+            plant_gen["Datetime"]
+            .dt.strftime("%b %Y")
+        )
+        .groupby(
+            ["MonthDate", "Month"],
+            as_index=False
+        )
+        .agg(
+            PeakMW=("Value", "max"),
+            AvgMW=("Value", "mean"),
+            EnergyMWh=("Value", "sum")
+        )
+        .sort_values(
+            "MonthDate"
+        )
     )
-    .groupby(
-        "Month",
-        as_index=False
+    
+    fig_monthly = go.Figure()
+    
+    fig_monthly.add_trace(
+        go.Scatter(
+            x=monthly_perf["Month"],
+            y=monthly_perf["PeakMW"],
+            mode="lines+markers",
+            name="Monthly Peak MW"
+        )
     )
-    .agg(
-        PeakMW=("Value", "max"),
-        AvgMW=("Value", "mean"),
-        EnergyMWh=("Value", "sum")
+    
+    fig_monthly.add_trace(
+        go.Scatter(
+            x=monthly_perf["Month"],
+            y=monthly_perf["AvgMW"],
+            mode="lines+markers",
+            name="Monthly Average MW"
+        )
     )
-)
-
-fig_monthly = go.Figure()
-
-fig_monthly.add_trace(
-    go.Scatter(
-        x=monthly_perf["Month"],
-        y=monthly_perf["PeakMW"],
-        mode="lines+markers",
-        name="Monthly Peak MW"
-    )
-)
-
-fig_monthly.add_trace(
-    go.Scatter(
-        x=monthly_perf["Month"],
-        y=monthly_perf["AvgMW"],
-        mode="lines+markers",
-        name="Monthly Average MW"
-    )
-)
-
-if dependable_mw > 0:
-
-    fig_monthly.add_hline(
-        y=dependable_mw,
-        line_dash="dash",
-        line_color="red",
-        annotation_text=
-            f"Dependable MW ({dependable_mw:.2f})"
-    )
-
+    
+    if dependable_mw > 0:
+    
+        fig_monthly.add_hline(
+            y=dependable_mw,
+            line_dash="dash",
+            line_color="red",
+            annotation_text=
+                f"Dependable MW ({dependable_mw:.2f})"
+        )
+    
     fig_monthly.update_layout(
         title=
             f"{selected_plant} Monthly Performance",
@@ -286,6 +294,31 @@ if dependable_mw > 0:
     st.plotly_chart(
         fig_monthly,
         use_container_width=True
+    )
+    
+    st.caption(
+        """
+        Monthly Performance evaluates whether the plant
+        can consistently achieve its dependable capacity.
+    
+        • Monthly Peak MW shows the highest output achieved each month.
+    
+        • Monthly Average MW shows how heavily the plant was utilized.
+    
+        • The dashed red line represents dependable capacity.
+    
+        Interpretation:
+    
+        • Peak MW reaching the dependable line indicates the plant
+          remains capable of delivering its rated output.
+    
+        • A growing gap between Peak MW and Dependable MW may indicate
+          derating, maintenance activity, resource limitations,
+          fuel constraints, or dispatch restrictions.
+    
+        • A wide gap between Peak MW and Average MW generally indicates
+          peaking or reserve-support operation.
+        """
     )
     
     st.caption(
@@ -349,7 +382,12 @@ if dependable_mw > 0:
             "##### Monthly Performance"
         )
 
-        monthly_display = monthly.copy()
+        monthly_display = (
+            monthly.copy()
+            .drop(
+                columns=["MonthDate"]
+            )
+        )
         
         monthly_display["EnergyMWh"] = (
             monthly_display["EnergyMWh"]
@@ -386,29 +424,17 @@ if dependable_mw > 0:
                     "Risk Flag"
                 ],
                 "Value": [
-                    dependable_mw,
-                    peak_mw,
-                    avg_mw,
-                    energy_mwh,
-                    hours_operated,
-                    capability_pct,
-                    utilization_pct,
-                    peak_support_pct,
+                    f"{dependable_mw:,.2f}",
+                    f"{peak_mw:,.2f}",
+                    f"{avg_mw:,.2f}",
+                    f"{energy_mwh:,.2f}",
+                    f"{hours_operated:,.0f}",
+                    f"{capability_pct:,.2f}%",
+                    f"{utilization_pct:,.2f}%",
+                    f"{peak_support_pct:,.2f}%",
                     risk_flag
                 ]
             }
-        )
-
-        summary["Value"] = summary["Value"].apply(
-            lambda x:
-            (
-                f"{x:,.2f}"
-                if isinstance(
-                    x,
-                    (int, float)
-                )
-                else x
-            )
         )
         
         st.markdown(
