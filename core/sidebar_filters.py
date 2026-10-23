@@ -38,6 +38,46 @@ def get_filters(df):
     )
 
     # ----------------------------------
+    # MINDORO AREA
+    # ----------------------------------
+
+    area_options = []
+
+    if "WorkbookSource" in df.columns:
+
+        workbook_text = (
+            " ".join(
+                df["WorkbookSource"]
+                .astype(str)
+                .unique()
+            )
+            .upper()
+        )
+
+        if (
+            "ORIENTAL"
+            in workbook_text
+            or
+            "OCCIDENTAL"
+            in workbook_text
+        ):
+
+            area_options = [
+                "Oriental Mindoro",
+                "Occidental Mindoro"
+            ]
+
+    selected_areas = area_options
+
+    if area_options:
+
+        selected_areas = st.sidebar.multiselect(
+            "Mindoro Area",
+            options=area_options,
+            default=area_options
+        )
+
+    # ----------------------------------
     # MONTH
     # ----------------------------------
 
@@ -81,6 +121,7 @@ def get_filters(df):
 
     return {
         "selected_years": selected_years,
+        "selected_areas": selected_areas,
         "selected_months": selected_months,
         "selected_days": selected_days,
         "show_demand": show_demand
