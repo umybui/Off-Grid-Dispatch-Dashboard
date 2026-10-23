@@ -215,6 +215,9 @@ try:
         config
     )
 
+    st.write("COLUMNS")
+    st.write(df.columns.tolist())
+    
     capacity_reference = (
         build_capacity_reference(
             df,
