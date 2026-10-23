@@ -227,6 +227,67 @@ def build_plant_deep_dive_dashboard(
         use_container_width=True
     )
 
+monthly_perf = (
+    plant_gen
+    .assign(
+        Month=
+        plant_gen["Datetime"]
+        .dt.strftime("%b %Y")
+    )
+    .groupby(
+        "Month",
+        as_index=False
+    )
+    .agg(
+        PeakMW=("Value", "max"),
+        AvgMW=("Value", "mean"),
+        EnergyMWh=("Value", "sum")
+    )
+)
+
+fig_monthly = go.Figure()
+
+fig_monthly.add_trace(
+    go.Scatter(
+        x=monthly_perf["Month"],
+        y=monthly_perf["PeakMW"],
+        mode="lines+markers",
+        name="Monthly Peak MW"
+    )
+)
+
+fig_monthly.add_trace(
+    go.Scatter(
+        x=monthly_perf["Month"],
+        y=monthly_perf["AvgMW"],
+        mode="lines+markers",
+        name="Monthly Average MW"
+    )
+)
+
+if dependable_mw > 0:
+
+    fig_monthly.add_hline(
+        y=dependable_mw,
+        line_dash="dash",
+        line_color="red",
+        annotation_text=
+            f"Dependable MW ({dependable_mw:.2f})"
+    )
+
+    fig_monthly.update_layout(
+        title=
+            f"{selected_plant} Monthly Performance",
+        xaxis_title="Month",
+        yaxis_title="MW",
+        height=450
+    )
+    
+    st.plotly_chart(
+        fig_monthly,
+        use_container_width=True
+    )
+    
     st.caption(
         """
         How to read the Output Duration Curve:
@@ -261,29 +322,26 @@ def build_plant_deep_dive_dashboard(
         monthly = (
             plant_gen
             .assign(
+                MonthDate=
+                plant_gen["Datetime"]
+                .dt.to_period("M")
+                .dt.to_timestamp(),
+        
                 Month=
-                plant_gen[
-                    "Datetime"
-                ]
+                plant_gen["Datetime"]
                 .dt.strftime("%b %Y")
             )
             .groupby(
-                "Month",
+                ["MonthDate", "Month"],
                 as_index=False
             )
             .agg(
-                EnergyMWh=(
-                    "Value",
-                    "sum"
-                ),
-                PeakMW=(
-                    "Value",
-                    "max"
-                ),
-                AvgMW=(
-                    "Value",
-                    "mean"
-                )
+                EnergyMWh=("Value", "sum"),
+                PeakMW=("Value", "max"),
+                AvgMW=("Value", "mean")
+            )
+            .sort_values(
+                "MonthDate"
             )
         )
 
