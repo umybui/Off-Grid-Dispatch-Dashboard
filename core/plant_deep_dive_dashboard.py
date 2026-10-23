@@ -227,6 +227,32 @@ def build_plant_deep_dive_dashboard(
         use_container_width=True
     )
 
+    st.caption(
+            """
+            How to read the Output Duration Curve:
+        
+            • The curve ranks all operating hours from highest output to lowest output.
+        
+            • The left side represents the plant's strongest operating hours.
+        
+            • The right side represents periods when the plant carried less load or was unavailable.
+        
+            • A flatter curve indicates a consistently utilized plant capable of sustaining output over long periods.
+        
+            • A steep curve indicates a plant that is primarily used for peak support, reserve support, or intermittent service.
+        
+            • The dashed line represents the plant's dependable capacity.
+        
+            Interpretation:
+        
+            • If the curve stays near the dependable-capacity line for a large portion of the study period, the plant is providing sustained dependable service.
+        
+            • If output exceeds dependable capacity, the unit occasionally delivered performance above its dependable rating.
+        
+            • Significant drop-offs or long low-output tails may indicate dispatch limitations, outages, maintenance activity, fuel constraints, seasonal resource limitations, or peaking operation.
+            """
+        )
+    
     monthly_perf = (
         plant_gen
         .assign(
@@ -285,7 +311,7 @@ def build_plant_deep_dive_dashboard(
     
     fig_monthly.update_layout(
         title=
-            f"{selected_plant} Monthly Performance",
+            f"{selected_plant} Capability Performance by Month",
         xaxis_title="Month",
         yaxis_title="MW",
         height=450
@@ -295,7 +321,7 @@ def build_plant_deep_dive_dashboard(
         fig_monthly,
         use_container_width=True
     )
-    
+
     st.caption(
         """
         Monthly Performance evaluates whether the plant
@@ -321,32 +347,114 @@ def build_plant_deep_dive_dashboard(
         """
     )
     
-    st.caption(
-        """
-        How to read the Output Duration Curve:
-    
-        • The curve ranks all operating hours from highest output to lowest output.
-    
-        • The left side represents the plant's strongest operating hours.
-    
-        • The right side represents periods when the plant carried less load or was unavailable.
-    
-        • A flatter curve indicates a consistently utilized plant capable of sustaining output over long periods.
-    
-        • A steep curve indicates a plant that is primarily used for peak support, reserve support, or intermittent service.
-    
-        • The dashed line represents the plant's dependable capacity.
-    
-        Interpretation:
-    
-        • If the curve stays near the dependable-capacity line for a large portion of the study period, the plant is providing sustained dependable service.
-    
-        • If output exceeds dependable capacity, the unit occasionally delivered performance above its dependable rating.
-    
-        • Significant drop-offs or long low-output tails may indicate dispatch limitations, outages, maintenance activity, fuel constraints, seasonal resource limitations, or peaking operation.
-        """
+    view_mode = st.radio(
+        "Performance Resolution",
+        [
+            "Monthly",
+            "Daily Detail"
+        ],
+        horizontal=True,
+        key="plant_perf_resolution"
     )
+
+    if view_mode == "Daily Detail":
     
+        available_months = (
+            plant_gen["Datetime"]
+            .dt.to_period("M")
+            .dt.to_timestamp()
+            .drop_duplicates()
+            .sort_values()
+            .tolist()
+        )
+    
+        selected_month = st.selectbox(
+            "Select Month",
+            available_months,
+            format_func=lambda x: x.strftime("%b %Y"),
+            key="plant_daily_month"
+        )
+    
+        daily_df = (
+            plant_gen[
+                plant_gen["Datetime"]
+                .dt.to_period("M")
+                .dt.to_timestamp()
+                ==
+                selected_month
+            ]
+            .copy()
+        )
+    
+        daily_perf = (
+            daily_df
+            .assign(
+                Day=
+                daily_df["Datetime"]
+                .dt.strftime("%Y-%m-%d")
+            )
+            .groupby(
+                "Day",
+                as_index=False
+            )
+            .agg(
+                PeakMW=("Value", "max"),
+                AvgMW=("Value", "mean"),
+                EnergyMWh=("Value", "sum")
+            )
+        )
+    
+        fig_daily = go.Figure()
+    
+        fig_daily.add_trace(
+            go.Scatter(
+                x=daily_perf["Day"],
+                y=daily_perf["PeakMW"],
+                mode="lines+markers",
+                name="Daily Peak MW"
+            )
+        )
+    
+        fig_daily.add_trace(
+            go.Scatter(
+                x=daily_perf["Day"],
+                y=daily_perf["AvgMW"],
+                mode="lines+markers",
+                name="Daily Average MW"
+            )
+        )
+    
+        if dependable_mw > 0:
+    
+            fig_daily.add_hline(
+                y=dependable_mw,
+                line_dash="dash",
+                line_color="red",
+                annotation_text=
+                    f"Dependable MW ({dependable_mw:.2f})"
+            )
+    
+        fig_daily.update_layout(
+            title=
+                f"{selected_plant} Daily Performance",
+            xaxis_title="Date",
+            yaxis_title="MW",
+            height=450
+        )
+    
+        st.plotly_chart(
+            fig_daily,
+            use_container_width=True
+        )
+    
+        st.caption(
+            """
+            Daily Detail allows operators to identify
+            specific days where plant performance
+            deviated from dependable capability.
+            """
+        )
+        
     with st.expander(
         "View Detailed Plant Analytics",
         expanded=False
