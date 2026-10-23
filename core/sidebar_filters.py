@@ -45,17 +45,29 @@ def get_filters(df):
 
     if "SourceWorkbook" in df.columns:
 
-        selected_areas = st.sidebar.multiselect(
-            "Mindoro Area",
-            [
-                "Oriental Mindoro",
-                "Occidental Mindoro"
-            ],
-            default=[
-                "Oriental Mindoro",
-                "Occidental Mindoro"
-            ]
-        )
+        workbook_text = " ".join(
+            df["SourceWorkbook"]
+            .astype(str)
+            .unique()
+        ).upper()
+
+        if (
+            "ORIENTAL MINDORO" in workbook_text
+            or
+            "OCCIDENTAL MINDORO" in workbook_text
+        ):
+
+            selected_areas = st.sidebar.multiselect(
+                "Mindoro Area",
+                [
+                    "Oriental Mindoro",
+                    "Occidental Mindoro"
+                ],
+                default=[
+                    "Oriental Mindoro",
+                    "Occidental Mindoro"
+                ]
+            )
 
     # ----------------------------------
     # MONTH
@@ -63,4 +75,46 @@ def get_filters(df):
 
     available_months = sorted(
         df["Month"]
-        .dropna
+        .dropna()
+        .unique()
+    )
+
+    selected_months = st.sidebar.multiselect(
+        "Month",
+        options=available_months,
+        default=available_months,
+        format_func=lambda x: month_names.get(x, x)
+    )
+
+    # ----------------------------------
+    # DAY
+    # ----------------------------------
+
+    available_days = sorted(
+        df["Day"]
+        .dropna()
+        .unique()
+    )
+
+    selected_days = st.sidebar.multiselect(
+        "Day of Month",
+        options=available_days,
+        default=available_days
+    )
+
+    # ----------------------------------
+    # DEMAND
+    # ----------------------------------
+
+    show_demand = st.sidebar.checkbox(
+        "Show Total Demand",
+        value=True
+    )
+
+    return {
+        "selected_years": selected_years,
+        "selected_areas": selected_areas,
+        "selected_months": selected_months,
+        "selected_days": selected_days,
+        "show_demand": show_demand
+    }
