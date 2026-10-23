@@ -17,26 +17,24 @@ def filter_data(df, filters):
     # ----------------------------------
     # MINDORO AREA
     # ----------------------------------
-    
+
     if (
-        "WorkbookSource" in filtered.columns
+        "SourceWorkbook" in filtered.columns
         and
-        len(
-            filters["selected_areas"]
-        ) > 0
+        len(filters["selected_areas"]) > 0
     ):
-    
+
         mask = False
-    
+
         if (
             "Oriental Mindoro"
             in filters["selected_areas"]
         ):
-    
+
             mask = (
                 mask
                 |
-                filtered["WorkbookSource"]
+                filtered["SourceWorkbook"]
                 .astype(str)
                 .str.contains(
                     "Oriental Mindoro",
@@ -44,16 +42,16 @@ def filter_data(df, filters):
                     na=False
                 )
             )
-    
+
         if (
             "Occidental Mindoro"
             in filters["selected_areas"]
         ):
-    
+
             mask = (
                 mask
                 |
-                filtered["WorkbookSource"]
+                filtered["SourceWorkbook"]
                 .astype(str)
                 .str.contains(
                     "Occidental Mindoro",
@@ -61,8 +59,9 @@ def filter_data(df, filters):
                     na=False
                 )
             )
-    
+
         filtered = filtered[mask]
+
     # ----------------------------------
     # MONTH + DAY
     # ----------------------------------
