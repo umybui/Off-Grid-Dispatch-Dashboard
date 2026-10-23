@@ -202,10 +202,6 @@ try:
 
     df = load_data(config)
 
-    st.sidebar.success(
-        f"Loaded {len(df):,} records"
-    )
-
     # =================================================
     # DATA PREPARATION
     # =================================================
