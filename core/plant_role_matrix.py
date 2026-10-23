@@ -88,6 +88,34 @@ def build_plant_role_matrix(
         .fillna(0)
     )
 
+    x_mid = role_df["PeakSharePct"].median()
+    y_mid = role_df["EnergySharePct"].median()
+    
+    def classify_role(row):
+    
+        if (
+            row["EnergySharePct"] >= y_mid
+            and
+            row["PeakSharePct"] >= x_mid
+        ):
+            return "Core Asset"
+    
+        if (
+            row["EnergySharePct"] >= y_mid
+            and
+            row["PeakSharePct"] < x_mid
+        ):
+            return "Baseload Asset"
+    
+        if (
+            row["EnergySharePct"] < y_mid
+            and
+            row["PeakSharePct"] >= x_mid
+        ):
+            return "Peaking Asset"
+    
+        return "Support Asset"
+    
     role_df["Role"] = (
         role_df.apply(
             classify_role,
