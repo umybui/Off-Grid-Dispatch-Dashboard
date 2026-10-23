@@ -1,30 +1,34 @@
 def filter_data(df, filters):
 
-    # ----------------------------------
-    # YEAR FILTER
-    # ----------------------------------
-
-    if "Year" in filters:
-
-        df = df[
-            df["Datetime"]
-            .dt.year
-            .isin(filters["Year"])
-        ]
+    filtered = df.copy()
 
     # ----------------------------------
-    # MONTH + DAY FILTER
+    # YEAR
     # ----------------------------------
 
-    filtered = df[
+    filtered = filtered[
+        filtered["Datetime"]
+        .dt.year
+        .isin(
+            filters["selected_years"]
+        )
+    ]
+
+    # ----------------------------------
+    # MONTH + DAY
+    # ----------------------------------
+
+    filtered = filtered[
         (
-            df["Month"].isin(
+            filtered["Month"]
+            .isin(
                 filters["selected_months"]
             )
         )
         &
         (
-            df["Day"].isin(
+            filtered["Day"]
+            .isin(
                 filters["selected_days"]
             )
         )
