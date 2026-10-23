@@ -227,6 +227,32 @@ def build_plant_deep_dive_dashboard(
         use_container_width=True
     )
 
+    st.caption(
+        """
+        How to read the Output Duration Curve:
+    
+        • The curve ranks all operating hours from highest output to lowest output.
+    
+        • The left side represents the plant's strongest operating hours.
+    
+        • The right side represents periods when the plant carried less load or was unavailable.
+    
+        • A flatter curve indicates a consistently utilized plant capable of sustaining output over long periods.
+    
+        • A steep curve indicates a plant that is primarily used for peak support, reserve support, or intermittent service.
+    
+        • The dashed line represents the plant's dependable capacity.
+    
+        Interpretation:
+    
+        • If the curve stays near the dependable-capacity line for a large portion of the study period, the plant is providing sustained dependable service.
+    
+        • If output exceeds dependable capacity, the unit occasionally delivered performance above its dependable rating.
+    
+        • Significant drop-offs or long low-output tails may indicate dispatch limitations, outages, maintenance activity, fuel constraints, seasonal resource limitations, or peaking operation.
+        """
+    )
+    
     with st.expander(
         "View Detailed Plant Analytics",
         expanded=False
@@ -239,8 +265,7 @@ def build_plant_deep_dive_dashboard(
                 plant_gen[
                     "Datetime"
                 ]
-                .dt.to_period("M")
-                .astype(str)
+                .dt.strftime("%b %Y")
             )
             .groupby(
                 "Month",
@@ -266,8 +291,25 @@ def build_plant_deep_dive_dashboard(
             "##### Monthly Performance"
         )
 
+        monthly_display = monthly.copy()
+        
+        monthly_display["EnergyMWh"] = (
+            monthly_display["EnergyMWh"]
+            .map(lambda x: f"{x:,.2f}")
+        )
+        
+        monthly_display["PeakMW"] = (
+            monthly_display["PeakMW"]
+            .map(lambda x: f"{x:,.2f}")
+        )
+        
+        monthly_display["AvgMW"] = (
+            monthly_display["AvgMW"]
+            .map(lambda x: f"{x:,.2f}")
+        )
+        
         st.dataframe(
-            monthly.round(2),
+            monthly_display,
             use_container_width=True,
             hide_index=True
         )
@@ -299,6 +341,18 @@ def build_plant_deep_dive_dashboard(
             }
         )
 
+        summary["Value"] = summary["Value"].apply(
+            lambda x:
+            (
+                f"{x:,.2f}"
+                if isinstance(
+                    x,
+                    (int, float)
+                )
+                else x
+            )
+        )
+        
         st.markdown(
             "##### Asset Summary"
         )
