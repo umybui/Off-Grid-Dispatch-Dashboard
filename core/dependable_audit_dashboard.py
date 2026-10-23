@@ -8,23 +8,27 @@ def build_dependable_audit_dashboard(
     st.subheader(
         "Dependable Capacity Audit Trail"
     )
-    
+
     has_unit_data = (
         dependable_audit.get(
             "has_unit_data",
             False
         )
     )
-    
+
+    plant_totals = (
+        dependable_audit[
+            "plant_totals"
+        ]
+    )
+
     if not has_unit_data:
-    
+
         st.info(
-            "Unit-level dependable capacity data "
-            "is not available for this system. "
-            "Only plant-level dependable capacity "
-            "is maintained."
+            "Unit-level dependable capacity data is not available for this system. "
+            "Only plant-level dependable capacity is maintained."
         )
-    
+
     with st.expander(
         "View Dependable Capacity Audit Trail",
         expanded=False
@@ -39,10 +43,6 @@ def build_dependable_audit_dashboard(
             use_container_width=True,
             hide_index=True
         )
-
-        # ----------------------------------
-        # PALAWAN / CATANDUANES
-        # ----------------------------------
 
         if has_unit_data:
 
@@ -86,15 +86,4 @@ def build_dependable_audit_dashboard(
             st.metric(
                 "Plant Total Dependable Capacity",
                 f"{total_dependable:,.2f} MW"
-            )
-
-        # ----------------------------------
-        # MINDORO
-        # ----------------------------------
-
-        else:
-
-            st.info(
-                "Unit-level dependable capacity data "
-                "is not available for this system."
             )
