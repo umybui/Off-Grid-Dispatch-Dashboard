@@ -518,36 +518,72 @@ def build_plant_deep_dive_dashboard(
             hide_index=True
         )
 
-        summary = pd.DataFrame(
-            {
-                "Metric": [
-                    "Dependable MW",
-                    "Peak MW",
-                    "Average MW",
-                    "Energy MWh",
-                    "Operating Hours",
-                    "Capability %",
-                    "Utilization %",
-                    "Peak Support %",
-                    "Risk Flag"
-                ],
-                "Value": [
-                    f"{dependable_mw:,.2f}",
-                    f"{peak_mw:,.2f}",
-                    f"{avg_mw:,.2f}",
-                    f"{energy_mwh:,.2f}",
-                    f"{hours_operated:,.0f}",
-                    f"{capability_pct:,.2f}%",
-                    f"{utilization_pct:,.2f}%",
-                    f"{peak_support_pct:,.2f}%",
-                    risk_flag
+    monthly_asset = monthly.copy()
+
+        monthly_asset["DependableMW"] = dependable_mw
+        
+        monthly_asset["CapabilityPct"] = (
+            monthly_asset["PeakMW"]
+            /
+            dependable_mw
+            * 100
+            if dependable_mw > 0
+            else 0
+        )
+        
+        monthly_asset["UtilizationPct"] = (
+            monthly_asset["AvgMW"]
+            /
+            dependable_mw
+            * 100
+            if dependable_mw > 0
+            else 0
+        )
+        
+        monthly_asset["PeakSupportPct"] = peak_support_pct
+        
+        monthly_asset = (
+            monthly_asset[
+                [
+                    "Month",
+                    "DependableMW",
+                    "CapabilityPct",
+                    "UtilizationPct",
+                    "PeakSupportPct"
                 ]
-            }
+            ]
+        )
+        
+        monthly_asset["DependableMW"] = (
+            monthly_asset["DependableMW"]
+            .map(lambda x: f"{x:,.2f}")
+        )
+        
+        monthly_asset["CapabilityPct"] = (
+            monthly_asset["CapabilityPct"]
+            .map(lambda x: f"{x:,.2f}%")
+        )
+        
+        monthly_asset["UtilizationPct"] = (
+            monthly_asset["UtilizationPct"]
+            .map(lambda x: f"{x:,.2f}%")
+        )
+        
+        monthly_asset["PeakSupportPct"] = (
+            monthly_asset["PeakSupportPct"]
+            .map(lambda x: f"{x:,.2f}%")
         )
         
         st.markdown(
-            "##### Asset Summary"
+            "##### Monthly Asset Summary"
         )
+        
+        st.dataframe(
+            monthly_asset,
+            use_container_width=True,
+            hide_index=True
+        )
+
 
         st.dataframe(
             summary,
