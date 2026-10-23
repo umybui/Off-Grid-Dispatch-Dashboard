@@ -139,6 +139,9 @@ from core.generation_unit import (
 from core.unit_capacity_reference import (
     build_unit_capacity_reference
 )
+from core.plant_deep_dive_dashboard import (
+    build_plant_deep_dive_dashboard
+)
 
 # =====================================================
 # PAGE CONFIG
@@ -523,6 +526,15 @@ try:
 
     st.divider()
 
+    build_plant_deep_dive_dashboard(
+        generation,
+        asset_performance,
+        peak_support,
+        capacity_reference
+    )
+    
+    st.divider()
+
     build_peak_hour_dashboard(
         peak_hour,
         peak_hour_share_fig
@@ -533,15 +545,6 @@ try:
     build_capacity_outlook_dashboard(
         capacity_planning,
         capacity_reference
-    )
-
-    st.divider()
-
-    build_historical_dispatch_dashboard(
-        generation,
-        total_demand,
-        total_generation,
-        transfer_flow
     )
 
     st.divider()
@@ -569,7 +572,16 @@ try:
         unit_capability,
         unit_capability_chart
     )
+
+    st.divider()
     
+    build_historical_dispatch_dashboard(
+        generation,
+        total_demand,
+        total_generation,
+        transfer_flow
+    )
+
 #$$$$$$$$$$$$$$$$$$$
 
 except Exception as e:
