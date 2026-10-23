@@ -214,7 +214,9 @@ try:
         df,
         config
     )
- 
+
+    st.sidebar.write(df.columns.tolist())
+    
     capacity_reference = (
         build_capacity_reference(
             df,
