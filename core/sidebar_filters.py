@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def get_filters(df):
 
     st.sidebar.header("Filters")
@@ -19,24 +20,33 @@ def get_filters(df):
         12: "Dec"
     }
 
-    available_months = sorted(
-        df["Month"].dropna().unique()
-    )
+    # ----------------------------------
+    # YEAR
+    # ----------------------------------
 
-    years = sorted(
+    available_years = sorted(
         df["Datetime"]
         .dt.year
+        .dropna()
         .unique()
     )
-    
+
     selected_years = st.sidebar.multiselect(
         "Year",
-        years,
-        default=years
+        options=available_years,
+        default=available_years
     )
-    
-    filters["Year"] = selected_years
-    
+
+    # ----------------------------------
+    # MONTH
+    # ----------------------------------
+
+    available_months = sorted(
+        df["Month"]
+        .dropna()
+        .unique()
+    )
+
     selected_months = st.sidebar.multiselect(
         "Month",
         options=available_months,
@@ -44,8 +54,14 @@ def get_filters(df):
         format_func=lambda x: month_names.get(x, x)
     )
 
+    # ----------------------------------
+    # DAY
+    # ----------------------------------
+
     available_days = sorted(
-        df["Day"].dropna().unique()
+        df["Day"]
+        .dropna()
+        .unique()
     )
 
     selected_days = st.sidebar.multiselect(
@@ -54,12 +70,17 @@ def get_filters(df):
         default=available_days
     )
 
+    # ----------------------------------
+    # DEMAND
+    # ----------------------------------
+
     show_demand = st.sidebar.checkbox(
         "Show Total Demand",
         value=True
     )
 
     return {
+        "selected_years": selected_years,
         "selected_months": selected_months,
         "selected_days": selected_days,
         "show_demand": show_demand
