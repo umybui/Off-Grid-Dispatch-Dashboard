@@ -8,24 +8,27 @@ def build_dependable_audit_dashboard(
     st.subheader(
         "Dependable Capacity Audit Trail"
     )
-
+    
+    has_unit_data = (
+        dependable_audit.get(
+            "has_unit_data",
+            False
+        )
+    )
+    
+    if not has_unit_data:
+    
+        st.info(
+            "Unit-level dependable capacity data "
+            "is not available for this system. "
+            "Only plant-level dependable capacity "
+            "is maintained."
+        )
+    
     with st.expander(
         "View Dependable Capacity Audit Trail",
         expanded=False
     ):
-
-        plant_totals = (
-            dependable_audit[
-                "plant_totals"
-            ]
-        )
-
-        has_unit_data = (
-            dependable_audit.get(
-                "has_unit_data",
-                False
-            )
-        )
 
         st.markdown(
             "##### Plant-Level Dependable Capacity"
