@@ -3,7 +3,7 @@ import streamlit as st
 
 
 @st.cache_data
-def read_excel_file(uploaded_file):
+def load_uploaded_excel(uploaded_file):
 
     file_name = uploaded_file.name.lower()
 
@@ -15,11 +15,21 @@ def read_excel_file(uploaded_file):
             engine="pyxlsb"
         )
 
-    return pd.read_excel(
-        uploaded_file,
-        sheet_name=None,
-        engine="openpyxl"
-    )
+    elif file_name.endswith(".xls"):
+
+        return pd.read_excel(
+            uploaded_file,
+            sheet_name=None,
+            engine="xlrd"
+        )
+
+    else:
+
+        return pd.read_excel(
+            uploaded_file,
+            sheet_name=None,
+            engine="openpyxl"
+        )
 
 
 def load_data(config):
@@ -32,18 +42,25 @@ def load_data(config):
 
         uploaded_file = st.sidebar.file_uploader(
             "Upload Mindoro Dispatch Summary",
-            type=["xlsx", "xlsb"]
+            type=[
+                "xlsx",
+                "xlsm",
+                "xlsb",
+                "xls",
+                "xltx",
+                "xltm"
+            ]
         )
 
         if uploaded_file is None:
 
-            st.warning(
-                "Please upload the Mindoro Dispatch Summary file."
+            st.info(
+                "Please upload the Mindoro Dispatch Summary workbook."
             )
 
             st.stop()
 
-        sheets = read_excel_file(
+        sheets = load_uploaded_excel(
             uploaded_file
         )
 
@@ -63,10 +80,12 @@ def load_data(config):
                 sheet_df
             )
 
-        return pd.concat(
+        df = pd.concat(
             tables,
             ignore_index=True
         )
+
+        return df
 
     # ==================================
     # PALAWAN / CATANDUANES
